@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROMONT — Cadastro de Representante</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#F5F5F5;font-family:'DM Sans',sans-serif;color:#2C2C2C;min-height:100vh;padding:2rem 1rem}
+.page{max-width:860px;margin:0 auto}
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:2px solid #2C2C2C}
+.header h1{font-size:18px;font-weight:600;letter-spacing:-.01em}
+.header p{font-size:13px;color:#555;margin-top:3px}
+.card{background:#fff;border:1px solid #E4E4E4;border-radius:8px;padding:1.5rem;margin-bottom:1.25rem;box-shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.05)}
+.sec-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.1rem;padding-bottom:.65rem;border-bottom:1px solid #E4E4E4}
+.sec-label i{color:#E30613;font-size:15px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+label{font-size:12px;font-weight:500;color:#555}
+.req{color:#E30613}
+input,select,textarea{background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:#2C2C2C}
+input.err,select.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10)}
+.phone-row{display:flex;gap:8px}
+.phone-row select{width:130px;min-width:130px;flex-shrink:0}
+.phone-row input{flex:1}
+.at-wrap{overflow-x:auto;margin:0 -1.5rem;padding:0 1.5rem}
+.at-table{min-width:740px}
+.at-head{display:grid;grid-template-columns:130px 130px 95px 170px 125px 70px 90px 56px;gap:8px;padding:0 8px 8px;border-bottom:1px solid #E4E4E4}
+.at-head span{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9A9A9A}
+.at-row{display:grid;grid-template-columns:130px 130px 95px 170px 125px 70px 90px 56px;gap:8px;align-items:start;padding:10px 8px;border-top:1px solid #E4E4E4}
+.at-row select,.at-row input{font-size:12px;padding:7px 9px}
+.at-row textarea{font-size:11px;padding:7px 9px;resize:none;height:60px;line-height:1.5}
+.tag-area{display:flex;flex-direction:column;gap:5px}
+.tags{display:flex;flex-wrap:wrap;gap:3px;min-height:20px}
+.tag{display:inline-flex;align-items:center;gap:2px;border-radius:99px;padding:2px 8px;font-size:10px;font-weight:600;line-height:1.5}
+.tag.red{background:#FDECEE;color:#B30410;border:1px solid #FAD4D7}
+.tag.gray{background:#EFEFEF;color:#2C2C2C;border:1px solid #DCDCDC}
+.tag button{background:none;border:none;cursor:pointer;font-size:13px;padding:0;line-height:1;margin-left:1px;opacity:.7}
+.tag-sel{font-size:11px;padding:5px 7px}
+.obs-count{font-size:10px;color:#9A9A9A;text-align:right;font-family:'DM Mono',monospace;margin-top:2px}
+.row-actions{display:flex;flex-direction:column;gap:5px;align-items:center;padding-top:2px}
+.row-btn{width:28px;height:28px;border-radius:4px;border:1px solid #E4E4E4;background:#fff;color:#9A9A9A;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .15s}
+.row-btn:hover{border-color:#2C2C2C;color:#2C2C2C;background:#F0F0F0}
+.row-btn.del:hover{border-color:#E30613;color:#E30613;background:#FDECEE}
+.btn-add{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border-radius:4px;border:1.5px dashed #C8C8C8;background:transparent;color:#555;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:12px;width:100%;transition:all .15s}
+.btn-add:hover{border-color:#E30613;color:#E30613;background:#FDECEE}
+.footer{display:flex;justify-content:flex-end;gap:10px;margin-top:1rem}
+.btn-primary{display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;background:#E30613;color:#fff;box-shadow:0 2px 6px rgba(227,6,19,.25);min-width:160px;justify-content:center;transition:background .15s}
+.btn-primary:hover{background:#B30410}
+.btn-primary:disabled{opacity:.7;cursor:not-allowed}
+.btn-outline{display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:1px solid #C8C8C8;background:#fff;color:#2C2C2C;transition:all .15s}
+.btn-outline:hover{background:#F0F0F0;border-color:#2C2C2C}
+.btn-outline:disabled{opacity:.5;cursor:not-allowed}
+.error-box{background:#FDECEE;border:1px solid #FAD4D7;border-left:3px solid #E30613;border-radius:4px;padding:.75rem 1rem;display:flex;gap:8px;align-items:center;margin-top:1rem;font-size:12px;color:#B30410}
+.success-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4rem 2rem;gap:14px}
+.success-icon{width:64px;height:64px;border-radius:50%;background:#FDECEE;border:2px solid #FAD4D7;display:flex;align-items:center;justify-content:center;font-size:30px;color:#E30613}
+.success-wrap h2{font-size:22px;font-weight:600}
+.success-wrap p{font-size:14px;color:#555;max-width:380px;line-height:1.6}
+.meta-box{background:#F5F5F5;border:1px solid #E4E4E4;border-radius:8px;padding:1rem 1.25rem;font-size:12px;line-height:1.8;text-align:left;font-family:'DM Mono',monospace;max-width:420px;width:100%;white-space:pre}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.spin{animation:spin 1s linear infinite;display:inline-block}
+@media(max-width:600px){.row2{grid-template-columns:1fr}}
+
+.recovery-box{background:#fff;border:1px solid #E4E4E4;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.recovery-row{display:flex;gap:8px;align-items:flex-end}
+.welcome-banner{background:linear-gradient(135deg,#2C2C2C,#2D2D2D);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:14px}
+.welcome-avatar{width:44px;height:44px;border-radius:50%;background:#E30613;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.welcome-text h2{font-size:15px;font-weight:700;margin-bottom:2px}
+.welcome-text p{font-size:12px;opacity:.7}
+.welcome-repid{margin-left:auto;font-size:10px;opacity:.4;font-family:'DM Mono',monospace}
+.status-sel{padding:4px 7px;border-radius:4px;border:1px solid #E4E4E4;font-size:10px;font-family:'DM Sans',sans-serif;cursor:pointer;background:#fff;font-weight:600;width:100%;color:#9A9A9A}
+.status-sel.PROSPECCAO,.status-sel.OPORTUNIDADE,.status-sel.POC,.status-sel.PROPOSTA,.status-sel.PROJETO_ATIVO,.status-sel.HOMOLOGACAO,.status-sel.CERTIFICACAO,.status-sel.EM_PAUSA,.status-sel.PERDIDO{color:inherit}
+.status-sel.PROSPECCAO{background:#FFF0F0;color:#E30613;border-color:#FAD4D7}
+.status-sel.OPORTUNIDADE{background:#FEFCE8;color:#854D0E;border-color:#FEF08A}
+.status-sel.POC{background:#FFF7ED;color:#C2410C;border-color:#FED7AA}
+.status-sel.PROPOSTA{background:#F5F3FF;color:#B30410;border-color:#FAD4D7}
+.status-sel.PROJETO_ATIVO{background:#F0FDF4;color:#166534;border-color:#BBF7D0}
+.status-sel.EM_PAUSA{background:#F9FAFB;color:#374151;border-color:#D1D5DB}
+.status-sel.PERDIDO{background:#FFF1F2;color:#BE123C;border-color:#FECDD3}
+.status-sel.HOMOLOGACAO{background:#FFF0F0;color:#E30613;border-color:#FAD4D7}
+.status-sel.CERTIFICACAO{background:#F0F9FF;color:#B30410;border-color:#FAD4D7}
+.toast{position:fixed;bottom:24px;right:24px;background:#2C2C2C;color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.toast.err{background:#E30613}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin .8s linear infinite;display:inline-block}
+
+
+
+
+#ddi{width:110px;flex-shrink:0;min-width:0}
+#whats{flex:1;min-width:0}
+
+
+/* ── LINHA DE ATIVIDADE — CARD 2 LINHAS ── */
+.linha-row{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  border-top:1px solid #E4E4E4;
+  padding:10px 12px;
+  background:#fff;
+}
+.linha-row:first-child{border-top:none}
+.linha-row-l1{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 120px;gap:8px;margin-bottom:8px}
+.linha-row-l2{display:grid;grid-template-columns:200px 1fr 2fr 36px;gap:8px;align-items:start}
+.linha-label{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#9A9A9A;margin-bottom:3px}
+.linha-inp{background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:6px 8px;font-size:11px;color:#1A1A1A;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box;cursor:pointer}
+.linha-inp-sm{font-size:10px;padding:3px 6px;margin-top:3px}
+.tag-wrap{display:flex;flex-direction:column;gap:3px}
+.tag-list{display:flex;flex-wrap:wrap;gap:2px;min-height:18px}
+.ptag,.jtag{display:inline-flex;align-items:center;border-radius:99px;padding:2px 6px;font-size:9px;font-weight:600}
+.ptag{background:#FDECEE;color:#B30410;border:1px solid #FAD4D7}
+.jtag{background:#EFEFEF;color:#1A1A1A;border:1px solid #DCDCDC}
+.ptag button,.jtag button{background:none;border:none;cursor:pointer;font-size:11px;padding:0;margin-left:2px;line-height:1}
+.linha-actions{display:flex;flex-direction:column;gap:4px;align-items:center;padding-top:18px}
+.row-btn{width:26px;height:26px;border-radius:4px;border:1px solid #E4E4E4;background:#fff;color:#9A9A9A;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .15s}
+.row-btn:hover{border-color:#1A1A1A;color:#1A1A1A}
+.row-btn-del:hover{border-color:#E30613!important;color:#E30613!important;background:#FDECEE!important}
+.prod-add-row{display:flex;gap:4px;align-items:center;margin-top:4px}
+.prod-add-row select{font-size:10px;padding:3px 6px}
+.prod-add-btn{padding:3px 10px;border-radius:4px;border:none;background:#E30613;color:#fff;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+
+
+/* ── CARDS DE PROJETO ── */
+.proj-card-wrap{margin-bottom:12px;border-radius:8px;overflow:hidden;border:1px solid #E4E4E4;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.proj-card-header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FAFAFA;border-bottom:1px solid #E4E4E4;border-left:4px solid #2C2C2C}
+.proj-card-header.s-PROSPECCAO{border-left-color:#3B82F6}
+.proj-card-header.s-OPORTUNIDADE{border-left-color:#EAB308}
+.proj-card-header.s-POC{border-left-color:#F97316}
+.proj-card-header.s-PROPOSTA{border-left-color:#8B5CF6}
+.proj-card-header.s-PROJETO_ATIVO{border-left-color:#22C55E}
+.proj-card-header.s-HOMOLOGACAO{border-left-color:#3B82F6}
+.proj-card-header.s-CERTIFICACAO{border-left-color:#0EA5E9}
+.proj-card-header.s-EM_PAUSA{border-left-color:#6B7280}
+.proj-card-header.s-PERDIDO{border-left-color:#EF4444}
+.proj-num{font-size:11px;font-weight:700;color:#E30613;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.proj-card-body{padding:14px;background:#fff}
+.proj-field{display:flex;flex-direction:column;gap:4px}
+.proj-field-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9A9A9A}
+.proj-title-wrap{display:flex;align-items:center;gap:8px;flex:1}
+.proj-title-counter{font-size:10px;color:#AAAAAA;white-space:nowrap;flex-shrink:0}
+.proj-row1{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.proj-row2{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.proj-row3{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.proj-prod-line{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.proj-prod-line select{font-size:11px;padding:4px 6px;border:1px solid #E4E4E4;border-radius:4px;background:#fff;cursor:pointer}
+.proj-prod-line select:first-child{flex:1}
+.proj-prod-line select:last-of-type{width:110px}
+.proj-prod-rm{background:none;border:none;cursor:pointer;color:#9A9A9A;font-size:14px;padding:0 2px;line-height:1;transition:color .15s}
+.proj-prod-rm:hover{color:#E30613}
+.proj-add-prod{display:flex;align-items:center;gap:5px;font-size:11px;color:#E30613;cursor:pointer;font-weight:600;margin-top:4px;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
+.proj-add-prod:hover{text-decoration:underline}
+.proj-obs-wrap{display:flex;flex-direction:column;gap:4px}
+.proj-obs-counter{font-size:10px;color:#AAAAAA;text-align:right}
+.proj-card-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+.proj-btn{width:28px;height:28px;border-radius:4px;border:1px solid #E4E4E4;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:#9A9A9A;transition:all .15s}
+.proj-btn:hover{border-color:#2C2C2C;color:#2C2C2C}
+.proj-btn.del:hover{border-color:#E30613;color:#E30613;background:#FDECEE}
+.proj-collapsed .proj-card-body{display:none}
+.proj-add-section{display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px}
+.btn-add-proj{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:4px;border:none;background:#E30613;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s}
+.btn-add-proj:hover{background:#B30410}
+.proj-dica{font-size:11px;color:#888;padding:10px 14px;background:#F9FAFB;border:1px solid #F0F0F0;border-radius:6px;margin-top:4px}
+
+</style>
+</head>
+<body>
+<div style="background:#F5F5F5;min-height:100vh;padding:2rem 1rem">
+<div style="max-width:900px;margin:0 auto;font-family:'DM Sans',sans-serif;color:#2C2C2C">
+
+<!-- HEADER -->
+<div style="display:flex;align-items:center;gap:14px;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:2px solid #2C2C2C">
+  <img src="data:image/webp;base64,UklGRoIGAABXRUJQVlA4THYGAAAvbMALELXQ3v7PkOx8Y+PS5qWtyZ7fedIXwfGJbdu2bTu5PJexbdu27aRrqn6LP6COZg52n/PdqeS36t7ItW3r2J7Z/f5js/zLOClTsrRtlrbNkqVt68cz8u0vedPlAnIfH4O2jSR5744/wgPyRbOyIAEgYOVqHrJt27Zt27Zt27Zt2/60bdt1005AbJsRMVHTFjWjFFE3Er+1wF8JYtuMSjrEawRdxHP0SdUmoSEEcbvURtxokxDZEPTbJESpZkGRCJV8KAqFIwqhiOdAt2iIXO3hiELolsqBCEFkales4YiAo0IiUb7mwA+JEYdKVUQQsQnfxItoCCDmIX4jqCIuo8gWIyqt+ktVxGNU6sWYeTIJlwTC7+ZAzalSG5VZETGu1Ebcxj0hiEKI36UyIogiU0Yk0W02j343/ovUr1YiKiG2leqISUIhiq11lIhspT7uaYW4pIdPVgm1Wg2KXK0C76xqIXIjbw3H86Xx2Xd3Ak5cTb3+0njeGo77vgmsfJeQK+fx2mjeGk5VHrk+LWvQhfwJ35+amOLXMN+nupix4DfoAubbm92gpd04ixNXx3nblJgduD0h7w3OqcvTnj9xNW8Nx75qZ75X+O24J2ajZnLg9jjvmoDZlkdoadmVlM6FXmF24HZCnurK/6Xz0M3YV+0s9Iqg1W+mdK58l9az2LM0w5Hro7Hy3bgareCmGVw5DyfNDtyekO+ac+2sNPLXzuKj/rGXxjPnN9oO3+4Qz6/ayW5QtpDYEm6bkgvnx33u/HSXIV+1c+W8FPl/2+2uCUxbCBp2Jq5uv8TFtouHeK2GeOsxpQz1qM/andJ55mLsq3bmexW/bQ/E7Kv21PMvjafDbMMzeAnVUPRCBJUQv/FLl5a04x6sY6FX+K18Nx3m+Vn/9HkJl1cmFaIW4hDiOuK2ImIfohIIuBZ6xoZn0jnXu2itfpPOda+kdPd1DrqQWbvjVy71iA1PpLN6A8EnUfRaWFWhV4VOwaJ2Me9SxTuZXKp4p1kVTXyySlQrl6gp+uxA3X+1bhSREI/1EMUQs/QQwzJyCUFB0qVw2YG6FWooekVEPTXEKRwRQCUd4rMW4j26JRpGJOGYQFvo5MAfsRDjEI/7EN/D+xC3uxAhMSK6Ia739SginiOWoUgWI4pyHUWPIuJ1B4pMMVaIJywSnou+KwqfhctCr+UJccSIhhAU8RDxwlHEwjuRYh4NAVRidSjinWjRiX+iIeIpjo3OzB1pvKIQr0IICLhBxEyDhMdUFAWF20K3GKPQqHciFYXXolkZ0WIUMgmHhN9UFL6PzTzpYlyeSMIk0XsqCsFeoZGriTmk2BRJCr1ihWaTyaRICutihVSi52RSJBsrEyuKdpFJkZws1HOIHWTSZWMpInUxKVPIJ5rGpExRL1E6JmUKlxwpT9KDZEopMfNkYnLSt8rqaiWcc5F0kXRVWCaq5aK3S/juwUGIGViFMa4L5kS5XJwcq9foWplWpYMxRua4rsRIx+qsEmo5ODn60iH89nkPH+E5lHRwQ3kLhXlxUzyGonrtTDDgIRS1fYW5K6V4DcNAvxNReNY2BIN+wp+wa+FghrtgVviNgvl+hkGg32sw+w17ginxRthX2FACLpQ/4fkdNhUVOxTMXQgLuglWvxLHIn+ivAZrnxhm7UeCKjuip6fnNvwJuw89PT2XYpjovIZBYOK2aGi8h3VBZ7/Gbxhjn2FPUCGR5K4Y8yfOBPNJoW42jszwFMzGhL2FdcGUUtKZfC7M6jtCI6XkSlVDel+C2b7gWLO70NeyeK7U7SvsilbQ1bC3cKCMsc9cNoSOU4ljx1gxvuVxrNkYG9NNhfYdpZYfJKOgk3gizKwV1N6DmfVSw+oNp1ljQ2gkdtdbA3eVujWGQeFY1M3zLgiSRuK5Um9hRbEpmLitFFsKE/uLHeGV2FlU72EK+LfYErnEnmJ0BoVaUQyDTiKZUiKZUiKZcpknlyvRNwUkkslJkikokWTS0aTI0sQSfaZDkUI1YZNLkcIkoZhPIIX7DuEmtYRVURilRdHzCrGEcqQOhWBnRrT/qCVMczSRUnRdoCscykgU+4Vl1BUeV0gXo6jfRKoK3yu0ilHI9B91RasyYjnicoQOpOxAM0DMqHBh0NoUBRFijFHILnQTMypczLCB1BhOWIwxNpG0ieYDGNEVLrRYhzgxxrglkZqoMIDBXeED6CNkBgE3" alt="Promont" style="height:38px;width:auto">
+  <div>
+    <h1 id="page-title" style="font-size:18px;font-weight:600;letter-spacing:-.01em">Cadastro de Representante</h1>
+    <p id="page-sub" style="font-size:13px;color:#555;margin-top:2px">Preencha seus dados para fazer parte da rede Promont.</p>
+  </div>
+</div>
+
+<!-- WELCOME BANNER -->
+<div id="welcome-banner" class="welcome-banner" style="display:none">
+  <div class="welcome-avatar" id="welcome-ini">?</div>
+  <div class="welcome-text">
+    <h2 id="welcome-name">Bem-vindo de volta!</h2>
+    <p id="welcome-empresa">Seus dados foram carregados automaticamente.</p>
+  </div>
+  <span class="welcome-repid" id="welcome-repid"></span>
+</div>
+
+<!-- RECOVERY TOGGLE -->
+<div id="recovery-toggle" style="text-align:right;margin-bottom:.75rem;display:none">
+  <button onclick="toggleRecovery()" style="background:none;border:none;font-size:12px;color:#9A9A9A;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline">
+    Já sou cadastrado — recuperar acesso
+  </button>
+</div>
+
+<!-- RECOVERY FORM -->
+<div id="recovery-section" class="recovery-box" style="display:none">
+  <p style="font-size:12px;font-weight:600;color:#2C2C2C;margin-bottom:.75rem"><i class="ti ti-key" style="color:#E30613"></i> Recuperar acesso</p>
+  <div class="recovery-row">
+    <input id="recovery-query" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box;flex:1" placeholder="Seu e-mail ou telefone cadastrado">
+    <button onclick="recuperarAcesso()" style="padding:9px 18px;background:#2C2C2C;color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">Enviar link</button>
+  </div>
+  <div id="recovery-msg" style="font-size:12px;margin-top:8px;display:none"></div>
+</div>
+
+<!-- DADOS PESSOAIS -->
+<div style="background:#fff;border:1px solid #E4E4E4;border-radius:8px;padding:1.5rem;margin-bottom:1.25rem;box-shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.05)">
+  <div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.1rem;padding-bottom:.65rem;border-bottom:1px solid #E4E4E4"><i class="ti ti-user" style="color:#E30613"></i> Dados pessoais</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+    <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">Nome <span style="color:#E30613">*</span></label><input id="nome" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="First name"></div>
+    <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">Sobrenome <span style="color:#E30613">*</span></label><input id="sobrenome" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="Last name"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+    <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">País <span style="color:#E30613">*</span></label><select id="pais" onchange="autoDDI(this.value)">
+<option value="">Selecione seu país...</option>
+<optgroup label="América do Norte"><option value="CA">🇨🇦 Canadá</option><option value="US">🇺🇸 Estados Unidos</option><option value="MX">🇲🇽 México</option></optgroup>
+<optgroup label="América Central Continental"><option value="BZ">🇧🇿 Belize</option><option value="CR">🇨🇷 Costa Rica</option><option value="SV">🇸🇻 El Salvador</option><option value="GT">🇬🇹 Guatemala</option><option value="HN">🇭🇳 Honduras</option><option value="NI">🇳🇮 Nicarágua</option><option value="PA">🇵🇦 Panamá</option></optgroup>
+<optgroup label="Caribe — Grandes Antilhas"><option value="CU">🇨🇺 Cuba</option><option value="HT">🇭🇹 Haiti</option><option value="JM">🇯🇲 Jamaica</option><option value="DO">🇩🇴 República Dominicana</option><option value="BS">🇧🇸 Bahamas</option></optgroup>
+<optgroup label="Caribe — Pequenas Antilhas"><option value="AG">🇦🇬 Antígua e Barbuda</option><option value="BB">🇧🇧 Barbados</option><option value="DM">🇩🇲 Dominica</option><option value="GD">🇬🇩 Granada</option><option value="LC">🇱🇨 Santa Lúcia</option><option value="KN">🇰🇳 São Cristóvão e Névis</option><option value="VC">🇻🇨 São Vicente e Granadinas</option><option value="TT">🇹🇹 Trinidad e Tobago</option></optgroup>
+<optgroup label="Caribe — Adm. EUA"><option value="PR">🇵🇷 Porto Rico</option><option value="VI">🇻🇮 Ilhas Virgens Americanas</option></optgroup>
+<optgroup label="Caribe — Adm. Reino Unido"><option value="AI">🇦🇮 Anguila</option><option value="BM">🇧🇲 Bermudas</option><option value="KY">🇰🇾 Ilhas Cayman</option><option value="VG">🇻🇬 Ilhas Virgens Britânicas</option><option value="MS">🇲🇸 Montserrat</option><option value="TC">🇹🇨 Turcas e Caicos</option></optgroup>
+<optgroup label="Caribe — Adm. França"><option value="GP">🇬🇵 Guadalupe</option><option value="MQ">🇲🇶 Martinica</option><option value="BL">🇧🇱 São Bartolomeu</option><option value="MF">🇲🇫 São Martinho (Norte)</option></optgroup>
+<optgroup label="Caribe — Adm. Holanda"><option value="AW">🇦🇼 Aruba</option><option value="CW">🇨🇼 Curaçao</option><option value="SX">🇸🇽 São Martinho (Sul)</option></optgroup>
+<optgroup label="América do Sul"><option value="AR">🇦🇷 Argentina</option><option value="BO">🇧🇴 Bolívia</option><option value="BR">🇧🇷 Brasil</option><option value="CL">🇨🇱 Chile</option><option value="CO">🇨🇴 Colômbia</option><option value="EC">🇪🇨 Equador</option><option value="GY">🇬🇾 Guiana</option><option value="PY">🇵🇾 Paraguai</option><option value="PE">🇵🇪 Peru</option><option value="SR">🇸🇷 Suriname</option><option value="UY">🇺🇾 Uruguai</option><option value="VE">🇻🇪 Venezuela</option></optgroup>
+<optgroup label="Ibéria"><option value="PT">🇵🇹 Portugal</option><option value="ES">🇪🇸 Espanha</option></optgroup>
+<optgroup label="Europa Ocidental"><option value="FR">🇫🇷 França</option><option value="DE">🇩🇪 Alemanha</option><option value="GB">🇬🇧 Reino Unido</option><option value="IT">🇮🇹 Itália</option><option value="NL">🇳🇱 Países Baixos</option><option value="BE">🇧🇪 Bélgica</option><option value="CH">🇨🇭 Suíça</option><option value="AT">🇦🇹 Áustria</option><option value="LU">🇱🇺 Luxemburgo</option></optgroup>
+<optgroup label="Europa do Norte"><option value="SE">🇸🇪 Suécia</option><option value="NO">🇳🇴 Noruega</option><option value="DK">🇩🇰 Dinamarca</option><option value="FI">🇫🇮 Finlândia</option><option value="IE">🇮🇪 Irlanda</option><option value="IS">🇮🇸 Islândia</option></optgroup>
+<optgroup label="Europa do Sul"><option value="GR">🇬🇷 Grécia</option><option value="HR">🇭🇷 Croácia</option><option value="RS">🇷🇸 Sérvia</option><option value="SI">🇸🇮 Eslovênia</option><option value="BA">🇧🇦 Bósnia e Herzegovina</option><option value="ME">🇲🇪 Montenegro</option><option value="MK">🇲🇰 Macedônia do Norte</option><option value="AL">🇦🇱 Albânia</option></optgroup>
+<optgroup label="Europa do Leste"><option value="PL">🇵🇱 Polônia</option><option value="CZ">🇨🇿 República Tcheca</option><option value="HU">🇭🇺 Hungria</option><option value="RO">🇷🇴 Romênia</option><option value="SK">🇸🇰 Eslováquia</option><option value="BG">🇧🇬 Bulgária</option><option value="UA">🇺🇦 Ucrânia</option><option value="MD">🇲🇩 Moldávia</option><option value="BY">🇧🇾 Bielorrússia</option></optgroup>
+<optgroup label="Países Bálticos"><option value="EE">🇪🇪 Estônia</option><option value="LV">🇱🇻 Letônia</option><option value="LT">🇱🇹 Lituânia</option></optgroup>
+<optgroup label="África — Língua Portuguesa"><option value="AO">🇦🇴 Angola</option><option value="MZ">🇲🇿 Moçambique</option><option value="CV">🇨🇻 Cabo Verde</option><option value="ST">🇸🇹 São Tomé e Príncipe</option><option value="GW">🇬🇼 Guiné-Bissau</option><option value="GQ">🇬🇶 Guiné Equatorial</option></optgroup>
+<optgroup label="África do Norte"><option value="MA">🇲🇦 Marrocos</option><option value="DZ">🇩🇿 Argélia</option><option value="TN">🇹🇳 Tunísia</option><option value="LY">🇱🇾 Líbia</option><option value="EG">🇪🇬 Egito</option><option value="SD">🇸🇩 Sudão</option></optgroup>
+<optgroup label="África Ocidental"><option value="NG">🇳🇬 Nigéria</option><option value="GH">🇬🇭 Gana</option><option value="SN">🇸🇳 Senegal</option><option value="CI">🇨🇮 Costa do Marfim</option><option value="CM">🇨🇲 Camarões</option><option value="ML">🇲🇱 Mali</option><option value="BF">🇧🇫 Burkina Faso</option><option value="GN">🇬🇳 Guiné</option><option value="NE">🇳🇪 Níger</option><option value="TG">🇹🇬 Togo</option><option value="BJ">🇧🇯 Benim</option><option value="SL">🇸🇱 Serra Leoa</option><option value="LR">🇱🇷 Libéria</option><option value="MR">🇲🇷 Mauritânia</option><option value="GM">🇬🇲 Gâmbia</option></optgroup>
+<optgroup label="África Central"><option value="CD">🇨🇩 República Democrática do Congo</option><option value="CG">🇨🇬 República do Congo</option><option value="GA">🇬🇦 Gabão</option><option value="CF">🇨🇫 República Centro-Africana</option><option value="TD">🇹🇩 Chade</option></optgroup>
+<optgroup label="África Oriental"><option value="KE">🇰🇪 Quênia</option><option value="TZ">🇹🇿 Tanzânia</option><option value="ET">🇪🇹 Etiópia</option><option value="UG">🇺🇬 Uganda</option><option value="RW">🇷🇼 Ruanda</option><option value="BI">🇧🇮 Burundi</option><option value="SO">🇸🇴 Somália</option><option value="DJ">🇩🇯 Djibuti</option><option value="ER">🇪🇷 Eritreia</option></optgroup>
+<optgroup label="África Austral"><option value="ZA">🇿🇦 África do Sul</option><option value="ZW">🇿🇼 Zimbábue</option><option value="ZM">🇿🇲 Zâmbia</option><option value="BW">🇧🇼 Botsuana</option><option value="NA">🇳🇦 Namíbia</option><option value="MW">🇲🇼 Malaui</option><option value="SZ">🇸🇿 Essuatíni</option><option value="LS">🇱🇸 Lesoto</option><option value="MG">🇲🇬 Madagascar</option></optgroup>
+<optgroup label="Golfo Pérsico"><option value="AE">🇦🇪 Emirados Árabes Unidos</option><option value="SA">🇸🇦 Arábia Saudita</option><option value="QA">🇶🇦 Catar</option><option value="KW">🇰🇼 Kuwait</option><option value="BH">🇧🇭 Bahrein</option><option value="OM">🇴🇲 Omã</option></optgroup>
+<optgroup label="Levante & Outros"><option value="IL">🇮🇱 Israel</option><option value="TR">🇹🇷 Turquia</option><option value="JO">🇯🇴 Jordânia</option><option value="LB">🇱🇧 Líbano</option><option value="IQ">🇮🇶 Iraque</option><option value="IR">🇮🇷 Irã</option><option value="SY">🇸🇾 Síria</option><option value="YE">🇾🇪 Iêmen</option><option value="PS">🇵🇸 Palestina</option></optgroup>
+<optgroup label="Cáucaso"><option value="GE">🇬🇪 Geórgia</option><option value="AM">🇦🇲 Armênia</option><option value="AZ">🇦🇿 Azerbaijão</option></optgroup>
+<optgroup label="Ásia Central"><option value="KZ">🇰🇿 Cazaquistão</option><option value="UZ">🇺🇿 Uzbequistão</option><option value="TM">🇹🇲 Turcomenistão</option><option value="KG">🇰🇬 Quirguistão</option><option value="TJ">🇹🇯 Tadjiquistão</option><option value="AF">🇦🇫 Afeganistão</option></optgroup>
+<optgroup label="Ásia do Sul"><option value="IN">🇮🇳 Índia</option><option value="PK">🇵🇰 Paquistão</option><option value="BD">🇧🇩 Bangladesh</option><option value="LK">🇱🇰 Sri Lanka</option><option value="NP">🇳🇵 Nepal</option><option value="MM">🇲🇲 Myanmar</option></optgroup>
+<optgroup label="Ásia Oriental"><option value="CN">🇨🇳 China</option><option value="JP">🇯🇵 Japão</option><option value="KR">🇰🇷 Coreia do Sul</option><option value="TW">🇹🇼 Taiwan</option><option value="HK">🇭🇰 Hong Kong</option><option value="MN">🇲🇳 Mongólia</option></optgroup>
+<optgroup label="Ásia do Sudeste"><option value="SG">🇸🇬 Singapura</option><option value="MY">🇲🇾 Malásia</option><option value="TH">🇹🇭 Tailândia</option><option value="ID">🇮🇩 Indonésia</option><option value="VN">🇻🇳 Vietnã</option><option value="PH">🇵🇭 Filipinas</option><option value="KH">🇰🇭 Camboja</option><option value="LA">🇱🇦 Laos</option><option value="BN">🇧🇳 Brunei</option><option value="TL">🇹🇱 Timor-Leste</option></optgroup>
+<optgroup label="Oceania"><option value="AU">🇦🇺 Austrália</option><option value="NZ">🇳🇿 Nova Zelândia</option><option value="PG">🇵🇬 Papua Nova Guiné</option><option value="FJ">🇫🇯 Fiji</option><option value="SB">🇸🇧 Ilhas Salomão</option><option value="VU">🇻🇺 Vanuatu</option><option value="WS">🇼🇸 Samoa</option><option value="TO">🇹🇴 Tonga</option><option value="KI">🇰🇮 Kiribati</option><option value="FM">🇫🇲 Micronésia</option><option value="PW">🇵🇼 Palau</option><option value="MH">🇲🇭 Ilhas Marshall</option><option value="NR">🇳🇷 Nauru</option><option value="TV">🇹🇻 Tuvalu</option></optgroup>
+<optgroup label="Outro"><option value="OT">🌐 Outro</option></optgroup>
+</select></div>
+    <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">Cidade <span style="color:#E30613">*</span></label><input id="cidade" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="City"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+    <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">Empresa <span style="color:#E30613">*</span></label><input id="empresa" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="Empresa onde trabalha"></div>
+    <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">E-mail <span style="color:#E30613">*</span></label><input type="email" id="email" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="email@domain.com"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <label style="font-size:12px;font-weight:500;color:#555">WhatsApp / Celular <span style="color:#E30613">*</span></label>
+      <div style="display:flex;gap:8px"><select id="ddi"><option value="+1">🇨🇦 +1</option><option value="+52">🇲🇽 +52</option><option value="+501">🇧🇿 +501</option><option value="+506">🇨🇷 +506</option><option value="+503">🇸🇻 +503</option><option value="+502">🇬🇹 +502</option><option value="+504">🇭🇳 +504</option><option value="+505">🇳🇮 +505</option><option value="+507">🇵🇦 +507</option><option value="+53">🇨🇺 +53</option><option value="+509">🇭🇹 +509</option><option value="+1-876">🇯🇲 +1-876</option><option value="+1-809">🇩🇴 +1-809</option><option value="+1-242">🇧🇸 +1-242</option><option value="+1-268">🇦🇬 +1-268</option><option value="+1-246">🇧🇧 +1-246</option><option value="+1-767">🇩🇲 +1-767</option><option value="+1-473">🇬🇩 +1-473</option><option value="+1-758">🇱🇨 +1-758</option><option value="+1-869">🇰🇳 +1-869</option><option value="+1-784">🇻🇨 +1-784</option><option value="+1-868">🇹🇹 +1-868</option><option value="+1-787">🇵🇷 +1-787</option><option value="+1-340">🇻🇮 +1-340</option><option value="+1-264">🇦🇮 +1-264</option><option value="+1-441">🇧🇲 +1-441</option><option value="+1-345">🇰🇾 +1-345</option><option value="+1-284">🇻🇬 +1-284</option><option value="+1-664">🇲🇸 +1-664</option><option value="+1-649">🇹🇨 +1-649</option><option value="+590">🇬🇵 +590</option><option value="+596">🇲🇶 +596</option><option value="+297">🇦🇼 +297</option><option value="+599">🇨🇼 +599</option><option value="+1-721">🇸🇽 +1-721</option><option value="+54">🇦🇷 +54</option><option value="+591">🇧🇴 +591</option><option value="+55">🇧🇷 +55</option><option value="+56">🇨🇱 +56</option><option value="+57">🇨🇴 +57</option><option value="+593">🇪🇨 +593</option><option value="+592">🇬🇾 +592</option><option value="+595">🇵🇾 +595</option><option value="+51">🇵🇪 +51</option><option value="+597">🇸🇷 +597</option><option value="+598">🇺🇾 +598</option><option value="+58">🇻🇪 +58</option><option value="+351">🇵🇹 +351</option><option value="+34">🇪🇸 +34</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+44">🇬🇧 +44</option><option value="+39">🇮🇹 +39</option><option value="+31">🇳🇱 +31</option><option value="+32">🇧🇪 +32</option><option value="+41">🇨🇭 +41</option><option value="+43">🇦🇹 +43</option><option value="+352">🇱🇺 +352</option><option value="+46">🇸🇪 +46</option><option value="+47">🇳🇴 +47</option><option value="+45">🇩🇰 +45</option><option value="+358">🇫🇮 +358</option><option value="+353">🇮🇪 +353</option><option value="+354">🇮🇸 +354</option><option value="+30">🇬🇷 +30</option><option value="+385">🇭🇷 +385</option><option value="+381">🇷🇸 +381</option><option value="+386">🇸🇮 +386</option><option value="+387">🇧🇦 +387</option><option value="+382">🇲🇪 +382</option><option value="+389">🇲🇰 +389</option><option value="+355">🇦🇱 +355</option><option value="+48">🇵🇱 +48</option><option value="+420">🇨🇿 +420</option><option value="+36">🇭🇺 +36</option><option value="+40">🇷🇴 +40</option><option value="+421">🇸🇰 +421</option><option value="+359">🇧🇬 +359</option><option value="+380">🇺🇦 +380</option><option value="+373">🇲🇩 +373</option><option value="+375">🇧🇾 +375</option><option value="+372">🇪🇪 +372</option><option value="+371">🇱🇻 +371</option><option value="+370">🇱🇹 +370</option><option value="+244">🇦🇴 +244</option><option value="+258">🇲🇿 +258</option><option value="+238">🇨🇻 +238</option><option value="+239">🇸🇹 +239</option><option value="+245">🇬🇼 +245</option><option value="+240">🇬🇶 +240</option><option value="+212">🇲🇦 +212</option><option value="+213">🇩🇿 +213</option><option value="+216">🇹🇳 +216</option><option value="+218">🇱🇾 +218</option><option value="+20">🇪🇬 +20</option><option value="+249">🇸🇩 +249</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+221">🇸🇳 +221</option><option value="+225">🇨🇮 +225</option><option value="+237">🇨🇲 +237</option><option value="+223">🇲🇱 +223</option><option value="+226">🇧🇫 +226</option><option value="+224">🇬🇳 +224</option><option value="+227">🇳🇪 +227</option><option value="+228">🇹🇬 +228</option><option value="+229">🇧🇯 +229</option><option value="+232">🇸🇱 +232</option><option value="+231">🇱🇷 +231</option><option value="+222">🇲🇷 +222</option><option value="+220">🇬🇲 +220</option><option value="+243">🇨🇩 +243</option><option value="+242">🇨🇬 +242</option><option value="+241">🇬🇦 +241</option><option value="+236">🇨🇫 +236</option><option value="+235">🇹🇩 +235</option><option value="+254">🇰🇪 +254</option><option value="+255">🇹🇿 +255</option><option value="+251">🇪🇹 +251</option><option value="+256">🇺🇬 +256</option><option value="+250">🇷🇼 +250</option><option value="+257">🇧🇮 +257</option><option value="+252">🇸🇴 +252</option><option value="+253">🇩🇯 +253</option><option value="+291">🇪🇷 +291</option><option value="+27">🇿🇦 +27</option><option value="+263">🇿🇼 +263</option><option value="+260">🇿🇲 +260</option><option value="+267">🇧🇼 +267</option><option value="+264">🇳🇦 +264</option><option value="+265">🇲🇼 +265</option><option value="+268">🇸🇿 +268</option><option value="+266">🇱🇸 +266</option><option value="+261">🇲🇬 +261</option><option value="+971">🇦🇪 +971</option><option value="+966">🇸🇦 +966</option><option value="+974">🇶🇦 +974</option><option value="+965">🇰🇼 +965</option><option value="+973">🇧🇭 +973</option><option value="+968">🇴🇲 +968</option><option value="+972">🇮🇱 +972</option><option value="+90">🇹🇷 +90</option><option value="+962">🇯🇴 +962</option><option value="+961">🇱🇧 +961</option><option value="+964">🇮🇶 +964</option><option value="+98">🇮🇷 +98</option><option value="+963">🇸🇾 +963</option><option value="+967">🇾🇪 +967</option><option value="+970">🇵🇸 +970</option><option value="+995">🇬🇪 +995</option><option value="+374">🇦🇲 +374</option><option value="+994">🇦🇿 +994</option><option value="+7">🇰🇿 +7</option><option value="+998">🇺🇿 +998</option><option value="+993">🇹🇲 +993</option><option value="+996">🇰🇬 +996</option><option value="+992">🇹🇯 +992</option><option value="+93">🇦🇫 +93</option><option value="+91">🇮🇳 +91</option><option value="+92">🇵🇰 +92</option><option value="+880">🇧🇩 +880</option><option value="+94">🇱🇰 +94</option><option value="+977">🇳🇵 +977</option><option value="+95">🇲🇲 +95</option><option value="+86">🇨🇳 +86</option><option value="+81">🇯🇵 +81</option><option value="+82">🇰🇷 +82</option><option value="+886">🇹🇼 +886</option><option value="+852">🇭🇰 +852</option><option value="+976">🇲🇳 +976</option><option value="+65">🇸🇬 +65</option><option value="+60">🇲🇾 +60</option><option value="+66">🇹🇭 +66</option><option value="+62">🇮🇩 +62</option><option value="+84">🇻🇳 +84</option><option value="+63">🇵🇭 +63</option><option value="+855">🇰🇭 +855</option><option value="+856">🇱🇦 +856</option><option value="+673">🇧🇳 +673</option><option value="+670">🇹🇱 +670</option><option value="+61">🇦🇺 +61</option><option value="+64">🇳🇿 +64</option><option value="+675">🇵🇬 +675</option><option value="+679">🇫🇯 +679</option><option value="+677">🇸🇧 +677</option><option value="+678">🇻🇺 +678</option><option value="+685">🇼🇸 +685</option><option value="+676">🇹🇴 +676</option><option value="+686">🇰🇮 +686</option><option value="+691">🇫🇲 +691</option><option value="+680">🇵🇼 +680</option><option value="+692">🇲🇭 +692</option><option value="+674">🇳🇷 +674</option><option value="+688">🇹🇻 +688</option></select><input type="tel" id="whats" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box;flex:1;min-width:0" placeholder="99 99999-9999"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">LinkedIn</label><input type="url" id="linkedin" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="linkedin.com/in/seuperfil"></div>
+  </div>
+</div>
+
+<!-- ÁREA DE ATUAÇÃO -->
+<div style="background:#fff;border:1px solid #E4E4E4;border-radius:8px;padding:1.5rem;margin-bottom:1.25rem;box-shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.05)">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.65rem;border-bottom:1px solid #E4E4E4">
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">
+      <i class="ti ti-map-pin" style="color:#E30613"></i> Área de Atuação — Clientes e Projetos
+    </div>
+    <button class="btn-add-proj" onclick="addProjeto()">
+      <i class="ti ti-plus"></i> Adicionar projeto
+    </button>
+  </div>
+  <p style="font-size:12px;color:#555;margin-bottom:1rem">Adicione um ou mais projetos relacionados aos seus clientes. O status indica a fase atual de cada projeto.</p>
+  <div id="projetos-container"></div>
+  <div class="proj-dica">
+    <i class="ti ti-info-circle" style="color:#3B82F6"></i>
+    <strong>Dica:</strong> Use o título do projeto para identificar rapidamente cada iniciativa. Você pode adicionar quantos projetos precisar.
+  </div>
+</div>
+
+<!-- ERROR -->
+<div id="error-box" style="display:none;background:#FDECEE;border:1px solid #FAD4D7;border-left:3px solid #E30613;border-radius:4px;padding:.75rem 1rem;gap:8px;align-items:center;margin-bottom:1rem;font-size:12px;color:#B30410">
+  <i class="ti ti-alert-circle"></i> <span id="error-msg"></span>
+</div>
+
+<!-- FOOTER -->
+<div style="display:flex;justify-content:flex-end;gap:10px;margin-top:1rem">
+  <button id="btn-rascunho" onclick="salvarRascunho()" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:1px solid #C8C8C8;background:#fff;color:#2C2C2C;transition:all .15s">
+    <i class="ti ti-download"></i> Salvar rascunho
+  </button>
+  <button id="btn-enviar" onclick="enviar()" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;background:#E30613;color:#fff;min-width:170px;justify-content:center;transition:background .15s">
+    <i class="ti ti-send" id="btn-icon"></i> <span id="btn-label">Enviar cadastro</span>
+  </button>
+</div>
+
+</div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbz3sokUShIvH1eYGiVBNbNHw1hTsaIPxnUpZ59tHodrCzmn53U6pHoxZPl9TkpTLoAaVw/exec';
+const DDI_MAP = {
+  "CA":"+1",
+  "US":"+1",
+  "MX":"+52",
+  "BZ":"+501",
+  "CR":"+506",
+  "SV":"+503",
+  "GT":"+502",
+  "HN":"+504",
+  "NI":"+505",
+  "PA":"+507",
+  "CU":"+53",
+  "HT":"+509",
+  "JM":"+1-876",
+  "DO":"+1-809",
+  "BS":"+1-242",
+  "AG":"+1-268",
+  "BB":"+1-246",
+  "DM":"+1-767",
+  "GD":"+1-473",
+  "LC":"+1-758",
+  "KN":"+1-869",
+  "VC":"+1-784",
+  "TT":"+1-868",
+  "PR":"+1-787",
+  "VI":"+1-340",
+  "AI":"+1-264",
+  "BM":"+1-441",
+  "KY":"+1-345",
+  "VG":"+1-284",
+  "MS":"+1-664",
+  "TC":"+1-649",
+  "GP":"+590",
+  "MQ":"+596",
+  "BL":"+590",
+  "MF":"+590",
+  "AW":"+297",
+  "CW":"+599",
+  "SX":"+1-721",
+  "AR":"+54",
+  "BO":"+591",
+  "BR":"+55",
+  "CL":"+56",
+  "CO":"+57",
+  "EC":"+593",
+  "GY":"+592",
+  "PY":"+595",
+  "PE":"+51",
+  "SR":"+597",
+  "UY":"+598",
+  "VE":"+58",
+  "PT":"+351",
+  "ES":"+34",
+  "FR":"+33",
+  "DE":"+49",
+  "GB":"+44",
+  "IT":"+39",
+  "NL":"+31",
+  "BE":"+32",
+  "CH":"+41",
+  "AT":"+43",
+  "LU":"+352",
+  "SE":"+46",
+  "NO":"+47",
+  "DK":"+45",
+  "FI":"+358",
+  "IE":"+353",
+  "IS":"+354",
+  "GR":"+30",
+  "HR":"+385",
+  "RS":"+381",
+  "SI":"+386",
+  "BA":"+387",
+  "ME":"+382",
+  "MK":"+389",
+  "AL":"+355",
+  "PL":"+48",
+  "CZ":"+420",
+  "HU":"+36",
+  "RO":"+40",
+  "SK":"+421",
+  "BG":"+359",
+  "UA":"+380",
+  "MD":"+373",
+  "BY":"+375",
+  "EE":"+372",
+  "LV":"+371",
+  "LT":"+370",
+  "AO":"+244",
+  "MZ":"+258",
+  "CV":"+238",
+  "ST":"+239",
+  "GW":"+245",
+  "GQ":"+240",
+  "MA":"+212",
+  "DZ":"+213",
+  "TN":"+216",
+  "LY":"+218",
+  "EG":"+20",
+  "SD":"+249",
+  "NG":"+234",
+  "GH":"+233",
+  "SN":"+221",
+  "CI":"+225",
+  "CM":"+237",
+  "ML":"+223",
+  "BF":"+226",
+  "GN":"+224",
+  "NE":"+227",
+  "TG":"+228",
+  "BJ":"+229",
+  "SL":"+232",
+  "LR":"+231",
+  "MR":"+222",
+  "GM":"+220",
+  "CD":"+243",
+  "CG":"+242",
+  "GA":"+241",
+  "CF":"+236",
+  "TD":"+235",
+  "KE":"+254",
+  "TZ":"+255",
+  "ET":"+251",
+  "UG":"+256",
+  "RW":"+250",
+  "BI":"+257",
+  "SO":"+252",
+  "DJ":"+253",
+  "ER":"+291",
+  "ZA":"+27",
+  "ZW":"+263",
+  "ZM":"+260",
+  "BW":"+267",
+  "NA":"+264",
+  "MW":"+265",
+  "SZ":"+268",
+  "LS":"+266",
+  "MG":"+261",
+  "AE":"+971",
+  "SA":"+966",
+  "QA":"+974",
+  "KW":"+965",
+  "BH":"+973",
+  "OM":"+968",
+  "IL":"+972",
+  "TR":"+90",
+  "JO":"+962",
+  "LB":"+961",
+  "IQ":"+964",
+  "IR":"+98",
+  "SY":"+963",
+  "YE":"+967",
+  "PS":"+970",
+  "GE":"+995",
+  "AM":"+374",
+  "AZ":"+994",
+  "KZ":"+7",
+  "UZ":"+998",
+  "TM":"+993",
+  "KG":"+996",
+  "TJ":"+992",
+  "AF":"+93",
+  "IN":"+91",
+  "PK":"+92",
+  "BD":"+880",
+  "LK":"+94",
+  "NP":"+977",
+  "MM":"+95",
+  "CN":"+86",
+  "JP":"+81",
+  "KR":"+82",
+  "TW":"+886",
+  "HK":"+852",
+  "MN":"+976",
+  "SG":"+65",
+  "MY":"+60",
+  "TH":"+66",
+  "ID":"+62",
+  "VN":"+84",
+  "PH":"+63",
+  "KH":"+855",
+  "LA":"+856",
+  "BN":"+673",
+  "TL":"+670",
+  "AU":"+61",
+  "NZ":"+64",
+  "PG":"+675",
+  "FJ":"+679",
+  "SB":"+677",
+  "VU":"+678",
+  "WS":"+685",
+  "TO":"+676",
+  "KI":"+686",
+  "FM":"+691",
+  "PW":"+680",
+  "MH":"+692",
+  "NR":"+674",
+  "TV":"+688",
+};
+const VERTICAIS = ['Logística','Energia','Telecom','Mineração','Oil & Gas','Automação Industrial','Varejo','Segurança','Outro'];
+const PRODUTOS = ['CADEADO PAD-I','CADEADO PAD-C','CADEADO PAD-C IOT','UNILOCK COVER IOT','MÓDULO UNILOCK ONE IOT','MÓDULO UNILOCK ONE WIFI'];
+const APLICACOES = ['Storage','Logística Last-Mile','Frotas / Caminhões','E-commerce','Portaria','Canteiro de Obras','Datacenter','Varejo','Manutenção','Outro'];
+const STATUS_OPTS = [
+  {v:'',             l:'— status —'},
+  {v:'PROSPECCAO',   l:'🔵 Prospecção'},
+  {v:'OPORTUNIDADE', l:'🟡 Oportunidade'},
+  {v:'POC',          l:'🟠 POC / Piloto'},
+  {v:'PROPOSTA',     l:'🟣 Proposta'},
+  {v:'PROJETO_ATIVO',l:'🟢 Projeto Ativo'},
+  {v:'HOMOLOGACAO',  l:'🔷 Homologação'},
+  {v:'CERTIFICACAO', l:'📋 Certificação'},
+  {v:'EM_PAUSA',     l:'⚫ Em Pausa'},
+  {v:'PERDIDO',      l:'🔴 Perdido'},
+];
+
+const PAISES_DATA = [
+  {iso:'CA',nome:'Canadá',flag:'🇨🇦',sub:'América do Norte'},
+  {iso:'US',nome:'Estados Unidos',flag:'🇺🇸',sub:'América do Norte'},
+  {iso:'MX',nome:'México',flag:'🇲🇽',sub:'América do Norte'},
+  {iso:'BZ',nome:'Belize',flag:'🇧🇿',sub:'América Central Continental'},
+  {iso:'CR',nome:'Costa Rica',flag:'🇨🇷',sub:'América Central Continental'},
+  {iso:'SV',nome:'El Salvador',flag:'🇸🇻',sub:'América Central Continental'},
+  {iso:'GT',nome:'Guatemala',flag:'🇬🇹',sub:'América Central Continental'},
+  {iso:'HN',nome:'Honduras',flag:'🇭🇳',sub:'América Central Continental'},
+  {iso:'NI',nome:'Nicarágua',flag:'🇳🇮',sub:'América Central Continental'},
+  {iso:'PA',nome:'Panamá',flag:'🇵🇦',sub:'América Central Continental'},
+  {iso:'CU',nome:'Cuba',flag:'🇨🇺',sub:'Caribe — Grandes Antilhas'},
+  {iso:'HT',nome:'Haiti',flag:'🇭🇹',sub:'Caribe — Grandes Antilhas'},
+  {iso:'JM',nome:'Jamaica',flag:'🇯🇲',sub:'Caribe — Grandes Antilhas'},
+  {iso:'DO',nome:'República Dominicana',flag:'🇩🇴',sub:'Caribe — Grandes Antilhas'},
+  {iso:'BS',nome:'Bahamas',flag:'🇧🇸',sub:'Caribe — Grandes Antilhas'},
+  {iso:'AG',nome:'Antígua e Barbuda',flag:'🇦🇬',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'BB',nome:'Barbados',flag:'🇧🇧',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'DM',nome:'Dominica',flag:'🇩🇲',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'GD',nome:'Granada',flag:'🇬🇩',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'LC',nome:'Santa Lúcia',flag:'🇱🇨',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'KN',nome:'São Cristóvão e Névis',flag:'🇰🇳',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'VC',nome:'São Vicente e Granadinas',flag:'🇻🇨',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'TT',nome:'Trinidad e Tobago',flag:'🇹🇹',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'PR',nome:'Porto Rico',flag:'🇵🇷',sub:'Caribe — Adm. EUA'},
+  {iso:'VI',nome:'Ilhas Virgens Americanas',flag:'🇻🇮',sub:'Caribe — Adm. EUA'},
+  {iso:'AI',nome:'Anguila',flag:'🇦🇮',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'BM',nome:'Bermudas',flag:'🇧🇲',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'KY',nome:'Ilhas Cayman',flag:'🇰🇾',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'VG',nome:'Ilhas Virgens Britânicas',flag:'🇻🇬',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'MS',nome:'Montserrat',flag:'🇲🇸',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'TC',nome:'Turcas e Caicos',flag:'🇹🇨',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'GP',nome:'Guadalupe',flag:'🇬🇵',sub:'Caribe — Adm. França'},
+  {iso:'MQ',nome:'Martinica',flag:'🇲🇶',sub:'Caribe — Adm. França'},
+  {iso:'BL',nome:'São Bartolomeu',flag:'🇧🇱',sub:'Caribe — Adm. França'},
+  {iso:'MF',nome:'São Martinho (Norte)',flag:'🇲🇫',sub:'Caribe — Adm. França'},
+  {iso:'AW',nome:'Aruba',flag:'🇦🇼',sub:'Caribe — Adm. Holanda'},
+  {iso:'CW',nome:'Curaçao',flag:'🇨🇼',sub:'Caribe — Adm. Holanda'},
+  {iso:'SX',nome:'São Martinho (Sul)',flag:'🇸🇽',sub:'Caribe — Adm. Holanda'},
+  {iso:'AR',nome:'Argentina',flag:'🇦🇷',sub:'América do Sul'},
+  {iso:'BO',nome:'Bolívia',flag:'🇧🇴',sub:'América do Sul'},
+  {iso:'BR',nome:'Brasil',flag:'🇧🇷',sub:'América do Sul'},
+  {iso:'CL',nome:'Chile',flag:'🇨🇱',sub:'América do Sul'},
+  {iso:'CO',nome:'Colômbia',flag:'🇨🇴',sub:'América do Sul'},
+  {iso:'EC',nome:'Equador',flag:'🇪🇨',sub:'América do Sul'},
+  {iso:'GY',nome:'Guiana',flag:'🇬🇾',sub:'América do Sul'},
+  {iso:'PY',nome:'Paraguai',flag:'🇵🇾',sub:'América do Sul'},
+  {iso:'PE',nome:'Peru',flag:'🇵🇪',sub:'América do Sul'},
+  {iso:'SR',nome:'Suriname',flag:'🇸🇷',sub:'América do Sul'},
+  {iso:'UY',nome:'Uruguai',flag:'🇺🇾',sub:'América do Sul'},
+  {iso:'VE',nome:'Venezuela',flag:'🇻🇪',sub:'América do Sul'},
+  {iso:'PT',nome:'Portugal',flag:'🇵🇹',sub:'Ibéria'},
+  {iso:'ES',nome:'Espanha',flag:'🇪🇸',sub:'Ibéria'},
+  {iso:'FR',nome:'França',flag:'🇫🇷',sub:'Europa Ocidental'},
+  {iso:'DE',nome:'Alemanha',flag:'🇩🇪',sub:'Europa Ocidental'},
+  {iso:'GB',nome:'Reino Unido',flag:'🇬🇧',sub:'Europa Ocidental'},
+  {iso:'IT',nome:'Itália',flag:'🇮🇹',sub:'Europa Ocidental'},
+  {iso:'NL',nome:'Países Baixos',flag:'🇳🇱',sub:'Europa Ocidental'},
+  {iso:'BE',nome:'Bélgica',flag:'🇧🇪',sub:'Europa Ocidental'},
+  {iso:'CH',nome:'Suíça',flag:'🇨🇭',sub:'Europa Ocidental'},
+  {iso:'AT',nome:'Áustria',flag:'🇦🇹',sub:'Europa Ocidental'},
+  {iso:'LU',nome:'Luxemburgo',flag:'🇱🇺',sub:'Europa Ocidental'},
+  {iso:'SE',nome:'Suécia',flag:'🇸🇪',sub:'Europa do Norte'},
+  {iso:'NO',nome:'Noruega',flag:'🇳🇴',sub:'Europa do Norte'},
+  {iso:'DK',nome:'Dinamarca',flag:'🇩🇰',sub:'Europa do Norte'},
+  {iso:'FI',nome:'Finlândia',flag:'🇫🇮',sub:'Europa do Norte'},
+  {iso:'IE',nome:'Irlanda',flag:'🇮🇪',sub:'Europa do Norte'},
+  {iso:'IS',nome:'Islândia',flag:'🇮🇸',sub:'Europa do Norte'},
+  {iso:'GR',nome:'Grécia',flag:'🇬🇷',sub:'Europa do Sul'},
+  {iso:'HR',nome:'Croácia',flag:'🇭🇷',sub:'Europa do Sul'},
+  {iso:'RS',nome:'Sérvia',flag:'🇷🇸',sub:'Europa do Sul'},
+  {iso:'SI',nome:'Eslovênia',flag:'🇸🇮',sub:'Europa do Sul'},
+  {iso:'BA',nome:'Bósnia e Herzegovina',flag:'🇧🇦',sub:'Europa do Sul'},
+  {iso:'ME',nome:'Montenegro',flag:'🇲🇪',sub:'Europa do Sul'},
+  {iso:'MK',nome:'Macedônia do Norte',flag:'🇲🇰',sub:'Europa do Sul'},
+  {iso:'AL',nome:'Albânia',flag:'🇦🇱',sub:'Europa do Sul'},
+  {iso:'PL',nome:'Polônia',flag:'🇵🇱',sub:'Europa do Leste'},
+  {iso:'CZ',nome:'República Tcheca',flag:'🇨🇿',sub:'Europa do Leste'},
+  {iso:'HU',nome:'Hungria',flag:'🇭🇺',sub:'Europa do Leste'},
+  {iso:'RO',nome:'Romênia',flag:'🇷🇴',sub:'Europa do Leste'},
+  {iso:'SK',nome:'Eslováquia',flag:'🇸🇰',sub:'Europa do Leste'},
+  {iso:'BG',nome:'Bulgária',flag:'🇧🇬',sub:'Europa do Leste'},
+  {iso:'UA',nome:'Ucrânia',flag:'🇺🇦',sub:'Europa do Leste'},
+  {iso:'MD',nome:'Moldávia',flag:'🇲🇩',sub:'Europa do Leste'},
+  {iso:'BY',nome:'Bielorrússia',flag:'🇧🇾',sub:'Europa do Leste'},
+  {iso:'EE',nome:'Estônia',flag:'🇪🇪',sub:'Países Bálticos'},
+  {iso:'LV',nome:'Letônia',flag:'🇱🇻',sub:'Países Bálticos'},
+  {iso:'LT',nome:'Lituânia',flag:'🇱🇹',sub:'Países Bálticos'},
+  {iso:'AO',nome:'Angola',flag:'🇦🇴',sub:'África — Língua Portuguesa'},
+  {iso:'MZ',nome:'Moçambique',flag:'🇲🇿',sub:'África — Língua Portuguesa'},
+  {iso:'CV',nome:'Cabo Verde',flag:'🇨🇻',sub:'África — Língua Portuguesa'},
+  {iso:'ST',nome:'São Tomé e Príncipe',flag:'🇸🇹',sub:'África — Língua Portuguesa'},
+  {iso:'GW',nome:'Guiné-Bissau',flag:'🇬🇼',sub:'África — Língua Portuguesa'},
+  {iso:'GQ',nome:'Guiné Equatorial',flag:'🇬🇶',sub:'África — Língua Portuguesa'},
+  {iso:'MA',nome:'Marrocos',flag:'🇲🇦',sub:'África do Norte'},
+  {iso:'DZ',nome:'Argélia',flag:'🇩🇿',sub:'África do Norte'},
+  {iso:'TN',nome:'Tunísia',flag:'🇹🇳',sub:'África do Norte'},
+  {iso:'LY',nome:'Líbia',flag:'🇱🇾',sub:'África do Norte'},
+  {iso:'EG',nome:'Egito',flag:'🇪🇬',sub:'África do Norte'},
+  {iso:'SD',nome:'Sudão',flag:'🇸🇩',sub:'África do Norte'},
+  {iso:'NG',nome:'Nigéria',flag:'🇳🇬',sub:'África Ocidental'},
+  {iso:'GH',nome:'Gana',flag:'🇬🇭',sub:'África Ocidental'},
+  {iso:'SN',nome:'Senegal',flag:'🇸🇳',sub:'África Ocidental'},
+  {iso:'CI',nome:'Costa do Marfim',flag:'🇨🇮',sub:'África Ocidental'},
+  {iso:'CM',nome:'Camarões',flag:'🇨🇲',sub:'África Ocidental'},
+  {iso:'ML',nome:'Mali',flag:'🇲🇱',sub:'África Ocidental'},
+  {iso:'BF',nome:'Burkina Faso',flag:'🇧🇫',sub:'África Ocidental'},
+  {iso:'GN',nome:'Guiné',flag:'🇬🇳',sub:'África Ocidental'},
+  {iso:'NE',nome:'Níger',flag:'🇳🇪',sub:'África Ocidental'},
+  {iso:'TG',nome:'Togo',flag:'🇹🇬',sub:'África Ocidental'},
+  {iso:'BJ',nome:'Benim',flag:'🇧🇯',sub:'África Ocidental'},
+  {iso:'SL',nome:'Serra Leoa',flag:'🇸🇱',sub:'África Ocidental'},
+  {iso:'LR',nome:'Libéria',flag:'🇱🇷',sub:'África Ocidental'},
+  {iso:'MR',nome:'Mauritânia',flag:'🇲🇷',sub:'África Ocidental'},
+  {iso:'GM',nome:'Gâmbia',flag:'🇬🇲',sub:'África Ocidental'},
+  {iso:'CD',nome:'República Democrática do Congo',flag:'🇨🇩',sub:'África Central'},
+  {iso:'CG',nome:'República do Congo',flag:'🇨🇬',sub:'África Central'},
+  {iso:'GA',nome:'Gabão',flag:'🇬🇦',sub:'África Central'},
+  {iso:'CF',nome:'República Centro-Africana',flag:'🇨🇫',sub:'África Central'},
+  {iso:'TD',nome:'Chade',flag:'🇹🇩',sub:'África Central'},
+  {iso:'KE',nome:'Quênia',flag:'🇰🇪',sub:'África Oriental'},
+  {iso:'TZ',nome:'Tanzânia',flag:'🇹🇿',sub:'África Oriental'},
+  {iso:'ET',nome:'Etiópia',flag:'🇪🇹',sub:'África Oriental'},
+  {iso:'UG',nome:'Uganda',flag:'🇺🇬',sub:'África Oriental'},
+  {iso:'RW',nome:'Ruanda',flag:'🇷🇼',sub:'África Oriental'},
+  {iso:'BI',nome:'Burundi',flag:'🇧🇮',sub:'África Oriental'},
+  {iso:'SO',nome:'Somália',flag:'🇸🇴',sub:'África Oriental'},
+  {iso:'DJ',nome:'Djibuti',flag:'🇩🇯',sub:'África Oriental'},
+  {iso:'ER',nome:'Eritreia',flag:'🇪🇷',sub:'África Oriental'},
+  {iso:'ZA',nome:'África do Sul',flag:'🇿🇦',sub:'África Austral'},
+  {iso:'ZW',nome:'Zimbábue',flag:'🇿🇼',sub:'África Austral'},
+  {iso:'ZM',nome:'Zâmbia',flag:'🇿🇲',sub:'África Austral'},
+  {iso:'BW',nome:'Botsuana',flag:'🇧🇼',sub:'África Austral'},
+  {iso:'NA',nome:'Namíbia',flag:'🇳🇦',sub:'África Austral'},
+  {iso:'MW',nome:'Malaui',flag:'🇲🇼',sub:'África Austral'},
+  {iso:'SZ',nome:'Essuatíni',flag:'🇸🇿',sub:'África Austral'},
+  {iso:'LS',nome:'Lesoto',flag:'🇱🇸',sub:'África Austral'},
+  {iso:'MG',nome:'Madagascar',flag:'🇲🇬',sub:'África Austral'},
+  {iso:'AE',nome:'Emirados Árabes Unidos',flag:'🇦🇪',sub:'Golfo Pérsico'},
+  {iso:'SA',nome:'Arábia Saudita',flag:'🇸🇦',sub:'Golfo Pérsico'},
+  {iso:'QA',nome:'Catar',flag:'🇶🇦',sub:'Golfo Pérsico'},
+  {iso:'KW',nome:'Kuwait',flag:'🇰🇼',sub:'Golfo Pérsico'},
+  {iso:'BH',nome:'Bahrein',flag:'🇧🇭',sub:'Golfo Pérsico'},
+  {iso:'OM',nome:'Omã',flag:'🇴🇲',sub:'Golfo Pérsico'},
+  {iso:'IL',nome:'Israel',flag:'🇮🇱',sub:'Levante & Outros'},
+  {iso:'TR',nome:'Turquia',flag:'🇹🇷',sub:'Levante & Outros'},
+  {iso:'JO',nome:'Jordânia',flag:'🇯🇴',sub:'Levante & Outros'},
+  {iso:'LB',nome:'Líbano',flag:'🇱🇧',sub:'Levante & Outros'},
+  {iso:'IQ',nome:'Iraque',flag:'🇮🇶',sub:'Levante & Outros'},
+  {iso:'IR',nome:'Irã',flag:'🇮🇷',sub:'Levante & Outros'},
+  {iso:'SY',nome:'Síria',flag:'🇸🇾',sub:'Levante & Outros'},
+  {iso:'YE',nome:'Iêmen',flag:'🇾🇪',sub:'Levante & Outros'},
+  {iso:'PS',nome:'Palestina',flag:'🇵🇸',sub:'Levante & Outros'},
+  {iso:'GE',nome:'Geórgia',flag:'🇬🇪',sub:'Cáucaso'},
+  {iso:'AM',nome:'Armênia',flag:'🇦🇲',sub:'Cáucaso'},
+  {iso:'AZ',nome:'Azerbaijão',flag:'🇦🇿',sub:'Cáucaso'},
+  {iso:'KZ',nome:'Cazaquistão',flag:'🇰🇿',sub:'Ásia Central'},
+  {iso:'UZ',nome:'Uzbequistão',flag:'🇺🇿',sub:'Ásia Central'},
+  {iso:'TM',nome:'Turcomenistão',flag:'🇹🇲',sub:'Ásia Central'},
+  {iso:'KG',nome:'Quirguistão',flag:'🇰🇬',sub:'Ásia Central'},
+  {iso:'TJ',nome:'Tadjiquistão',flag:'🇹🇯',sub:'Ásia Central'},
+  {iso:'AF',nome:'Afeganistão',flag:'🇦🇫',sub:'Ásia Central'},
+  {iso:'IN',nome:'Índia',flag:'🇮🇳',sub:'Ásia do Sul'},
+  {iso:'PK',nome:'Paquistão',flag:'🇵🇰',sub:'Ásia do Sul'},
+  {iso:'BD',nome:'Bangladesh',flag:'🇧🇩',sub:'Ásia do Sul'},
+  {iso:'LK',nome:'Sri Lanka',flag:'🇱🇰',sub:'Ásia do Sul'},
+  {iso:'NP',nome:'Nepal',flag:'🇳🇵',sub:'Ásia do Sul'},
+  {iso:'MM',nome:'Myanmar',flag:'🇲🇲',sub:'Ásia do Sul'},
+  {iso:'CN',nome:'China',flag:'🇨🇳',sub:'Ásia Oriental'},
+  {iso:'JP',nome:'Japão',flag:'🇯🇵',sub:'Ásia Oriental'},
+  {iso:'KR',nome:'Coreia do Sul',flag:'🇰🇷',sub:'Ásia Oriental'},
+  {iso:'TW',nome:'Taiwan',flag:'🇹🇼',sub:'Ásia Oriental'},
+  {iso:'HK',nome:'Hong Kong',flag:'🇭🇰',sub:'Ásia Oriental'},
+  {iso:'MN',nome:'Mongólia',flag:'🇲🇳',sub:'Ásia Oriental'},
+  {iso:'SG',nome:'Singapura',flag:'🇸🇬',sub:'Ásia do Sudeste'},
+  {iso:'MY',nome:'Malásia',flag:'🇲🇾',sub:'Ásia do Sudeste'},
+  {iso:'TH',nome:'Tailândia',flag:'🇹🇭',sub:'Ásia do Sudeste'},
+  {iso:'ID',nome:'Indonésia',flag:'🇮🇩',sub:'Ásia do Sudeste'},
+  {iso:'VN',nome:'Vietnã',flag:'🇻🇳',sub:'Ásia do Sudeste'},
+  {iso:'PH',nome:'Filipinas',flag:'🇵🇭',sub:'Ásia do Sudeste'},
+  {iso:'KH',nome:'Camboja',flag:'🇰🇭',sub:'Ásia do Sudeste'},
+  {iso:'LA',nome:'Laos',flag:'🇱🇦',sub:'Ásia do Sudeste'},
+  {iso:'BN',nome:'Brunei',flag:'🇧🇳',sub:'Ásia do Sudeste'},
+  {iso:'TL',nome:'Timor-Leste',flag:'🇹🇱',sub:'Ásia do Sudeste'},
+  {iso:'AU',nome:'Austrália',flag:'🇦🇺',sub:'Oceania'},
+  {iso:'NZ',nome:'Nova Zelândia',flag:'🇳🇿',sub:'Oceania'},
+  {iso:'PG',nome:'Papua Nova Guiné',flag:'🇵🇬',sub:'Oceania'},
+  {iso:'FJ',nome:'Fiji',flag:'🇫🇯',sub:'Oceania'},
+  {iso:'SB',nome:'Ilhas Salomão',flag:'🇸🇧',sub:'Oceania'},
+  {iso:'VU',nome:'Vanuatu',flag:'🇻🇺',sub:'Oceania'},
+  {iso:'WS',nome:'Samoa',flag:'🇼🇸',sub:'Oceania'},
+  {iso:'TO',nome:'Tonga',flag:'🇹🇴',sub:'Oceania'},
+  {iso:'KI',nome:'Kiribati',flag:'🇰🇮',sub:'Oceania'},
+  {iso:'FM',nome:'Micronésia',flag:'🇫🇲',sub:'Oceania'},
+  {iso:'PW',nome:'Palau',flag:'🇵🇼',sub:'Oceania'},
+  {iso:'MH',nome:'Ilhas Marshall',flag:'🇲🇭',sub:'Oceania'},
+  {iso:'NR',nome:'Nauru',flag:'🇳🇷',sub:'Oceania'},
+  {iso:'TV',nome:'Tuvalu',flag:'🇹🇻',sub:'Oceania'},
+];
+
+const AREAS_CLIENTE = ['TI / Tecnologia','Segurança','Engenharia','Logística','Facilities','Operações','Compras / Procurement','Projetos','Manutenção','P&D','Jurídico','Financeiro','Diretoria','Outro'];
+
+function buildPaisOptions(current) {
+  const subsSeen = [];
+  let h = '<option value="">— país —</option>';
+  PAISES_DATA.forEach(p => {
+    if (!subsSeen.includes(p.sub)) {
+      if (subsSeen.length > 0) h += '</optgroup>';
+      h += '<optgroup label="' + p.sub + '">';
+      subsSeen.push(p.sub);
+    }
+    const sel = (current === p.nome || current === p.iso) ? ' selected' : '';
+    h += '<option value="' + p.iso + '"' + sel + '>' + p.flag + ' ' + p.nome + '</option>';
+  });
+  if (subsSeen.length > 0) h += '</optgroup>';
+  h += '<optgroup label="Outro"><option value="OT"' + (current==="Outro"?' selected':'') + '>🌐 Outro</option></optgroup>';
+  return h;
+}
+
+let rowId=0, linhas=[], repToken=null, repId=null;
+
+// ── IDENTITY ─────────────────────────────────────────────────
+(function init(){ try {
+  const params  = new URLSearchParams(window.location.search);
+  const tokenURL = params.get('token');
+  const tokenLS  = localStorage.getItem('promont_rep_token');
+  const token    = tokenURL || tokenLS;
+  if (token) carregarPerfil(token);
+  else { addProjeto(); document.getElementById('recovery-toggle').style.display='block'; }
+  } catch(initErr) {
+    console.error('init error:', initErr);
+    if (!linhas || !linhas.length) addProjeto();
+    document.getElementById('recovery-toggle').style.display = 'block';
+  }
+})();
+
+async function carregarPerfil(token) {
+  try {
+    const resp = await fetch(APPS_URL + '?action=getProfile&token=' + token);
+    const json = await resp.json();
+    if (json.status === 'ok') {
+      repToken = token; repId = json.perfil.repId;
+      localStorage.setItem('promont_rep_token', token);
+      preencherPerfil(json.perfil);
+      linhas = json.atividades && json.atividades.length > 0
+        ? json.atividades.map(a => ({id:'r'+(rowId++),pais:a.pais||'',cliente:a.cliente||'',area:a.area||'',prods:a.produtos||[],qtd:a.qtd||'',projs:a.projetos||[],status:a.status||'PROSPECCAO',obs:a.obs||''}))
+        : [];
+      renderLinhas();
+      if (!linhas.length) addProjeto();
+      document.getElementById('welcome-banner').style.display = 'flex';
+      document.getElementById('welcome-ini').textContent = ini((json.perfil.nome||'')+' '+(json.perfil.sobrenome||''));
+      document.getElementById('welcome-name').textContent = 'Olá, ' + json.perfil.nome + '!';
+      document.getElementById('welcome-empresa').textContent = (json.perfil.empresa||'') + ' · ' + (json.perfil.pais||'');
+      document.getElementById('welcome-repid').textContent = json.perfil.repId;
+      document.getElementById('page-title').textContent = 'Atualizar Cadastro';
+      document.getElementById('page-sub').textContent = 'Seus dados foram carregados. Atualize seus projetos ou informações.';
+      document.getElementById('btn-label').textContent = 'Salvar atualização';
+    } else {
+      localStorage.removeItem('promont_rep_token');
+      if (!linhas || !linhas.length) addProjeto();
+      document.getElementById('recovery-toggle').style.display = 'block';
+    }
+  } catch(e) {
+    console.error('carregarPerfil error:', e);
+    localStorage.removeItem('promont_rep_token');
+    if (!linhas || !linhas.length) addProjeto();
+    document.getElementById('recovery-toggle').style.display = 'block';
+  }
+}
+
+function preencherPerfil(p) {
+  sv('nome',p.nome); sv('sobrenome',p.sobrenome); sv('cidade',p.cidade);
+  sv('empresa',p.empresa); sv('email',p.email); sv('linkedin',p.linkedin||'');
+  // País
+  const ps = document.getElementById('pais');
+  for (let o of ps.options) { if (o.value===p.pais) { ps.value=p.pais; break; } }
+  // Telefone
+  const tel = p.telefone||'';
+  const m = tel.match(/^(\+[\d-]+)\s(.+)$/);
+  if (m) { document.getElementById('ddi').value=m[1]; sv('whats',m[2]); }
+  else sv('whats',tel.replace(/^'/,''));
+}
+
+// ── RECOVERY ─────────────────────────────────────────────────
+function toggleRecovery() {
+  const s = document.getElementById('recovery-section');
+  s.style.display = s.style.display==='none'||!s.style.display ? 'block' : 'none';
+}
+async function recuperarAcesso() {
+  const q = gv('recovery-query');
+  const msg = document.getElementById('recovery-msg');
+  if (!q) return;
+  msg.style.display='block'; msg.style.color='#555'; msg.textContent='Buscando...';
+  try {
+    const url = APPS_URL + '?action=recoverAccess&query=' + encodeURIComponent(q);
+    const resp = await fetch(url);
+    const json = await resp.json();
+    msg.style.color = json.status==='ok' ? '#166534' : '#B30410';
+    msg.textContent = (json.status==='ok'?'✅ ':'⚠️ ') + json.message;
+  } catch(e) { msg.style.color='#B30410'; msg.textContent='Erro de conexão.'; }
+}
+
+// ── LINHAS ────────────────────────────────────────────────────
+function addProjeto(src) {
+  const proj = src ? {
+    ...src,
+    id: 'p'+(rowId++),
+    prods: [...(src.prods||[])],
+    collapsed: false
+  } : {
+    id: 'p'+(rowId++),
+    titulo: '', pais: '', cliente: '',
+    vertical: '', areaCli: '', aplicacao: '',
+    prods: [], obs: '', status: '',
+    collapsed: false
+  };
+  linhas.push(proj);
+  renderProjetos();
+  // Scroll para o novo card
+  setTimeout(() => {
+    const el = document.getElementById('proj-' + proj.id);
+    if (el && el.scrollIntoView) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }, 50);
+}
+
+// Manter compatibilidade com o nome antigo
+function addLinha() { addProjeto(); }
+
+function removeProjeto(id) {
+  linhas = linhas.filter(p => p.id !== id);
+  renderProjetos();
+}
+
+function dupProjeto(id) {
+  const src = linhas.find(p => p.id === id);
+  const idx = linhas.indexOf(src);
+  const copy = {...src, id:'p'+(rowId++), prods:[...src.prods], titulo: src.titulo ? src.titulo + ' (cópia)' : '', collapsed:false};
+  linhas.splice(idx+1, 0, copy);
+  renderProjetos();
+}
+
+function toggleProjeto(id) {
+  const p = linhas.find(p => p.id === id);
+  if (p) { p.collapsed = !p.collapsed; renderProjetos(); }
+}
+
+function uProj(id, field, val) {
+  const p = linhas.find(p => p.id === id);
+  if (p) p[field] = val;
+}
+
+function addTagProd(id, val) {
+  const p = linhas.find(p => p.id === id); if (!p) return;
+  const prodNome = val.split(':')[0];
+  const existe = p.prods.some(x => x.split(':')[0] === prodNome);
+  if (existe) { p.prods = p.prods.map(x => x.split(':')[0] === prodNome ? val : x); }
+  else { p.prods.push(val); }
+  renderProjetos();
+}
+
+function rmProd(id, idx) {
+  const p = linhas.find(p => p.id === id); if (!p) return;
+  p.prods.splice(idx, 1);
+  renderProjetos();
+}
+
+function chgStatus(id, val) {
+  const p = linhas.find(p => p.id === id); if (p) p.status = val;
+  // Atualizar borda do header
+  const header = document.querySelector('#proj-' + id + ' .proj-card-header');
+  if (header) {
+    header.className = 'proj-card-header' + (val ? ' s-' + val : '');
+  }
+}
+
+function renderProjetos() {
+  const cont = document.getElementById('projetos-container');
+  if (!cont) return;
+  cont.innerHTML = '';
+
+  linhas.forEach((proj, num) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'proj-card-wrap' + (proj.collapsed ? ' proj-collapsed' : '');
+    wrap.id = 'proj-' + proj.id;
+
+    // ── HEADER ──────────────────────────────────────────────
+    const hdr = document.createElement('div');
+    hdr.className = 'proj-card-header' + (proj.status ? ' s-' + proj.status : '');
+
+    const numEl = document.createElement('span');
+    numEl.className = 'proj-num';
+    numEl.textContent = 'PROJETO #' + (num + 1);
+    hdr.appendChild(numEl);
+
+    // Título inline no header (quando collapsed)
+    if (proj.collapsed && proj.titulo) {
+      const titlePreview = document.createElement('span');
+      titlePreview.style.cssText = 'font-size:12px;color:#4A4A4A;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+      titlePreview.textContent = proj.titulo;
+      hdr.appendChild(titlePreview);
+    } else {
+      const spacer = document.createElement('span'); spacer.style.flex = '1';
+      hdr.appendChild(spacer);
+    }
+
+    // Ações
+    const actions = document.createElement('div');
+    actions.className = 'proj-card-actions';
+
+    const dupBtn = document.createElement('button');
+    dupBtn.className = 'proj-btn'; dupBtn.title = 'Duplicar';
+    dupBtn.innerHTML = '<i class="ti ti-copy"></i>';
+    (function(pid){ dupBtn.onclick = () => dupProjeto(pid); })(proj.id);
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'proj-btn del'; delBtn.title = 'Remover';
+    delBtn.innerHTML = '<i class="ti ti-trash"></i>';
+    (function(pid){ delBtn.onclick = () => removeProjeto(pid); })(proj.id);
+
+    const togBtn = document.createElement('button');
+    togBtn.className = 'proj-btn'; togBtn.title = proj.collapsed ? 'Expandir' : 'Recolher';
+    togBtn.innerHTML = proj.collapsed ? '<i class="ti ti-chevron-down"></i>' : '<i class="ti ti-chevron-up"></i>';
+    (function(pid){ togBtn.onclick = () => toggleProjeto(pid); })(proj.id);
+
+    actions.appendChild(dupBtn); actions.appendChild(delBtn); actions.appendChild(togBtn);
+    hdr.appendChild(actions);
+    wrap.appendChild(hdr);
+
+    // ── BODY ────────────────────────────────────────────────
+    const body = document.createElement('div');
+    body.className = 'proj-card-body';
+
+    // Linha 1: Título + Status
+    const row1 = document.createElement('div');
+    row1.className = 'proj-row1';
+
+    // Título do projeto
+    const tituloWrap = document.createElement('div');
+    tituloWrap.className = 'proj-field';
+    tituloWrap.innerHTML = '<div class="proj-field-label">Título do projeto (máx. 40 caracteres)</div>';
+    const tituloRow = document.createElement('div');
+    tituloRow.className = 'proj-title-wrap';
+    const tituloInp = document.createElement('input');
+    tituloInp.className = 'linha-inp'; tituloInp.maxLength = 40;
+    tituloInp.placeholder = 'Ex: Expansão Hub Logístico SP';
+    tituloInp.value = proj.titulo || '';
+    const tituloCounter = document.createElement('span');
+    tituloCounter.className = 'proj-title-counter';
+    tituloCounter.textContent = (proj.titulo||'').length + '/40';
+    tituloInp.oninput = (function(pid, counter){ return function(){
+      uProj(pid, 'titulo', this.value);
+      counter.textContent = this.value.length + '/40';
+    }; })(proj.id, tituloCounter);
+    tituloRow.appendChild(tituloInp); tituloRow.appendChild(tituloCounter);
+    tituloWrap.appendChild(tituloRow);
+    row1.appendChild(tituloWrap);
+
+    // Status
+    const statusWrap = document.createElement('div');
+    statusWrap.className = 'proj-field';
+    statusWrap.innerHTML = '<div class="proj-field-label">Status</div>';
+    const statusSel = document.createElement('select');
+    statusSel.className = 'status-sel ' + (proj.status||'');
+    statusSel.style.width = '100%';
+    STATUS_OPTS.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s.v; o.textContent = s.l;
+      if (s.v === proj.status) o.selected = true;
+      statusSel.appendChild(o);
+    });
+    statusSel.onchange = (function(pid){ return function(){ chgStatus(pid, this.value); }; })(proj.id);
+    statusWrap.appendChild(statusSel);
+    row1.appendChild(statusWrap);
+    body.appendChild(row1);
+
+    // Linha 2: País · Cliente · Vertical · Área do Cliente · Aplicação
+    const row2 = document.createElement('div');
+    row2.className = 'proj-row2';
+
+    // País
+    const paisWrap = document.createElement('div');
+    paisWrap.className = 'proj-field';
+    paisWrap.innerHTML = '<div class="proj-field-label">País</div>';
+    const paisSel = document.createElement('select');
+    paisSel.className = 'linha-inp';
+    paisSel.innerHTML = buildPaisOptions(proj.pais);
+    paisSel.onchange = (function(pid){ return function(){ uProj(pid,'pais',this.value); }; })(proj.id);
+    paisWrap.appendChild(paisSel); row2.appendChild(paisWrap);
+
+    // Cliente
+    const cliWrap = document.createElement('div');
+    cliWrap.className = 'proj-field';
+    cliWrap.innerHTML = '<div class="proj-field-label">Cliente (digite o nome)</div>';
+    const cliInp = document.createElement('input');
+    cliInp.className = 'linha-inp'; cliInp.placeholder = 'Nome do cliente';
+    cliInp.value = proj.cliente || '';
+    cliInp.oninput = (function(pid){ return function(){ uProj(pid,'cliente',this.value); }; })(proj.id);
+    cliWrap.appendChild(cliInp); row2.appendChild(cliWrap);
+
+    // Vertical
+    const vertWrap = document.createElement('div');
+    vertWrap.className = 'proj-field';
+    vertWrap.innerHTML = '<div class="proj-field-label">Vertical</div>';
+    const vertSel = document.createElement('select');
+    vertSel.className = 'linha-inp';
+    const vertPh = document.createElement('option');
+    vertPh.value=''; vertPh.textContent='— vertical —';
+    if (!proj.vertical) vertPh.selected=true;
+    vertSel.appendChild(vertPh);
+    VERTICAIS.forEach(v => {
+      const o=document.createElement('option'); o.value=v; o.textContent=v;
+      if(v===proj.vertical) o.selected=true; vertSel.appendChild(o);
+    });
+    vertSel.onchange = (function(pid){ return function(){ uProj(pid,'vertical',this.value); }; })(proj.id);
+    vertWrap.appendChild(vertSel); row2.appendChild(vertWrap);
+
+    // Área do Cliente
+    const areaCliWrap = document.createElement('div');
+    areaCliWrap.className = 'proj-field';
+    areaCliWrap.innerHTML = '<div class="proj-field-label">Área do Cliente</div>';
+    const areaCliSel = document.createElement('select');
+    areaCliSel.className = 'linha-inp';
+    const aCliPh = document.createElement('option');
+    aCliPh.value=''; aCliPh.textContent='— área —';
+    if (!proj.areaCli) aCliPh.selected=true;
+    areaCliSel.appendChild(aCliPh);
+    AREAS_CLIENTE.forEach(a => {
+      const o=document.createElement('option'); o.value=a; o.textContent=a;
+      if(a===proj.areaCli) o.selected=true; areaCliSel.appendChild(o);
+    });
+    areaCliSel.onchange = (function(pid){ return function(){ uProj(pid,'areaCli',this.value); }; })(proj.id);
+    areaCliWrap.appendChild(areaCliSel); row2.appendChild(areaCliWrap);
+
+    // Aplicação
+    const apliWrap = document.createElement('div');
+    apliWrap.className = 'proj-field';
+    apliWrap.innerHTML = '<div class="proj-field-label">Aplicação</div>';
+    const apliSel = document.createElement('select');
+    apliSel.className = 'linha-inp';
+    const apliPh = document.createElement('option');
+    apliPh.value=''; apliPh.textContent='— aplicação —';
+    if (!proj.aplicacao) apliPh.selected=true;
+    apliSel.appendChild(apliPh);
+    APLICACOES.forEach(a => {
+      const o=document.createElement('option'); o.value=a; o.textContent=a;
+      if(a===proj.aplicacao) o.selected=true; apliSel.appendChild(o);
+    });
+    apliSel.onchange = (function(pid){ return function(){ uProj(pid,'aplicacao',this.value); }; })(proj.id);
+    apliWrap.appendChild(apliSel); row2.appendChild(apliWrap);
+
+    body.appendChild(row2);
+
+    // Linha 3: Produtos + Obs
+    const row3 = document.createElement('div');
+    row3.className = 'proj-row3';
+
+    // Produtos e quantidades
+    const prodWrap = document.createElement('div');
+    prodWrap.className = 'proj-field';
+    prodWrap.innerHTML = '<div class="proj-field-label">Produtos e quantidades</div>';
+
+    // Linhas de produto existentes
+    proj.prods.forEach((prod, i) => {
+      const parts = prod.split(':');
+      const nome  = parts[0]; const faixa = parts[1]||'';
+      const line  = document.createElement('div');
+      line.className = 'proj-prod-line';
+      // Select produto (readonly — mostra o nome)
+      const pSel = document.createElement('select');
+      pSel.className = 'linha-inp'; pSel.style.flex = '1';
+      PRODUTOS.forEach(p => {
+        const o=document.createElement('option'); o.value=p; o.textContent=p;
+        if(p===nome) o.selected=true; pSel.appendChild(o);
+      });
+      pSel.onchange = (function(pid,idx){ return function(){
+        const p = linhas.find(x=>x.id===pid);
+        if(p){ const f=p.prods[idx].split(':')[1]||'1–50'; p.prods[idx]=this.value+':'+f; }
+      }; })(proj.id, i);
+      // Select faixa
+      const fSel = document.createElement('select');
+      fSel.className = 'linha-inp'; fSel.style.width='110px';
+      ['1–50','51–100','101–200','201–500','501–1000','1000+','5000+'].forEach(f => {
+        const o=document.createElement('option'); o.value=f; o.textContent=f;
+        if(f===faixa) o.selected=true; fSel.appendChild(o);
+      });
+      fSel.onchange = (function(pid,idx){ return function(){
+        const p=linhas.find(x=>x.id===pid);
+        if(p){ const n=p.prods[idx].split(':')[0]; p.prods[idx]=n+':'+this.value; }
+      }; })(proj.id, i);
+      // Remover
+      const rmBtn = document.createElement('button');
+      rmBtn.className = 'proj-prod-rm'; rmBtn.textContent = '×';
+      (function(pid,idx){ rmBtn.onclick = () => rmProd(pid,idx); })(proj.id, i);
+      line.appendChild(pSel); line.appendChild(fSel); line.appendChild(rmBtn);
+      prodWrap.appendChild(line);
+    });
+
+    // Botão adicionar produto
+    const addProdWrap = document.createElement('div');
+    addProdWrap.className = 'proj-prod-line'; addProdWrap.style.marginTop='4px';
+    const newProdSel = document.createElement('select');
+    newProdSel.className = 'linha-inp'; newProdSel.style.flex='1';
+    newProdSel.innerHTML = '<option value="">— produto —</option>' + PRODUTOS.map(p=>'<option>'+p+'</option>').join('');
+    const newFaixaSel = document.createElement('select');
+    newFaixaSel.className = 'linha-inp'; newFaixaSel.style.width='110px';
+    ['1–50','51–100','101–200','201–500','501–1000','1000+','5000+'].forEach(f=>{
+      const o=document.createElement('option'); o.value=f; o.textContent=f; newFaixaSel.appendChild(o);
+    });
+    const addProdBtn = document.createElement('button');
+    addProdBtn.className = 'proj-add-prod'; addProdBtn.type='button';
+    addProdBtn.innerHTML = '<i class="ti ti-plus"></i> Adicionar produto';
+    (function(pid, pSel, fSel){ addProdBtn.onclick = function(){
+      if(!pSel.value) return;
+      addTagProd(pid, pSel.value+':'+fSel.value);
+      pSel.value='';
+    }; })(proj.id, newProdSel, newFaixaSel);
+    addProdWrap.appendChild(newProdSel); addProdWrap.appendChild(newFaixaSel); addProdWrap.appendChild(addProdBtn);
+    prodWrap.appendChild(addProdWrap);
+    row3.appendChild(prodWrap);
+
+    // Observações
+    const obsWrap = document.createElement('div');
+    obsWrap.className = 'proj-obs-wrap proj-field';
+    obsWrap.innerHTML = '<div class="proj-field-label">Observações (até 500 caracteres)</div>';
+    const obsTa = document.createElement('textarea');
+    obsTa.className = 'linha-inp'; obsTa.maxLength=500;
+    obsTa.placeholder='Descreva detalhes relevantes do projeto...';
+    obsTa.style.cssText='resize:vertical;min-height:80px;line-height:1.5';
+    obsTa.value = proj.obs||'';
+    const obsCounter = document.createElement('div');
+    obsCounter.className='proj-obs-counter';
+    obsCounter.textContent=(proj.obs||'').length+'/500';
+    obsTa.oninput=(function(pid,counter){ return function(){
+      uProj(pid,'obs',this.value);
+      counter.textContent=this.value.length+'/500';
+    }; })(proj.id, obsCounter);
+    obsWrap.appendChild(obsTa); obsWrap.appendChild(obsCounter);
+    row3.appendChild(obsWrap);
+
+    body.appendChild(row3);
+    wrap.appendChild(body);
+    cont.appendChild(wrap);
+  });
+}
+
+// Alias para compatibilidade
+function renderLinhas() { renderProjetos(); }
+function addTag(id,type,val) {
+  const p=linhas.find(p=>p.id===id); if(!p) return;
+  if(type==='projs'){ if(!p.aplicacao) p.aplicacao=val; }
+}
+function uRow(id,f,v){ uProj(id,f,v); }
+
+
+async function enviar() {
+  const req=['nome','sobrenome','pais','cidade','empresa','email','whats'];
+  let ok=true;
+  req.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el||!el.value.trim()){ if(el) el.style.borderColor='#E30613'; ok=false; }
+    else if(el) el.style.borderColor='#E4E4E4';
+  });
+  if(!ok){ showError('Preencha todos os campos obrigatórios (*).'); return; }
+  hideError(); setSending(true);
+  try {
+    const dados = coletarDados();
+    const url = APPS_URL+'?data='+encodeURIComponent(JSON.stringify(dados));
+    let resultado = null;
+    try {
+      const resp = await fetch(url, {method:'GET'});
+      if (resp.ok) resultado = await resp.json();
+    } catch(corsErr) {
+      await fetch(url, {method:'GET', mode:'no-cors'});
+    }
+    await new Promise(r => setTimeout(r, 2000));
+    setSending(false);
+    if (resultado && resultado.token) {
+      localStorage.setItem('promont_rep_token', resultado.token);
+      repToken = resultado.token;
+      repId    = resultado.repId;
+    }
+    showToast(repToken
+      ? '✅ Cadastro atualizado! Verifique seu e-mail.'
+      : '✅ Enviado! Verifique seu e-mail para o link de acesso.');
+    if (!repToken) setTimeout(()=>location.reload(), 3500);
+  } catch(e) {
+    setSending(false);
+    showError('Não foi possível enviar. Verifique sua conexão e tente novamente.');
+  }
+}
+
+// ── UTILS ─────────────────────────────────────────────────────
+function gv(id){ return (document.getElementById(id)||{}).value?.trim()||''; }
+function sv(id,val){ const el=document.getElementById(id); if(el) el.value=val||''; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function ini(s){ return (s||'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('')||'?'; }
+function autoDDI(code){ if(DDI_MAP[code]) document.getElementById('ddi').value=DDI_MAP[code]; }
+function setSending(s){
+  const b=document.getElementById('btn-enviar'),r=document.getElementById('btn-rascunho');
+  b.disabled=s; r.disabled=s;
+  document.getElementById('btn-label').textContent = s?'Enviando...':(repToken?'Salvar atualização':'Enviar cadastro');
+  document.getElementById('btn-icon').className = s?'ti ti-loader-2 spin':'ti ti-send';
+}
+function showError(m){ const b=document.getElementById('error-box'); document.getElementById('error-msg').textContent=m; b.style.display='flex'; }
+function hideError(){ document.getElementById('error-box').style.display='none'; }
+function showToast(msg,err=false){
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.className='toast'+(err?' err':'');
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
+
+// addProjeto() chamado pelo init() quando necessário
+
+// ── COLETA E ENVIO ────────────────────────────────────────────
+function coletarDados() {
+  return {
+    timestamp: new Date().toISOString(),
+    dadosPessoais: {
+      repId: repId||null, token: repToken||null,
+      nome: gv('nome'), sobrenome: gv('sobrenome'),
+      pais: gv('pais'), cidade: gv('cidade'),
+      empresa: gv('empresa'), email: gv('email'),
+      telefone: gv('ddi')+' '+gv('whats'), linkedin: gv('linkedin')
+    },
+    atuacao: linhas
+      .filter(p => p.cliente && p.cliente.trim())
+      .map(p => ({
+        titulo: p.titulo||'',
+        pais: p.pais, cliente: p.cliente,
+        vertical: p.vertical||'', area: p.vertical||'',
+        area_cliente: p.areaCli||'',
+        aplicacao: p.aplicacao||'',
+        produtos: p.prods, qtd_estimada: '',
+        projetos: p.aplicacao ? [p.aplicacao] : [],
+        status: p.status||'', obs: p.obs||''
+      }))
+  };
+}
+
+function salvarRascunho() {
+  const b = new Blob([JSON.stringify(coletarDados(),null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(b);
+  a.download='rascunho_promont.json'; a.click();
+}
+</script>
+</body>
+</html>

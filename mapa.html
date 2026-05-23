@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promont — Mapa de Representantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#E30613; --red-deep:#B30410; --red-soft:#FEF2F3;
+  --ink:#2C2C2C; --ink-2:#2C2C2C; --slate:#555555; --mute:#888888;
+  --line:#E6E8EE; --line-2:#EEF1F6; --bg:#F6F7FB; --card:#FFFFFF;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.06);
+  --shadow-md:0 4px 16px -4px rgba(15,23,42,.10), 0 2px 6px rgba(15,23,42,.05);
+  --shadow-lg:0 20px 50px -20px rgba(15,23,42,.25);
+  --r-sm:6px; --r:10px; --r-lg:14px; --r-xl:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Inter',-apple-system,system-ui,sans-serif;
+  background:
+    radial-gradient(1200px 600px at 90% -10%, rgba(227,6,19,.06), transparent 60%),
+    radial-gradient(900px 500px at -10% 10%, rgba(11,11,15,.05), transparent 60%),
+    var(--bg);
+  color:var(--ink); -webkit-font-smoothing:antialiased; min-height:100vh;
+  font-feature-settings:"cv11","ss01","ss03";
+}
+button{font-family:inherit}
+
+/* ============== HEADER ============== */
+.hdr{
+  position:sticky; top:0; z-index:50;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.hdr-inner{
+  max-width:1180px; margin:0 auto; padding:14px 24px;
+  display:flex; align-items:center; gap:18px; justify-content:space-between;
+}
+.brand{display:flex; align-items:center; gap:14px; min-width:0}
+.brand img{height:30px; display:block}
+.brand-divider{width:1px; height:28px; background:var(--line)}
+.brand-text{min-width:0}
+.brand-title{font-size:14px; font-weight:700; letter-spacing:-.01em; color:var(--ink)}
+.brand-sub{font-size:11.5px; color:var(--slate); margin-top:2px}
+.brand-sub b{color:var(--red); font-weight:700; font-variant-numeric:tabular-nums}
+
+.hdr-actions{display:flex; gap:8px; align-items:center; flex-shrink:0}
+.btn{
+  display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  padding:8px 12px; border-radius:var(--r-sm); font-size:12.5px; font-weight:600;
+  border:1px solid var(--line); background:#fff; color:var(--ink-2);
+  transition:all .15s ease; box-shadow:var(--shadow-sm);
+}
+.btn:hover{border-color:#CBD5E1; transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.primary{background:var(--ink); border-color:var(--ink); color:#fff}
+.btn.primary:hover{background:var(--red); border-color:var(--red)}
+.btn svg{width:14px; height:14px}
+
+/* ============== SUB-HEADER: search + stats ============== */
+.subhdr{
+  max-width:1180px; margin:0 auto; padding:22px 24px 10px;
+  display:grid; grid-template-columns:1fr auto; gap:16px; align-items:end;
+}
+.title-block h1{
+  font-size:28px; font-weight:800; letter-spacing:-.02em; line-height:1.1;
+}
+.title-block h1 .accent{
+  background:linear-gradient(90deg, var(--red), #FF6B6B);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.title-block p{font-size:13.5px; color:var(--slate); margin-top:6px; max-width:560px}
+
+.stats{display:flex; gap:10px}
+.stat{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+  padding:10px 14px; min-width:96px; box-shadow:var(--shadow-sm);
+}
+.stat-k{font-size:10.5px; color:var(--mute); text-transform:uppercase; letter-spacing:.08em; font-weight:600}
+.stat-v{font-size:20px; font-weight:800; color:var(--ink); margin-top:2px; font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.stat-sub{font-size:10px; color:var(--mute); font-weight:600; margin-top:1px}
+.stat.red .stat-v{color:var(--red)}
+
+/* ============== TOOLBAR ============== */
+.toolbar{
+  max-width:1180px; margin:14px auto 0; padding:0 24px;
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+}
+.search{
+  flex:1; min-width:240px; position:relative;
+  background:#fff; border:1px solid var(--line); border-radius:var(--r);
+  display:flex; align-items:center; padding:0 12px 0 38px;
+  box-shadow:var(--shadow-sm); transition:border-color .15s, box-shadow .15s;
+}
+.search:focus-within{border-color:var(--red); box-shadow:0 0 0 4px rgba(227,6,19,.08)}
+.search svg{position:absolute; left:13px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--mute)}
+.search input{
+  width:100%; border:0; outline:0; padding:11px 0; font-size:13.5px;
+  background:transparent; color:var(--ink); font-family:inherit;
+}
+.search input::placeholder{color:var(--mute)}
+.search .clear{
+  background:transparent; border:0; cursor:pointer; color:var(--mute);
+  padding:4px 6px; font-size:12px; border-radius:4px;
+}
+.search .clear:hover{color:var(--ink); background:var(--line-2)}
+
+.chips{display:flex; gap:6px; flex-wrap:wrap}
+.chip{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 12px; border-radius:99px; font-size:12px; font-weight:600;
+  border:1px solid var(--line); background:#fff; color:var(--ink-2);
+  cursor:pointer; transition:all .15s; box-shadow:var(--shadow-sm);
+}
+.chip:hover{border-color:#CBD5E1}
+.chip.active{border-color:var(--ink); background:var(--ink); color:#fff}
+.chip .num{
+  font-size:10.5px; padding:1px 6px; border-radius:99px;
+  background:var(--line-2); color:var(--slate); font-weight:700;
+}
+.chip.active .num{background:rgba(255,255,255,.18); color:#fff}
+
+/* ============== MAPA ============== */
+.mapa{max-width:1180px; margin:18px auto 80px; padding:0 24px}
+
+/* CONTINENT — big card */
+.cont{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--r-xl);
+  margin-bottom:18px; overflow:hidden; box-shadow:var(--shadow-md);
+  transition:box-shadow .2s;
+}
+.cont:hover{box-shadow:var(--shadow-lg)}
+.cont-head{
+  display:flex; align-items:center; gap:14px;
+  padding:18px 22px; cursor:pointer; user-select:none;
+  background:linear-gradient(180deg, #FAFBFD 0%, #FFFFFF 100%);
+  border-bottom:1px solid transparent;
+}
+.cont.open > .cont-head{border-bottom-color:var(--line-2)}
+.cont-emoji{
+  width:44px; height:44px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, var(--ink) 0%, var(--ink-2) 100%);
+  border-radius:var(--r); font-size:22px;
+  box-shadow:0 6px 16px -6px rgba(11,11,15,.4);
+}
+.cont-title{flex:1; min-width:0}
+.cont-name{font-size:17px; font-weight:800; letter-spacing:-.01em; color:var(--ink)}
+.cont-meta{font-size:12px; color:var(--slate); margin-top:2px}
+.cont-meta b{color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums}
+.chev{
+  width:32px; height:32px; flex-shrink:0; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--slate); transition:all .2s; background:transparent;
+}
+.cont-head:hover .chev{background:var(--line-2); color:var(--ink)}
+.chev svg{width:14px; height:14px; transition:transform .25s ease}
+.cont.open .chev svg{transform:rotate(90deg)}
+
+.cont-body{display:none; padding:8px 22px 22px}
+.cont.open > .cont-body{display:block}
+
+/* SUB-REGION */
+.sub{margin-top:10px}
+.sub:first-child{margin-top:4px}
+.sub-head{
+  display:flex; align-items:center; gap:10px;
+  padding:9px 10px; cursor:pointer; user-select:none;
+  border-top:1px solid var(--line-2);
+  border-radius:var(--r-sm);
+  transition:background .12s;
+}
+.sub-head:hover{background:var(--line-2)}
+.sub:first-child .sub-head{border-top:0; padding-top:6px}
+.sub-bar{width:3px; height:14px; border-radius:2px; background:var(--red); flex-shrink:0}
+.sub-name{
+  font-size:11px; font-weight:700; color:var(--ink-2);
+  text-transform:uppercase; letter-spacing:.1em; flex:1;
+}
+.sub-count{font-size:11px; color:var(--mute); font-weight:600; font-variant-numeric:tabular-nums}
+.sub-chev{color:var(--mute); transition:transform .2s}
+.sub.open .sub-chev{transform:rotate(90deg)}
+.sub-body{display:none; padding:4px 0 4px 12px; border-left:2px solid var(--line-2); margin-left:8px; margin-top:4px}
+.sub.open > .sub-body{display:block}
+
+/* COUNTRIES — lista vertical */
+.country-grid{display:flex; flex-direction:column; gap:4px}
+.country{
+  background:#fff; border:1px solid var(--line); border-radius:var(--r);
+  overflow:hidden; transition:all .15s;
+}
+.country.has-data{border-color:#DEE3EC}
+.country.has-data:hover{border-color:#BBC2CD; box-shadow:var(--shadow-md)}
+.country-empty-row{
+  display:flex; align-items:center; gap:8px;
+  padding:3px 14px; height:22px;
+  border-top:1px solid #F5F5F5;
+}
+.cer-flag{font-size:11px; opacity:.4; line-height:1}
+.cer-name{font-size:11px; color:#CCCCCC; font-weight:400; line-height:1}
+.country-head{
+  display:flex; align-items:center; gap:10px;
+  padding:12px 14px; cursor:pointer; user-select:none;
+}
+.country.empty .country-head{cursor:default}
+.flag{font-size:22px; line-height:1; flex-shrink:0}
+.country-name{flex:1; font-size:13.5px; font-weight:700; color:var(--ink); letter-spacing:-.005em}
+.country-badge{
+  font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:99px;
+  background:var(--red-soft); color:var(--red-deep);
+  font-variant-numeric:tabular-nums;
+}
+.country.empty .country-badge{background:var(--line-2); color:var(--mute); font-weight:600}
+.country-chev{color:var(--mute); transition:transform .2s; flex-shrink:0}
+.country.open .country-chev{transform:rotate(90deg)}
+.country-body{display:none; padding:0 14px 14px; border-top:1px solid var(--line-2); margin-top:0}
+.country.open .country-body{display:block; padding:8px 14px 14px; animation:fadeIn .15s ease}
+
+/* COMPANY (rep) */
+.company{margin-top:10px}
+.company:first-child{margin-top:2px}
+.company-head{
+  display:flex; align-items:center; gap:9px; padding:8px 10px;
+  background:linear-gradient(135deg, #4A4A4A 0%, #4A4A4A 100%);
+  color:#fff; border-radius:8px; cursor:pointer; user-select:none;
+  box-shadow:0 2px 8px -2px rgba(30,58,95,.4);
+}
+.company-ini{
+  width:24px; height:24px; flex-shrink:0; border-radius:6px;
+  background:rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center;
+  font-size:10px; font-weight:800; letter-spacing:-.02em;
+}
+.company-name{flex:1; font-size:12px; font-weight:700; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.company-cnt{font-size:10px; background:rgba(255,255,255,.15); padding:2px 7px; border-radius:99px; font-weight:700}
+.company-chev{color:rgba(255,255,255,.7); transition:transform .2s}
+.company.open .company-chev{transform:rotate(90deg)}
+.company-body{display:none; padding:6px 0 4px 12px; border-left:2px solid var(--line-2); margin-left:10px; margin-top:2px}
+.company.open .company-body{display:block}
+
+/* CLIENT */
+.client{margin-top:8px}
+.client:first-child{margin-top:0}
+.client-head{
+  display:flex; align-items:center; gap:8px; padding:7px 10px;
+  background:#fff; border:1px solid var(--line); border-radius:7px;
+  cursor:pointer; user-select:none; margin-left:8px;
+}
+.client-head:hover{border-color:#CBD5E1}
+.client-icon{font-size:13px; flex-shrink:0}
+.client-name{flex:1; font-size:12px; font-weight:600; color:var(--ink-2)}
+.client-chev{color:var(--mute); transition:transform .2s}
+.client.open .client-chev{transform:rotate(90deg)}
+.client-body{display:none; padding:6px 0 4px 12px; border-left:2px solid var(--line-2); margin-left:10px; margin-top:2px}
+.client.open .client-body{display:block}
+
+/* PROJECT CARD */
+.proj{
+  background:#FAFBFD; border:1px solid var(--line-2); border-radius:8px;
+  padding:10px 12px; margin-bottom:6px;
+}
+.proj:last-child{margin-bottom:0}
+.proj-row{display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; font-size:11.5px}
+.proj-row:last-child{margin-bottom:0}
+.proj-label{
+  color:var(--mute); font-weight:700; min-width:62px; flex-shrink:0;
+  font-size:10px; text-transform:uppercase; letter-spacing:.06em; padding-top:2px;
+}
+.tags{display:flex; flex-wrap:wrap; gap:4px; flex:1; min-width:0}
+.tag{
+  border-radius:99px; padding:2px 8px; font-size:10.5px; font-weight:600;
+  line-height:1.5; white-space:nowrap;
+}
+.tag.area{background:#FFF0F0; color:#E30613}
+.tag.prod{background:var(--red-soft); color:var(--red-deep)}
+.tag.proj{background:#F0FDF4; color:#15803D}
+.tag.loc{background:#F1F5F9; color:#555555; font-weight:500}
+.proj-rep{
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  margin-top:8px; padding-top:8px; border-top:1px dashed var(--line);
+}
+.rep-avatar{
+  width:22px; height:22px; flex-shrink:0; border-radius:50%;
+  background:linear-gradient(135deg, var(--red), var(--red-deep));
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:800; letter-spacing:-.02em;
+  box-shadow:0 2px 6px -2px rgba(227,6,19,.5);
+}
+.rep-name{font-size:11.5px; font-weight:700; color:var(--ink)}
+
+/* ============== STATES ============== */
+.empty,.loading{
+  text-align:center; padding:80px 24px;
+  background:var(--card); border:1px dashed var(--line); border-radius:var(--r-xl);
+}
+.empty-icon{font-size:46px; margin-bottom:14px; opacity:.6}
+.empty h3{font-size:16px; font-weight:700; margin-bottom:6px; color:var(--ink)}
+.empty p{font-size:13px; color:var(--slate); line-height:1.6}
+.loading{display:flex; flex-direction:column; align-items:center; gap:14px; color:var(--slate); font-size:13px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:28px; height:28px; border:2.5px solid var(--line); border-top-color:var(--red); border-radius:50%; animation:spin .7s linear infinite}
+
+.hidden{display:none !important}
+
+/* ============== RESPONSIVE ============== */
+@media (max-width:760px){
+  .hdr-inner{padding:12px 16px}
+  .brand-text{display:none}
+  .subhdr{grid-template-columns:1fr; padding:18px 16px 8px}
+  .toolbar{padding:0 16px}
+  .mapa{padding:0 16px}
+  .stats{overflow-x:auto; padding-bottom:4px}
+  .stat{min-width:88px}
+  .cont-head{padding:14px 16px}
+  .cont-body{padding:6px 16px 16px}
+  .country-grid{grid-template-columns:1fr}
+  .title-block h1{font-size:22px}
+}
+
+/* STATUS BADGES */
+.s-tag{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:2px 8px;font-size:9px;font-weight:700;letter-spacing:.03em;white-space:nowrap}
+.s-PROSPECCAO{background:#FFF0F0;color:#E30613;border:1px solid #FAD4D7}
+.s-OPORTUNIDADE{background:#FEFCE8;color:#854D0E;border:1px solid #FEF08A}
+.s-POC{background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA}
+.s-PROPOSTA{background:#F5F3FF;color:#B30410;border:1px solid #FAD4D7}
+.s-PROJETO_ATIVO{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+.s-EM_PAUSA{background:#F9FAFB;color:#374151;border:1px solid #D1D5DB}
+.s-PERDIDO{background:#FFF1F2;color:#BE123C;border:1px solid #FECDD3}
+.s-HOMOLOGACAO{background:#FFF0F0;color:#E30613;border:1px solid #FAD4D7}
+.s-CERTIFICACAO{background:#F0F9FF;color:#B30410;border:1px solid #FAD4D7}
+
+
+/* ── PROJ CARD ENRIQUECIDO ── */
+.proj{background:#FAFAFA;border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:6px}
+.proj:last-child{margin-bottom:0}
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-bottom:10px}
+.proj-field{display:flex;flex-direction:column;gap:3px}
+.proj-field-full{grid-column:1/-1;display:flex;flex-direction:column;gap:3px}
+.proj-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.proj-obs{font-size:11px;color:var(--slate);line-height:1.5;background:#fff;border:1px solid var(--line);border-radius:4px;padding:6px 8px}
+/* Rep card */
+.rep-card{display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);flex-wrap:wrap}
+.rep-avatar{width:32px;height:32px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.rep-info{flex:1;min-width:0}
+.rep-name-text{font-size:12px;font-weight:600;color:var(--ink)}
+.rep-contacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.rep-contact-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--slate);transition:all .15s;cursor:pointer}
+.rep-contact-btn:hover{border-color:var(--red);color:var(--red)}
+.rep-contact-btn.wa{border-color:#DCF8C6;background:#F0FFF4;color:#166534}
+.rep-contact-btn.wa:hover{background:#DCFCE7}
+.rep-time{display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap}
+.rep-clock{font-size:11px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.rep-tz{font-size:10px;color:var(--mute)}
+.rep-commercial{font-size:9px;font-weight:700;padding:2px 6px;border-radius:99px;letter-spacing:.04em}
+.rep-commercial.open{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+.rep-commercial.closed{background:#FFF1F2;color:#BE123C;border:1px solid #FECDD3}
+.copy-btn{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:600;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--mute);transition:all .12s}
+.copy-btn:hover{border-color:var(--ink);color:var(--ink)}
+
+
+/* ── PROJ CARD — header com título ── */
+.client-body{
+  background:#F5F5F5;
+  padding:10px 12px;
+  border-top:1px solid var(--line-2);
+}
+.proj{
+  background:#fff;
+  border:1px solid #E0E0E0;
+  border-radius:8px;
+  margin-bottom:8px;
+  overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.07), 0 2px 8px rgba(0,0,0,.04);
+}
+.proj:last-child{margin-bottom:0}
+.proj-header{
+  background:#2C2C2C;
+  color:#fff;
+  padding:9px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.proj-title{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  color:#fff;
+  flex:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.proj-status-badge{flex-shrink:0}
+.proj-body{padding:12px 14px}
+
+
+/* ── CARD ENRIQUECIDO v2 ── */
+.proj-card-v2{background:#fff;border:1px solid #E0E0E0;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:8px}
+.proj-card-v2:last-child{margin-bottom:0}
+
+/* Header */
+.proj-hdr{background:#2C2C2C;padding:9px 14px;display:flex;align-items:center;gap:10px;min-height:38px}
+.proj-hdr-code{font-size:9px;font-weight:700;letter-spacing:.1em;background:rgba(255,255,255,.15);color:#fff;padding:2px 7px;border-radius:3px;white-space:nowrap;flex-shrink:0;font-family:monospace}
+.proj-hdr-title{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.proj-hdr-status{flex-shrink:0;margin-left:8px}
+
+/* Body — dois painéis */
+.proj-body-v2{display:grid;grid-template-columns:250px 1fr;align-items:stretch}
+
+/* Painel esquerdo — Representante */
+.proj-rep-panel{padding:12px 14px;border-right:1px solid #EEEEEE;background:#FAFAFA;display:flex;flex-direction:column;gap:0}
+.proj-rep-section-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#BBBBBB;margin-bottom:8px}
+.proj-rep-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.proj-rep-avatar{width:34px;height:34px;border-radius:50%;background:#E30613;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.proj-rep-name{font-size:12px;font-weight:600;color:#2C2C2C;line-height:1.3}
+.proj-rep-loc{font-size:10px;color:#888;margin-top:1px}
+.proj-rep-time{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.proj-rep-clock{font-size:11px;font-weight:700;color:#2C2C2C;font-variant-numeric:tabular-nums}
+.proj-rep-tz{font-size:10px;color:#AAAAAA}
+.badge-exp{font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;white-space:nowrap}
+.badge-exp.open{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+.badge-exp.closed{background:#FFF1F2;color:#BE123C;border:1px solid #FECDD3}
+.proj-rep-contacts{display:flex;flex-direction:column;gap:5px;padding-top:8px;border-top:1px solid #EEEEEE;margin-top:auto}
+.proj-contact-row{display:flex;align-items:center;gap:5px}
+.proj-contact-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:500;text-decoration:none;border:1px solid #E4E4E4;background:#fff;color:#4A4A4A;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;transition:border-color .15s,color .15s}
+.proj-contact-btn:hover{border-color:#2C2C2C;color:#2C2C2C}
+.proj-contact-btn.wa{border-color:#BBF7D0;background:#F0FDF4;color:#166534}
+.proj-contact-btn.wa:hover{background:#DCFCE7}
+.proj-contact-btn.tel{color:#4A4A4A}
+.proj-copy{width:26px;height:26px;border-radius:4px;border:1px solid #E4E4E4;background:#fff;color:#AAAAAA;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;flex-shrink:0;transition:all .15s}
+.proj-copy:hover{border-color:#2C2C2C;color:#2C2C2C}
+
+/* Painel direito — Projeto */
+.proj-info-panel{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.proj-info-section-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#BBBBBB}
+
+/* Linha de metadados: Cliente · Vertical · Área */
+.proj-meta-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;padding-bottom:10px;border-bottom:1px solid #F0F0F0}
+.proj-meta-field{display:flex;flex-direction:column;gap:3px}
+.proj-meta-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#BBBBBB}
+.proj-meta-value{font-size:12px;font-weight:600;color:#2C2C2C;display:flex;align-items:center;gap:4px}
+.proj-vert-dot{width:7px;height:7px;border-radius:50%;background:#E30613;flex-shrink:0;display:inline-block}
+
+/* Produtos + Aplicação lado a lado */
+.proj-prods-apli{display:grid;grid-template-columns:1fr;gap:14px}
+.proj-col-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#BBBBBB;margin-bottom:6px}
+
+/* Produto linha */
+.proj-prod-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #F5F5F5}
+.proj-prod-row:last-child{border-bottom:none}
+.proj-prod-left{display:flex;align-items:center;gap:6px;min-width:0}
+.proj-prod-dash{width:3px;height:13px;background:#E30613;border-radius:2px;flex-shrink:0}
+.proj-prod-name{font-size:11px;font-weight:500;color:#2C2C2C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-prod-qty{font-size:10px;font-weight:600;color:#4A4A4A;background:#F5F5F5;border:1px solid #E0E0E0;border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0}
+
+/* Aplicação linha */
+.proj-apli-row{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid #F5F5F5;font-size:11px;color:#2C2C2C}
+.proj-apli-row:last-child{border-bottom:none}
+.proj-apli-dash{width:3px;height:12px;background:#E30613;border-radius:2px;flex-shrink:0}
+
+/* Observações */
+.proj-obs-block{border-left:3px solid #E30613;padding:7px 10px;background:#FAFAFA;border-radius:0 4px 4px 0}
+.proj-obs-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#BBBBBB;margin-bottom:4px}
+.proj-obs-txt{font-size:11px;color:#555;line-height:1.6}
+
+/* Footer */
+.proj-footer-v2{padding:5px 14px;background:#F9F9F9;border-top:1px solid #F0F0F0;text-align:right;font-size:9px;color:#BBBBBB;letter-spacing:.04em}
+.proj-footer-v2 b{color:#888;font-weight:500}
+
+
+.proj-empty{color:#CCCCCC;font-style:normal}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="brand">
+      <img src="data:image/webp;base64,UklGRoIGAABXRUJQVlA4THYGAAAvbMALELXQ3v7PkOx8Y+PS5qWtyZ7fedIXwfGJbdu2bTu5PJexbdu27aRrqn6LP6COZg52n/PdqeS36t7ItW3r2J7Z/f5js/zLOClTsrRtlrbNkqVt68cz8u0vedPlAnIfH4O2jSR5744/wgPyRbOyIAEgYOVqHrJt27Zt27Zt27Zt2/60bdt1005AbJsRMVHTFjWjFFE3Er+1wF8JYtuMSjrEawRdxHP0SdUmoSEEcbvURtxokxDZEPTbJESpZkGRCJV8KAqFIwqhiOdAt2iIXO3hiELolsqBCEFkales4YiAo0IiUb7mwA+JEYdKVUQQsQnfxItoCCDmIX4jqCIuo8gWIyqt+ktVxGNU6sWYeTIJlwTC7+ZAzalSG5VZETGu1Ebcxj0hiEKI36UyIogiU0Yk0W02j343/ovUr1YiKiG2leqISUIhiq11lIhspT7uaYW4pIdPVgm1Wg2KXK0C76xqIXIjbw3H86Xx2Xd3Ak5cTb3+0njeGo77vgmsfJeQK+fx2mjeGk5VHrk+LWvQhfwJ35+amOLXMN+nupix4DfoAubbm92gpd04ixNXx3nblJgduD0h7w3OqcvTnj9xNW8Nx75qZ75X+O24J2ajZnLg9jjvmoDZlkdoadmVlM6FXmF24HZCnurK/6Xz0M3YV+0s9Iqg1W+mdK58l9az2LM0w5Hro7Hy3bgareCmGVw5DyfNDtyekO+ac+2sNPLXzuKj/rGXxjPnN9oO3+4Qz6/ayW5QtpDYEm6bkgvnx33u/HSXIV+1c+W8FPl/2+2uCUxbCBp2Jq5uv8TFtouHeK2GeOsxpQz1qM/andJ55mLsq3bmexW/bQ/E7Kv21PMvjafDbMMzeAnVUPRCBJUQv/FLl5a04x6sY6FX+K18Nx3m+Vn/9HkJl1cmFaIW4hDiOuK2ImIfohIIuBZ6xoZn0jnXu2itfpPOda+kdPd1DrqQWbvjVy71iA1PpLN6A8EnUfRaWFWhV4VOwaJ2Me9SxTuZXKp4p1kVTXyySlQrl6gp+uxA3X+1bhSREI/1EMUQs/QQwzJyCUFB0qVw2YG6FWooekVEPTXEKRwRQCUd4rMW4j26JRpGJOGYQFvo5MAfsRDjEI/7EN/D+xC3uxAhMSK6Ia739SginiOWoUgWI4pyHUWPIuJ1B4pMMVaIJywSnou+KwqfhctCr+UJccSIhhAU8RDxwlHEwjuRYh4NAVRidSjinWjRiX+iIeIpjo3OzB1pvKIQr0IICLhBxEyDhMdUFAWF20K3GKPQqHciFYXXolkZ0WIUMgmHhN9UFL6PzTzpYlyeSMIk0XsqCsFeoZGriTmk2BRJCr1ihWaTyaRICutihVSi52RSJBsrEyuKdpFJkZws1HOIHWTSZWMpInUxKVPIJ5rGpExRL1E6JmUKlxwpT9KDZEopMfNkYnLSt8rqaiWcc5F0kXRVWCaq5aK3S/juwUGIGViFMa4L5kS5XJwcq9foWplWpYMxRua4rsRIx+qsEmo5ODn60iH89nkPH+E5lHRwQ3kLhXlxUzyGonrtTDDgIRS1fYW5K6V4DcNAvxNReNY2BIN+wp+wa+FghrtgVviNgvl+hkGg32sw+w17ginxRthX2FACLpQ/4fkdNhUVOxTMXQgLuglWvxLHIn+ivAZrnxhm7UeCKjuip6fnNvwJuw89PT2XYpjovIZBYOK2aGi8h3VBZ7/Gbxhjn2FPUCGR5K4Y8yfOBPNJoW42jszwFMzGhL2FdcGUUtKZfC7M6jtCI6XkSlVDel+C2b7gWLO70NeyeK7U7SvsilbQ1bC3cKCMsc9cNoSOU4ljx1gxvuVxrNkYG9NNhfYdpZYfJKOgk3gizKwV1N6DmfVSw+oNp1ljQ2gkdtdbA3eVujWGQeFY1M3zLgiSRuK5Um9hRbEpmLitFFsKE/uLHeGV2FlU72EK+LfYErnEnmJ0BoVaUQyDTiKZUiKZUiKZcpknlyvRNwUkkslJkikokWTS0aTI0sQSfaZDkUI1YZNLkcIkoZhPIIX7DuEmtYRVURilRdHzCrGEcqQOhWBnRrT/qCVMczSRUnRdoCscykgU+4Vl1BUeV0gXo6jfRKoK3yu0ilHI9B91RasyYjnicoQOpOxAM0DMqHBh0NoUBRFijFHILnQTMypczLCB1BhOWIwxNpG0ieYDGNEVLrRYhzgxxrglkZqoMIDBXeED6CNkBgE3" alt="Promont">
+      <span class="brand-divider"></span>
+      <div class="brand-text">
+        <div class="brand-title">Mapa de Representantes</div>
+        <div class="brand-sub"><b id="badge">—</b> cadastros · rede global</div>
+      </div>
+    </div>
+    <div class="hdr-actions">
+      <button class="btn" onclick="expandAll()" title="Expandir tudo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Expandir
+      </button>
+      <button class="btn" onclick="collapseAll()" title="Recolher tudo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        Recolher
+      </button>
+      <button class="btn primary" onclick="carregarDados()" title="Atualizar dados">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+        Atualizar
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="subhdr">
+  <div class="title-block">
+    <h1>Rede global de <span class="accent">representantes</span></h1>
+    <p>Visão organizada por continente, sub-região e país de atuação. Use a busca ou os filtros para encontrar empresas, clientes ou projetos.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-k">Países</div><div class="stat-v" id="stat-paises">0</div><div class="stat-sub" id="stat-paises-sub">de 54</div></div>
+    <div class="stat"><div class="stat-k">Representantes</div><div class="stat-v" id="stat-empresas">0</div></div>
+    <div class="stat red"><div class="stat-k">Clientes Finais</div><div class="stat-v" id="stat-clientes">0</div></div>
+  </div>
+</section>
+
+<div class="toolbar">
+  <label class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input id="search" type="search" placeholder="Buscar país, empresa, cliente, produto ou representante..." autocomplete="off">
+    <button class="clear" id="clearSearch" style="display:none">Limpar</button>
+  </label>
+  <div class="chips" id="contChips"></div>
+</div>
+
+<main class="mapa" id="mapa">
+  <div class="loading"><div class="spinner"></div><div>Carregando dados...</div></div>
+</main>
+
+<script>
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbz3sokUShIvH1eYGiVBNbNHw1hTsaIPxnUpZ59tHodrCzmn53U6pHoxZPl9TkpTLoAaVw/exec';
+
+// ── GEOGRAFIA (mesma estrutura) ──────────────────────────────
+
+const STATUS_LABEL = {
+  PROSPECCAO:'🔵 Prospecção', OPORTUNIDADE:'🟡 Oportunidade',
+  POC:'🟠 POC / Piloto', PROPOSTA:'🟣 Proposta',
+  PROJETO_ATIVO:'🟢 Projeto Ativo', HOMOLOGACAO:'🔷 Homologação',
+  CERTIFICACAO:'📋 Certificação', EM_PAUSA:'⚫ Em Pausa', PERDIDO:'🔴 Perdido'
+};
+function statusBadge(s){
+  const k=s||'PROSPECCAO';
+  return '<span class="s-tag s-'+k+'">'+(STATUS_LABEL[k]||k)+'</span>';
+}
+
+const GEO_TREE = {
+  "🌎 Américas": {
+    "América do Norte": ["Canadá", "Estados Unidos", "México"],
+    "América Central Continental": ["Belize", "Costa Rica", "El Salvador", "Guatemala", "Honduras", "Nicarágua", "Panamá"],
+    "Caribe — Grandes Antilhas": ["Cuba", "Haiti", "Jamaica", "República Dominicana", "Bahamas"],
+    "Caribe — Pequenas Antilhas": ["Antígua e Barbuda", "Barbados", "Dominica", "Granada", "Santa Lúcia", "São Cristóvão e Névis", "São Vicente e Granadinas", "Trinidad e Tobago"],
+    "Caribe — Adm. EUA": ["Porto Rico", "Ilhas Virgens Americanas"],
+    "Caribe — Adm. Reino Unido": ["Anguila", "Bermudas", "Ilhas Cayman", "Ilhas Virgens Britânicas", "Montserrat", "Turcas e Caicos"],
+    "Caribe — Adm. França": ["Guadalupe", "Martinica", "São Bartolomeu", "São Martinho (Norte)"],
+    "Caribe — Adm. Holanda": ["Aruba", "Curaçao", "São Martinho (Sul)"],
+    "América do Sul": ["Argentina", "Bolívia", "Brasil", "Chile", "Colômbia", "Equador", "Guiana", "Paraguai", "Peru", "Suriname", "Uruguai", "Venezuela"],
+  },
+  "🌍 Europa": {
+    "Ibéria": ["Portugal", "Espanha"],
+    "Europa Ocidental": ["França", "Alemanha", "Reino Unido", "Itália", "Países Baixos", "Bélgica", "Suíça", "Áustria", "Luxemburgo"],
+    "Europa do Norte": ["Suécia", "Noruega", "Dinamarca", "Finlândia", "Irlanda", "Islândia"],
+    "Europa do Sul": ["Grécia", "Croácia", "Sérvia", "Eslovênia", "Bósnia e Herzegovina", "Montenegro", "Macedônia do Norte", "Albânia"],
+    "Europa do Leste": ["Polônia", "República Tcheca", "Hungria", "Romênia", "Eslováquia", "Bulgária", "Ucrânia", "Moldávia", "Bielorrússia"],
+    "Países Bálticos": ["Estônia", "Letônia", "Lituânia"],
+  },
+  "🌍 África": {
+    "África — Língua Portuguesa": ["Angola", "Moçambique", "Cabo Verde", "São Tomé e Príncipe", "Guiné-Bissau", "Guiné Equatorial"],
+    "África do Norte": ["Marrocos", "Argélia", "Tunísia", "Líbia", "Egito", "Sudão"],
+    "África Ocidental": ["Nigéria", "Gana", "Senegal", "Costa do Marfim", "Camarões", "Mali", "Burkina Faso", "Guiné", "Níger", "Togo", "Benim", "Serra Leoa", "Libéria", "Mauritânia", "Gâmbia"],
+    "África Central": ["República Democrática do Congo", "República do Congo", "Gabão", "República Centro-Africana", "Chade"],
+    "África Oriental": ["Quênia", "Tanzânia", "Etiópia", "Uganda", "Ruanda", "Burundi", "Somália", "Djibuti", "Eritreia"],
+    "África Austral": ["África do Sul", "Zimbábue", "Zâmbia", "Botsuana", "Namíbia", "Malaui", "Essuatíni", "Lesoto", "Madagascar"],
+  },
+  "🌙 Oriente Médio": {
+    "Golfo Pérsico": ["Emirados Árabes Unidos", "Arábia Saudita", "Catar", "Kuwait", "Bahrein", "Omã"],
+    "Levante & Outros": ["Israel", "Turquia", "Jordânia", "Líbano", "Iraque", "Irã", "Síria", "Iêmen", "Palestina"],
+    "Cáucaso": ["Geórgia", "Armênia", "Azerbaijão"],
+  },
+  "🌏 Ásia": {
+    "Ásia Central": ["Cazaquistão", "Uzbequistão", "Turcomenistão", "Quirguistão", "Tadjiquistão", "Afeganistão"],
+    "Ásia do Sul": ["Índia", "Paquistão", "Bangladesh", "Sri Lanka", "Nepal", "Myanmar"],
+    "Ásia Oriental": ["China", "Japão", "Coreia do Sul", "Taiwan", "Hong Kong", "Mongólia"],
+    "Ásia do Sudeste": ["Singapura", "Malásia", "Tailândia", "Indonésia", "Vietnã", "Filipinas", "Camboja", "Laos", "Brunei", "Timor-Leste"],
+  },
+  "🌏 Oceania": {
+    "Oceania": ["Austrália", "Nova Zelândia", "Papua Nova Guiné", "Fiji", "Ilhas Salomão", "Vanuatu", "Samoa", "Tonga", "Kiribati", "Micronésia", "Palau", "Ilhas Marshall", "Nauru", "Tuvalu"],
+  },
+};
+
+const FLAGS = {
+  "Canadá":"🇨🇦",
+  "Estados Unidos":"🇺🇸",
+  "México":"🇲🇽",
+  "Belize":"🇧🇿",
+  "Costa Rica":"🇨🇷",
+  "El Salvador":"🇸🇻",
+  "Guatemala":"🇬🇹",
+  "Honduras":"🇭🇳",
+  "Nicarágua":"🇳🇮",
+  "Panamá":"🇵🇦",
+  "Cuba":"🇨🇺",
+  "Haiti":"🇭🇹",
+  "Jamaica":"🇯🇲",
+  "República Dominicana":"🇩🇴",
+  "Bahamas":"🇧🇸",
+  "Antígua e Barbuda":"🇦🇬",
+  "Barbados":"🇧🇧",
+  "Dominica":"🇩🇲",
+  "Granada":"🇬🇩",
+  "Santa Lúcia":"🇱🇨",
+  "São Cristóvão e Névis":"🇰🇳",
+  "São Vicente e Granadinas":"🇻🇨",
+  "Trinidad e Tobago":"🇹🇹",
+  "Porto Rico":"🇵🇷",
+  "Ilhas Virgens Americanas":"🇻🇮",
+  "Anguila":"🇦🇮",
+  "Bermudas":"🇧🇲",
+  "Ilhas Cayman":"🇰🇾",
+  "Ilhas Virgens Britânicas":"🇻🇬",
+  "Montserrat":"🇲🇸",
+  "Turcas e Caicos":"🇹🇨",
+  "Guadalupe":"🇬🇵",
+  "Martinica":"🇲🇶",
+  "São Bartolomeu":"🇧🇱",
+  "São Martinho (Norte)":"🇲🇫",
+  "Aruba":"🇦🇼",
+  "Curaçao":"🇨🇼",
+  "São Martinho (Sul)":"🇸🇽",
+  "Argentina":"🇦🇷",
+  "Bolívia":"🇧🇴",
+  "Brasil":"🇧🇷",
+  "Chile":"🇨🇱",
+  "Colômbia":"🇨🇴",
+  "Equador":"🇪🇨",
+  "Guiana":"🇬🇾",
+  "Paraguai":"🇵🇾",
+  "Peru":"🇵🇪",
+  "Suriname":"🇸🇷",
+  "Uruguai":"🇺🇾",
+  "Venezuela":"🇻🇪",
+  "Portugal":"🇵🇹",
+  "Espanha":"🇪🇸",
+  "França":"🇫🇷",
+  "Alemanha":"🇩🇪",
+  "Reino Unido":"🇬🇧",
+  "Itália":"🇮🇹",
+  "Países Baixos":"🇳🇱",
+  "Bélgica":"🇧🇪",
+  "Suíça":"🇨🇭",
+  "Áustria":"🇦🇹",
+  "Luxemburgo":"🇱🇺",
+  "Suécia":"🇸🇪",
+  "Noruega":"🇳🇴",
+  "Dinamarca":"🇩🇰",
+  "Finlândia":"🇫🇮",
+  "Irlanda":"🇮🇪",
+  "Islândia":"🇮🇸",
+  "Grécia":"🇬🇷",
+  "Croácia":"🇭🇷",
+  "Sérvia":"🇷🇸",
+  "Eslovênia":"🇸🇮",
+  "Bósnia e Herzegovina":"🇧🇦",
+  "Montenegro":"🇲🇪",
+  "Macedônia do Norte":"🇲🇰",
+  "Albânia":"🇦🇱",
+  "Polônia":"🇵🇱",
+  "República Tcheca":"🇨🇿",
+  "Hungria":"🇭🇺",
+  "Romênia":"🇷🇴",
+  "Eslováquia":"🇸🇰",
+  "Bulgária":"🇧🇬",
+  "Ucrânia":"🇺🇦",
+  "Moldávia":"🇲🇩",
+  "Bielorrússia":"🇧🇾",
+  "Estônia":"🇪🇪",
+  "Letônia":"🇱🇻",
+  "Lituânia":"🇱🇹",
+  "Angola":"🇦🇴",
+  "Moçambique":"🇲🇿",
+  "Cabo Verde":"🇨🇻",
+  "São Tomé e Príncipe":"🇸🇹",
+  "Guiné-Bissau":"🇬🇼",
+  "Guiné Equatorial":"🇬🇶",
+  "Marrocos":"🇲🇦",
+  "Argélia":"🇩🇿",
+  "Tunísia":"🇹🇳",
+  "Líbia":"🇱🇾",
+  "Egito":"🇪🇬",
+  "Sudão":"🇸🇩",
+  "Nigéria":"🇳🇬",
+  "Gana":"🇬🇭",
+  "Senegal":"🇸🇳",
+  "Costa do Marfim":"🇨🇮",
+  "Camarões":"🇨🇲",
+  "Mali":"🇲🇱",
+  "Burkina Faso":"🇧🇫",
+  "Guiné":"🇬🇳",
+  "Níger":"🇳🇪",
+  "Togo":"🇹🇬",
+  "Benim":"🇧🇯",
+  "Serra Leoa":"🇸🇱",
+  "Libéria":"🇱🇷",
+  "Mauritânia":"🇲🇷",
+  "Gâmbia":"🇬🇲",
+  "República Democrática do Congo":"🇨🇩",
+  "República do Congo":"🇨🇬",
+  "Gabão":"🇬🇦",
+  "República Centro-Africana":"🇨🇫",
+  "Chade":"🇹🇩",
+  "Quênia":"🇰🇪",
+  "Tanzânia":"🇹🇿",
+  "Etiópia":"🇪🇹",
+  "Uganda":"🇺🇬",
+  "Ruanda":"🇷🇼",
+  "Burundi":"🇧🇮",
+  "Somália":"🇸🇴",
+  "Djibuti":"🇩🇯",
+  "Eritreia":"🇪🇷",
+  "África do Sul":"🇿🇦",
+  "Zimbábue":"🇿🇼",
+  "Zâmbia":"🇿🇲",
+  "Botsuana":"🇧🇼",
+  "Namíbia":"🇳🇦",
+  "Malaui":"🇲🇼",
+  "Essuatíni":"🇸🇿",
+  "Lesoto":"🇱🇸",
+  "Madagascar":"🇲🇬",
+  "Emirados Árabes Unidos":"🇦🇪",
+  "Arábia Saudita":"🇸🇦",
+  "Catar":"🇶🇦",
+  "Kuwait":"🇰🇼",
+  "Bahrein":"🇧🇭",
+  "Omã":"🇴🇲",
+  "Israel":"🇮🇱",
+  "Turquia":"🇹🇷",
+  "Jordânia":"🇯🇴",
+  "Líbano":"🇱🇧",
+  "Iraque":"🇮🇶",
+  "Irã":"🇮🇷",
+  "Síria":"🇸🇾",
+  "Iêmen":"🇾🇪",
+  "Palestina":"🇵🇸",
+  "Geórgia":"🇬🇪",
+  "Armênia":"🇦🇲",
+  "Azerbaijão":"🇦🇿",
+  "Cazaquistão":"🇰🇿",
+  "Uzbequistão":"🇺🇿",
+  "Turcomenistão":"🇹🇲",
+  "Quirguistão":"🇰🇬",
+  "Tadjiquistão":"🇹🇯",
+  "Afeganistão":"🇦🇫",
+  "Índia":"🇮🇳",
+  "Paquistão":"🇵🇰",
+  "Bangladesh":"🇧🇩",
+  "Sri Lanka":"🇱🇰",
+  "Nepal":"🇳🇵",
+  "Myanmar":"🇲🇲",
+  "China":"🇨🇳",
+  "Japão":"🇯🇵",
+  "Coreia do Sul":"🇰🇷",
+  "Taiwan":"🇹🇼",
+  "Hong Kong":"🇭🇰",
+  "Mongólia":"🇲🇳",
+  "Singapura":"🇸🇬",
+  "Malásia":"🇲🇾",
+  "Tailândia":"🇹🇭",
+  "Indonésia":"🇮🇩",
+  "Vietnã":"🇻🇳",
+  "Filipinas":"🇵🇭",
+  "Camboja":"🇰🇭",
+  "Laos":"🇱🇦",
+  "Brunei":"🇧🇳",
+  "Timor-Leste":"🇹🇱",
+  "Austrália":"🇦🇺",
+  "Nova Zelândia":"🇳🇿",
+  "Papua Nova Guiné":"🇵🇬",
+  "Fiji":"🇫🇯",
+  "Ilhas Salomão":"🇸🇧",
+  "Vanuatu":"🇻🇺",
+  "Samoa":"🇼🇸",
+  "Tonga":"🇹🇴",
+  "Kiribati":"🇰🇮",
+  "Micronésia":"🇫🇲",
+  "Palau":"🇵🇼",
+  "Ilhas Marshall":"🇲🇭",
+  "Nauru":"🇳🇷",
+  "Tuvalu":"🇹🇻",
+};
+
+const FUSOS = {
+  "Canadá":"UTC-5",
+  "Estados Unidos":"UTC-5",
+  "México":"UTC-6",
+  "Belize":"UTC-6",
+  "Costa Rica":"UTC-6",
+  "El Salvador":"UTC-6",
+  "Guatemala":"UTC-6",
+  "Honduras":"UTC-6",
+  "Nicarágua":"UTC-6",
+  "Panamá":"UTC-5",
+  "Cuba":"UTC-5",
+  "Haiti":"UTC-5",
+  "Jamaica":"UTC-5",
+  "República Dominicana":"UTC-4",
+  "Bahamas":"UTC-5",
+  "Antígua e Barbuda":"UTC-4",
+  "Barbados":"UTC-4",
+  "Dominica":"UTC-4",
+  "Granada":"UTC-4",
+  "Santa Lúcia":"UTC-4",
+  "São Cristóvão e Névis":"UTC-4",
+  "São Vicente e Granadinas":"UTC-4",
+  "Trinidad e Tobago":"UTC-4",
+  "Porto Rico":"UTC-4",
+  "Ilhas Virgens Americanas":"UTC-4",
+  "Anguila":"UTC-4",
+  "Bermudas":"UTC-4",
+  "Ilhas Cayman":"UTC-5",
+  "Ilhas Virgens Britânicas":"UTC-4",
+  "Montserrat":"UTC-4",
+  "Turcas e Caicos":"UTC-5",
+  "Guadalupe":"UTC-4",
+  "Martinica":"UTC-4",
+  "São Bartolomeu":"UTC-4",
+  "São Martinho (Norte)":"UTC-4",
+  "Aruba":"UTC-4",
+  "Curaçao":"UTC-4",
+  "São Martinho (Sul)":"UTC-4",
+  "Argentina":"UTC-3",
+  "Bolívia":"UTC-4",
+  "Brasil":"UTC-3",
+  "Chile":"UTC-3",
+  "Colômbia":"UTC-5",
+  "Equador":"UTC-5",
+  "Guiana":"UTC-4",
+  "Paraguai":"UTC-4",
+  "Peru":"UTC-5",
+  "Suriname":"UTC-3",
+  "Uruguai":"UTC-3",
+  "Venezuela":"UTC-4",
+  "Portugal":"UTC+0",
+  "Espanha":"UTC+1",
+  "França":"UTC+1",
+  "Alemanha":"UTC+1",
+  "Reino Unido":"UTC+0",
+  "Itália":"UTC+1",
+  "Países Baixos":"UTC+1",
+  "Bélgica":"UTC+1",
+  "Suíça":"UTC+1",
+  "Áustria":"UTC+1",
+  "Luxemburgo":"UTC+1",
+  "Suécia":"UTC+1",
+  "Noruega":"UTC+1",
+  "Dinamarca":"UTC+1",
+  "Finlândia":"UTC+2",
+  "Irlanda":"UTC+0",
+  "Islândia":"UTC+0",
+  "Grécia":"UTC+2",
+  "Croácia":"UTC+1",
+  "Sérvia":"UTC+1",
+  "Eslovênia":"UTC+1",
+  "Bósnia e Herzegovina":"UTC+1",
+  "Montenegro":"UTC+1",
+  "Macedônia do Norte":"UTC+1",
+  "Albânia":"UTC+1",
+  "Polônia":"UTC+1",
+  "República Tcheca":"UTC+1",
+  "Hungria":"UTC+1",
+  "Romênia":"UTC+2",
+  "Eslováquia":"UTC+1",
+  "Bulgária":"UTC+2",
+  "Ucrânia":"UTC+2",
+  "Moldávia":"UTC+2",
+  "Bielorrússia":"UTC+3",
+  "Estônia":"UTC+2",
+  "Letônia":"UTC+2",
+  "Lituânia":"UTC+2",
+  "Angola":"UTC+1",
+  "Moçambique":"UTC+2",
+  "Cabo Verde":"UTC-1",
+  "São Tomé e Príncipe":"UTC+0",
+  "Guiné-Bissau":"UTC+0",
+  "Guiné Equatorial":"UTC+1",
+  "Marrocos":"UTC+1",
+  "Argélia":"UTC+1",
+  "Tunísia":"UTC+1",
+  "Líbia":"UTC+2",
+  "Egito":"UTC+2",
+  "Sudão":"UTC+3",
+  "Nigéria":"UTC+1",
+  "Gana":"UTC+0",
+  "Senegal":"UTC+0",
+  "Costa do Marfim":"UTC+0",
+  "Camarões":"UTC+1",
+  "Mali":"UTC+0",
+  "Burkina Faso":"UTC+0",
+  "Guiné":"UTC+0",
+  "Níger":"UTC+1",
+  "Togo":"UTC+0",
+  "Benim":"UTC+1",
+  "Serra Leoa":"UTC+0",
+  "Libéria":"UTC+0",
+  "Mauritânia":"UTC+0",
+  "Gâmbia":"UTC+0",
+  "República Democrática do Congo":"UTC+1",
+  "República do Congo":"UTC+1",
+  "Gabão":"UTC+1",
+  "República Centro-Africana":"UTC+1",
+  "Chade":"UTC+1",
+  "Quênia":"UTC+3",
+  "Tanzânia":"UTC+3",
+  "Etiópia":"UTC+3",
+  "Uganda":"UTC+3",
+  "Ruanda":"UTC+2",
+  "Burundi":"UTC+2",
+  "Somália":"UTC+3",
+  "Djibuti":"UTC+3",
+  "Eritreia":"UTC+3",
+  "África do Sul":"UTC+2",
+  "Zimbábue":"UTC+2",
+  "Zâmbia":"UTC+2",
+  "Botsuana":"UTC+2",
+  "Namíbia":"UTC+2",
+  "Malaui":"UTC+2",
+  "Essuatíni":"UTC+2",
+  "Lesoto":"UTC+2",
+  "Madagascar":"UTC+3",
+  "Emirados Árabes Unidos":"UTC+4",
+  "Arábia Saudita":"UTC+3",
+  "Catar":"UTC+3",
+  "Kuwait":"UTC+3",
+  "Bahrein":"UTC+3",
+  "Omã":"UTC+4",
+  "Israel":"UTC+2",
+  "Turquia":"UTC+3",
+  "Jordânia":"UTC+3",
+  "Líbano":"UTC+2",
+  "Iraque":"UTC+3",
+  "Irã":"UTC+3",
+  "Síria":"UTC+3",
+  "Iêmen":"UTC+3",
+  "Palestina":"UTC+2",
+  "Geórgia":"UTC+4",
+  "Armênia":"UTC+4",
+  "Azerbaijão":"UTC+4",
+  "Cazaquistão":"UTC+5",
+  "Uzbequistão":"UTC+5",
+  "Turcomenistão":"UTC+5",
+  "Quirguistão":"UTC+6",
+  "Tadjiquistão":"UTC+5",
+  "Afeganistão":"UTC+4",
+  "Índia":"UTC+5",
+  "Paquistão":"UTC+5",
+  "Bangladesh":"UTC+6",
+  "Sri Lanka":"UTC+5",
+  "Nepal":"UTC+5",
+  "Myanmar":"UTC+6",
+  "China":"UTC+8",
+  "Japão":"UTC+9",
+  "Coreia do Sul":"UTC+9",
+  "Taiwan":"UTC+8",
+  "Hong Kong":"UTC+8",
+  "Mongólia":"UTC+8",
+  "Singapura":"UTC+8",
+  "Malásia":"UTC+8",
+  "Tailândia":"UTC+7",
+  "Indonésia":"UTC+7",
+  "Vietnã":"UTC+7",
+  "Filipinas":"UTC+8",
+  "Camboja":"UTC+7",
+  "Laos":"UTC+7",
+  "Brunei":"UTC+8",
+  "Timor-Leste":"UTC+9",
+  "Austrália":"UTC+10",
+  "Nova Zelândia":"UTC+12",
+  "Papua Nova Guiné":"UTC+10",
+  "Fiji":"UTC+12",
+  "Ilhas Salomão":"UTC+11",
+  "Vanuatu":"UTC+11",
+  "Samoa":"UTC+13",
+  "Tonga":"UTC+13",
+  "Kiribati":"UTC+12",
+  "Micronésia":"UTC+11",
+  "Palau":"UTC+9",
+  "Ilhas Marshall":"UTC+12",
+  "Nauru":"UTC+12",
+  "Tuvalu":"UTC+12",
+};
+
+const NORM = {
+  "CA":"Canadá",
+  "US":"Estados Unidos",
+  "MX":"México",
+  "BZ":"Belize",
+  "CR":"Costa Rica",
+  "SV":"El Salvador",
+  "GT":"Guatemala",
+  "HN":"Honduras",
+  "NI":"Nicarágua",
+  "PA":"Panamá",
+  "CU":"Cuba",
+  "HT":"Haiti",
+  "JM":"Jamaica",
+  "DO":"República Dominicana",
+  "BS":"Bahamas",
+  "AG":"Antígua e Barbuda",
+  "BB":"Barbados",
+  "DM":"Dominica",
+  "GD":"Granada",
+  "LC":"Santa Lúcia",
+  "KN":"São Cristóvão e Névis",
+  "VC":"São Vicente e Granadinas",
+  "TT":"Trinidad e Tobago",
+  "PR":"Porto Rico",
+  "VI":"Ilhas Virgens Americanas",
+  "AI":"Anguila",
+  "BM":"Bermudas",
+  "KY":"Ilhas Cayman",
+  "VG":"Ilhas Virgens Britânicas",
+  "MS":"Montserrat",
+  "TC":"Turcas e Caicos",
+  "GP":"Guadalupe",
+  "MQ":"Martinica",
+  "BL":"São Bartolomeu",
+  "MF":"São Martinho (Norte)",
+  "AW":"Aruba",
+  "CW":"Curaçao",
+  "SX":"São Martinho (Sul)",
+  "AR":"Argentina",
+  "BO":"Bolívia",
+  "BR":"Brasil",
+  "CL":"Chile",
+  "CO":"Colômbia",
+  "EC":"Equador",
+  "GY":"Guiana",
+  "PY":"Paraguai",
+  "PE":"Peru",
+  "SR":"Suriname",
+  "UY":"Uruguai",
+  "VE":"Venezuela",
+  "PT":"Portugal",
+  "ES":"Espanha",
+  "FR":"França",
+  "DE":"Alemanha",
+  "GB":"Reino Unido",
+  "IT":"Itália",
+  "NL":"Países Baixos",
+  "BE":"Bélgica",
+  "CH":"Suíça",
+  "AT":"Áustria",
+  "LU":"Luxemburgo",
+  "SE":"Suécia",
+  "NO":"Noruega",
+  "DK":"Dinamarca",
+  "FI":"Finlândia",
+  "IE":"Irlanda",
+  "IS":"Islândia",
+  "GR":"Grécia",
+  "HR":"Croácia",
+  "RS":"Sérvia",
+  "SI":"Eslovênia",
+  "BA":"Bósnia e Herzegovina",
+  "ME":"Montenegro",
+  "MK":"Macedônia do Norte",
+  "AL":"Albânia",
+  "PL":"Polônia",
+  "CZ":"República Tcheca",
+  "HU":"Hungria",
+  "RO":"Romênia",
+  "SK":"Eslováquia",
+  "BG":"Bulgária",
+  "UA":"Ucrânia",
+  "MD":"Moldávia",
+  "BY":"Bielorrússia",
+  "EE":"Estônia",
+  "LV":"Letônia",
+  "LT":"Lituânia",
+  "AO":"Angola",
+  "MZ":"Moçambique",
+  "CV":"Cabo Verde",
+  "ST":"São Tomé e Príncipe",
+  "GW":"Guiné-Bissau",
+  "GQ":"Guiné Equatorial",
+  "MA":"Marrocos",
+  "DZ":"Argélia",
+  "TN":"Tunísia",
+  "LY":"Líbia",
+  "EG":"Egito",
+  "SD":"Sudão",
+  "NG":"Nigéria",
+  "GH":"Gana",
+  "SN":"Senegal",
+  "CI":"Costa do Marfim",
+  "CM":"Camarões",
+  "ML":"Mali",
+  "BF":"Burkina Faso",
+  "GN":"Guiné",
+  "NE":"Níger",
+  "TG":"Togo",
+  "BJ":"Benim",
+  "SL":"Serra Leoa",
+  "LR":"Libéria",
+  "MR":"Mauritânia",
+  "GM":"Gâmbia",
+  "CD":"República Democrática do Congo",
+  "CG":"República do Congo",
+  "GA":"Gabão",
+  "CF":"República Centro-Africana",
+  "TD":"Chade",
+  "KE":"Quênia",
+  "TZ":"Tanzânia",
+  "ET":"Etiópia",
+  "UG":"Uganda",
+  "RW":"Ruanda",
+  "BI":"Burundi",
+  "SO":"Somália",
+  "DJ":"Djibuti",
+  "ER":"Eritreia",
+  "ZA":"África do Sul",
+  "ZW":"Zimbábue",
+  "ZM":"Zâmbia",
+  "BW":"Botsuana",
+  "NA":"Namíbia",
+  "MW":"Malaui",
+  "SZ":"Essuatíni",
+  "LS":"Lesoto",
+  "MG":"Madagascar",
+  "AE":"Emirados Árabes Unidos",
+  "SA":"Arábia Saudita",
+  "QA":"Catar",
+  "KW":"Kuwait",
+  "BH":"Bahrein",
+  "OM":"Omã",
+  "IL":"Israel",
+  "TR":"Turquia",
+  "JO":"Jordânia",
+  "LB":"Líbano",
+  "IQ":"Iraque",
+  "IR":"Irã",
+  "SY":"Síria",
+  "YE":"Iêmen",
+  "PS":"Palestina",
+  "GE":"Geórgia",
+  "AM":"Armênia",
+  "AZ":"Azerbaijão",
+  "KZ":"Cazaquistão",
+  "UZ":"Uzbequistão",
+  "TM":"Turcomenistão",
+  "KG":"Quirguistão",
+  "TJ":"Tadjiquistão",
+  "AF":"Afeganistão",
+  "IN":"Índia",
+  "PK":"Paquistão",
+  "BD":"Bangladesh",
+  "LK":"Sri Lanka",
+  "NP":"Nepal",
+  "MM":"Myanmar",
+  "CN":"China",
+  "JP":"Japão",
+  "KR":"Coreia do Sul",
+  "TW":"Taiwan",
+  "HK":"Hong Kong",
+  "MN":"Mongólia",
+  "SG":"Singapura",
+  "MY":"Malásia",
+  "TH":"Tailândia",
+  "ID":"Indonésia",
+  "VN":"Vietnã",
+  "PH":"Filipinas",
+  "KH":"Camboja",
+  "LA":"Laos",
+  "BN":"Brunei",
+  "TL":"Timor-Leste",
+  "AU":"Austrália",
+  "NZ":"Nova Zelândia",
+  "PG":"Papua Nova Guiné",
+  "FJ":"Fiji",
+  "SB":"Ilhas Salomão",
+  "VU":"Vanuatu",
+  "WS":"Samoa",
+  "TO":"Tonga",
+  "KI":"Kiribati",
+  "FM":"Micronésia",
+  "PW":"Palau",
+  "MH":"Ilhas Marshall",
+  "NR":"Nauru",
+  "TV":"Tuvalu",
+  "Mexico":"México",
+  "Colombia":"Colômbia",
+  "Bolivia":"Bolívia",
+  "Panama":"Panamá",
+  "Mocambique":"Moçambique",
+  "Uruguay":"Uruguai",
+  "Nicaragua":"Nicarágua",
+  "United States":"Estados Unidos",
+  "Canada":"Canadá",
+  "Guyana":"Guiana",
+  "Dominican Republic":"República Dominicana",
+  "Trinidad and Tobago":"Trinidad e Tobago",
+  "Cayman Islands":"Ilhas Cayman",
+  "British Virgin Islands":"Ilhas Virgens Britânicas",
+  "US Virgin Islands":"Ilhas Virgens Americanas",
+  "Martinique":"Martinica",
+  "Guadeloupe":"Guadalupe",
+  "Bermuda":"Bermudas",
+  "Anguilla":"Anguila",
+  "Curacao":"Curaçao",
+  "Saint Lucia":"Santa Lúcia",
+  "Dominica":"Dominica",
+  "Grenada":"Granada",
+  "Barbados":"Barbados",
+  "Bahamas":"Bahamas",
+  "Saint Kitts and Nevis":"São Cristóvão e Névis",
+  "Saint Vincent and the Grenadines":"São Vicente e Granadinas",
+  "Turks and Caicos":"Turcas e Caicos",
+  "Puerto Rico":"Porto Rico",
+  "El Salvador":"El Salvador",
+  "Guatemala":"Guatemala",
+  "Honduras":"Honduras",
+  "Belize":"Belize",
+  "Costa Rica":"Costa Rica",
+  "Cuba":"Cuba",
+  "Haiti":"Haiti",
+  "Jamaica":"Jamaica",
+  "Suriname":"Suriname",
+  "United Arab Emirates":"Emirados Árabes Unidos",
+  "Saudi Arabia":"Arábia Saudita",
+  "Qatar":"Catar",
+  "Turkey":"Turquia",
+  "Jordan":"Jordânia",
+  "Lebanon":"Líbano",
+  "China":"China",
+  "Japan":"Japão",
+  "South Korea":"Coreia do Sul",
+  "Singapore":"Singapura",
+  "Malaysia":"Malásia",
+  "Thailand":"Tailândia",
+  "Indonesia":"Indonésia",
+  "Vietnam":"Vietnã",
+  "Philippines":"Filipinas",
+  "India":"Índia",
+  "Pakistan":"Paquistão",
+  "Bangladesh":"Bangladesh",
+  "Australia":"Austrália",
+  "New Zealand":"Nova Zelândia",
+  "South Africa":"África do Sul",
+  "Nigeria":"Nigéria",
+  "Ghana":"Gana",
+  "Kenya":"Quênia",
+  "Ethiopia":"Etiópia",
+  "Tanzania":"Tanzânia",
+  "Morocco":"Marrocos",
+  "Egypt":"Egito",
+  "Angola":"Angola",
+  "Mozambique":"Moçambique",
+  "Cape Verde":"Cabo Verde",
+};
+
+function construirArvore(rows) {
+  // Mapa reverso usando dados oficiais
+  const paisParaSub = {}, subParaCont = {};
+  for (const [cont, subs] of Object.entries(GEO_TREE)) {
+    for (const [sub, paises] of Object.entries(subs)) {
+      subParaCont[sub] = cont;
+      paises.forEach(p => paisParaSub[p] = sub);
+    }
+  }
+
+  const tree = {};
+
+  rows.forEach(row => {
+    let paisAt = String(row[10]||'').trim();
+    // Normaliza: ISO → nome PT-BR, ou variante → nome canônico
+    paisAt = NORM[paisAt] || paisAt;
+    if (!paisAt) return;
+
+    const empresa   = String(row[5]||'—').trim();
+    const cliente   = String(row[11]||'').trim();
+    if (!cliente) return;
+
+    const area      = String(row[12]||'').trim();
+    const produtos  = String(row[13]||'').trim();
+    const projetos  = String(row[15]||'').trim();
+    const repNome   = (String(row[1]||'')+' '+String(row[2]||'')).trim();
+    const repPais   = NORM[String(row[3]||'').trim()] || String(row[3]||'').trim();
+    const repCidade = String(row[4]||'').trim();
+
+    const sub  = paisParaSub[paisAt] || 'Outros';
+    const cont = subParaCont[sub]    || '🌐 Outros';
+
+    if (!tree[cont])                       tree[cont]={};
+    if (!tree[cont][sub])                  tree[cont][sub]={};
+    if (!tree[cont][sub][paisAt])          tree[cont][sub][paisAt]={};
+    if (!tree[cont][sub][paisAt][empresa]) tree[cont][sub][paisAt][empresa]={};
+    if (!tree[cont][sub][paisAt][empresa][cliente]) tree[cont][sub][paisAt][empresa][cliente]=[];
+
+    const status = String(row[17]||row[8]||'PROSPECCAO').trim();
+    const repEmail = String(row[6]||'').trim();
+    const repTel   = String(row[7]||'').trim().replace(/^'/,'');
+    const qtd = String(row[14]||'').trim();
+    const obs = String(row[16]||'').trim();
+        const titulo      = String(row[18]||'').trim();
+    const vertical    = String(row[19]||'').trim();
+    const areaCliente2= String(row[20]||'').trim();
+    const aplicacao   = String(row[21]||'').trim();
+    const vertFinal   = vertical || area;
+    const apliList    = aplicacao ? [aplicacao] : (projetos ? projetos.split(',').map(x=>x.trim()).filter(Boolean) : []);
+    tree[cont][sub][paisAt][empresa][cliente].push({
+      area, vertical:vertFinal, areaCliente:areaCliente2||'',
+      aplicacoes:apliList, produtos, qtd, projetos, obs,
+      titulo, criadoEm: row[0]||null,
+      repNome, repPais, repCidade, repEmail, repTel, status
+    });
+  });
+
+  return tree;
+}
+
+// ── HELPERS ──────────────────────────────────────────────────
+function ini(s){ return (s||'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join('') || '—'; }
+function esc(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// SVG chevron
+const CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>';
+
+// ── RENDER ──────────────────────────────────────────────────
+let TREE = {}, TOTAL = 0;
+
+function renderMapa(tree, totalRows) {
+  _projSeq = 0;
+  TREE = tree; TOTAL = totalRows;
+  document.getElementById('badge').textContent = totalRows;
+
+  // stats globais
+  const allPaises = new Set(), allEmp = new Set(), allCli = new Set();
+  for (const sCont of Object.values(tree)) for (const sSub of Object.values(sCont))
+    for (const [pais, emps] of Object.entries(sSub)) {
+      allPaises.add(pais);
+      for (const [emp, clis] of Object.entries(emps)) { allEmp.add(emp); for (const c of Object.keys(clis)) allCli.add(c); }
+    }
+  document.getElementById('stat-paises').textContent   = allPaises.size;
+  const subEl = document.getElementById('stat-paises-sub');
+  if (subEl) subEl.textContent = 'de ' + Object.values(GEO_TREE).flatMap(s=>Object.values(s)).flat().length;
+  document.getElementById('stat-empresas').textContent = allEmp.size;
+  document.getElementById('stat-clientes').textContent = allCli.size;
+
+  // chips continentes
+  const chipsEl = document.getElementById('contChips');
+  chipsEl.innerHTML = '<button class="chip active" data-cont="all">Todos <span class="num">'+allPaises.size+'</span></button>' +
+    Object.keys(GEO_TREE).map(cont=>{
+      let n=0; if (tree[cont]) for (const sub of Object.values(tree[cont])) n += Object.keys(sub).length;
+      const key = cont.replace(/[^a-z]/gi,'').toLowerCase();
+      return '<button class="chip" data-cont="'+key+'">'+esc(cont)+' <span class="num">'+n+'</span></button>';
+    }).join('');
+  chipsEl.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
+    chipsEl.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    const k = c.dataset.cont;
+    document.querySelectorAll('.cont').forEach(el=>{
+      el.classList.toggle('hidden', k!=='all' && el.dataset.key!==k);
+    });
+  }));
+
+  const mapa = document.getElementById('mapa');
+  if (!totalRows) {
+    mapa.innerHTML = '<div class="empty"><div class="empty-icon">🗺️</div><h3>Nenhum cadastro ainda</h3><p>Distribua o formulário para os representantes para popular o mapa.</p></div>';
+    return;
+  }
+
+  let html = '';
+  for (const [cont, subs] of Object.entries(GEO_TREE)) {
+    const key = cont.replace(/[^a-z]/gi,'').toLowerCase();
+    let contPaises = 0;
+    for (const sub of Object.keys(subs)) if (tree[cont] && tree[cont][sub]) contPaises += Object.keys(tree[cont][sub]).length;
+    const emoji = (cont.match(/^\p{Emoji}/u)||[''])[0];
+    const nome  = cont.replace(/^\p{Emoji}\s*/u,'');
+    const totalPaisesCont = Object.values(subs).flat().length;
+    const isOpen = false; // sempre fechado no início
+
+    html += '<section class="cont '+(isOpen?'open':'')+'" data-key="'+key+'">';
+    html +=   '<header class="cont-head" onclick="this.parentNode.classList.toggle(\'open\')">';
+    html +=     '<div class="cont-emoji">'+emoji+'</div>';
+    html +=     '<div class="cont-title"><div class="cont-name">'+esc(nome)+'</div>';
+    html +=       '<div class="cont-meta"><b>'+contPaises+'</b> de <b>'+totalPaisesCont+'</b> país'+(totalPaisesCont===1?'':'es')+' com representação</div></div>';
+    html +=     '<div class="chev">'+CHEV+'</div>';
+    html +=   '</header>';
+    html +=   '<div class="cont-body">';
+
+    for (const [sub, paisesGeo] of Object.entries(subs)) {
+      const subData = tree[cont] && tree[cont][sub] ? tree[cont][sub] : {};
+      const nPaises = Object.keys(subData).length;
+      const subOpen = false; // sempre fechado no início
+
+      html += '<div class="sub '+(subOpen?'open':'')+'">';
+      html +=   '<div class="sub-head" onclick="this.parentNode.classList.toggle(\'open\')">';
+      html +=     '<div class="sub-bar"></div><div class="sub-name">'+esc(sub)+'</div>';
+      html +=     '<div class="sub-count">'+nPaises+'/'+paisesGeo.length+' país(es)</div>';
+      html +=     '<div class="sub-chev">'+CHEV+'</div>';
+      html +=   '</div>';
+      html +=   '<div class="sub-body"><div class="country-grid">';
+
+      // Ordenar: países com dados primeiro, depois vazios — ambos alfabéticos
+      const paisesOrdenados = [...paisesGeo].sort((a, b) => {
+        const aHas = subData[a] && Object.keys(subData[a]).length > 0;
+        const bHas = subData[b] && Object.keys(subData[b]).length > 0;
+        if (aHas && !bHas) return -1;
+        if (!aHas && bHas) return 1;
+        return a.localeCompare(b, 'pt-BR');
+      });
+
+      for (const paisGeo of paisesOrdenados) {
+        const empresas = subData[paisGeo] || {};
+        const nEmp = Object.keys(empresas).length;
+        const flag = FLAGS[paisGeo] || '🏳️';
+        const has = nEmp > 0;
+
+        if (!has) {
+          // País sem representação: linha fina simples
+          html += '<div class="country-empty-row">'
+               +  '<span class="cer-flag">'+flag+'</span>'
+               +  '<span class="cer-name">'+esc(paisGeo)+'</span>'
+               +  '</div>';
+        } else {
+          const tog = "this.parentNode.classList.toggle('open')";
+          html += '<div class="country has-data">';
+          html += '<div class="country-head" onclick="'+tog+'">';
+          html += '<div class="flag">'+flag+'</div>';
+          html += '<div class="country-name">'+esc(paisGeo)+'</div>';
+          html += '<div class="country-badge">'+nEmp+(nEmp===1?' representante':' representantes')+'</div>';
+          html += '<div class="country-chev">'+CHEV+'</div>';
+          html += '</div>';
+        }
+
+        if (has) {
+          html += '<div class="country-body">';
+          for (const [empresa, clientes] of Object.entries(empresas)) {
+            const nCli = Object.keys(clientes).length;
+            html += '<div class="company">';
+            html +=   '<div class="company-head" onclick="this.parentNode.classList.toggle(\'open\')">';
+            html +=     '<div class="company-ini">'+ini(empresa)+'</div>';
+            html +=     '<div class="company-name">'+esc(empresa)+'</div>';
+            html +=     '<div class="company-cnt">'+nCli+'</div>';
+            html +=     '<div class="company-chev">'+CHEV+'</div>';
+            html +=   '</div>';
+            html +=   '<div class="company-body">';
+            for (const [cliente, projetos] of Object.entries(clientes)) {
+              html += '<div class="client">';
+              html +=   '<div class="client-head" onclick="this.parentNode.classList.toggle(\'open\')">';
+              html +=     '<div class="client-icon">🏭</div>';
+              html +=     '<div class="client-name">'+esc(cliente)+'</div>';
+              html +=     '<div class="client-chev">'+CHEV+'</div>';
+              html +=   '</div>';
+              html +=   '<div class="client-body">';
+              projetos.forEach(p=>{
+                const prods = p.produtos ? p.produtos.split(',').map(x=>x.trim()).filter(Boolean) : [];
+                const projs = p.projetos ? p.projetos.split(',').map(x=>x.trim()).filter(Boolean) : [];
+                // Monta título automático
+                html += buildCardV2(p, paisGeo, cliente);
+              });
+              html += '</div></div>';
+            }
+            html += '</div></div>';
+          }
+          html += '</div>';
+          html += '</div>'; // fecha div.country
+        }
+      }
+      html += '</div></div></div>';
+    }
+    html += '</div></section>';
+  }
+  mapa.innerHTML = html;
+}
+
+// ── EXPAND / COLLAPSE ───────────────────────────────────────
+function expandAll(){ document.querySelectorAll('.cont,.sub,.country,.company,.client').forEach(el=>el.classList.add('open')); }
+function collapseAll(){ document.querySelectorAll('.cont,.sub,.country,.company,.client').forEach(el=>el.classList.remove('open')); }
+
+// ── SEARCH ──────────────────────────────────────────────────
+const searchInput = document.getElementById('search');
+const clearBtn = document.getElementById('clearSearch');
+let searchTimer;
+searchInput.addEventListener('input', ()=>{
+  clearTimeout(searchTimer);
+  clearBtn.style.display = searchInput.value ? '' : 'none';
+  searchTimer = setTimeout(applySearch, 120);
+});
+clearBtn.addEventListener('click', ()=>{ searchInput.value=''; clearBtn.style.display='none'; applySearch(); });
+
+function applySearch(){
+  const q = searchInput.value.trim().toLowerCase();
+
+  if (!q) {
+    // Sem filtro: remove hidden E fecha tudo — volta ao estado inicial limpo
+    document.querySelectorAll('.cont,.sub,.country,.company,.client,.proj').forEach(el=>{
+      el.classList.remove('hidden');
+      el.classList.remove('open');
+    });
+    return;
+  }
+
+  // ── PASSO 1: determina quais .proj fazem match (texto completo do card) ──
+  document.querySelectorAll('.proj').forEach(el=>{
+    el.classList.toggle('hidden', !el.textContent.toLowerCase().includes(q));
+  });
+
+  // ── PASSO 2: .client — match no nome OU tem .proj visível abaixo ──
+  document.querySelectorAll('.client').forEach(el=>{
+    const nameHit = el.querySelector('.client-name').textContent.toLowerCase().includes(q);
+    const hasProj = el.querySelectorAll('.proj:not(.hidden)').length > 0;
+    const hit = nameHit || hasProj;
+    el.classList.toggle('hidden', !hit);
+    if (hit) {
+      el.classList.add('open');
+      // Se o próprio nome bateu, abre TODOS os filhos (proj) — mostra tudo
+      if (nameHit) el.querySelectorAll('.proj').forEach(p=>p.classList.remove('hidden'));
+    }
+  });
+
+  // ── PASSO 3: .company — match no nome OU tem .client visível abaixo ──
+  document.querySelectorAll('.company').forEach(el=>{
+    const nameHit = el.querySelector('.company-name').textContent.toLowerCase().includes(q);
+    const hasCli  = el.querySelectorAll('.client:not(.hidden)').length > 0;
+    const hit = nameHit || hasCli;
+    el.classList.toggle('hidden', !hit);
+    if (hit) {
+      el.classList.add('open');
+      // Match na empresa: abre TODOS clientes e projetos abaixo
+      if (nameHit) {
+        el.querySelectorAll('.client,.proj').forEach(c=>{
+          c.classList.remove('hidden');
+          c.classList.add('open');
+        });
+      }
+    }
+  });
+
+  // ── PASSO 4: .country — match no nome OU tem .company visível ──
+  document.querySelectorAll('.country').forEach(el=>{
+    const nameHit = el.querySelector('.country-name').textContent.toLowerCase().includes(q);
+    const hasComp = el.querySelectorAll('.company:not(.hidden)').length > 0;
+    const hit = nameHit || hasComp;
+    el.classList.toggle('hidden', !hit);
+    if (hit && el.classList.contains('has-data')) {
+      el.classList.add('open');
+      if (nameHit) {
+        el.querySelectorAll('.company,.client,.proj').forEach(c=>{
+          c.classList.remove('hidden');
+          c.classList.add('open');
+        });
+      }
+    }
+  });
+
+  // ── PASSO 5: .sub e .cont — propagação ascendente ──
+  document.querySelectorAll('.sub').forEach(el=>{
+    const hit = el.querySelectorAll('.country:not(.hidden)').length > 0;
+    el.classList.toggle('hidden', !hit);
+    if (hit) el.classList.add('open');
+  });
+  document.querySelectorAll('.cont').forEach(el=>{
+    const hit = el.querySelectorAll('.sub:not(.hidden)').length > 0;
+    el.classList.toggle('hidden', !hit);
+    if (hit) el.classList.add('open');
+  });
+}
+
+// ── FETCH ───────────────────────────────────────────────────
+
+// ── HORA LOCAL E CONTATOS ────────────────────────────────────
+function localTimeFromFuso(fuso) {
+  if (!fuso) return null;
+  const m = fuso.match(/UTC([+-])(\d+)/);
+  if (!m) return null;
+  const sign = m[1] === '+' ? 1 : -1;
+  const offset = sign * parseInt(m[2]);
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const local = new Date(utc + offset * 3600000);
+  const h = local.getHours();
+  const min = String(local.getMinutes()).padStart(2,'0');
+  const commercial = h >= 8 && h < 18;
+  return { time: h + ':' + min, h, commercial };
+}
+
+
+function buildProjTitle(p, paisAt) {
+  const parts = [];
+  if (p.cliente) parts.push(p.cliente.toUpperCase());
+  if (paisAt)    parts.push(paisAt);
+  if (p.area)    parts.push(p.area);
+  // Primeiro projeto/aplicação se existir
+  const projs = p.projetos ? p.projetos.split(',').map(x=>x.trim()).filter(Boolean) : [];
+  if (projs.length) parts.push(projs[0]);
+  return parts.join(' · ');
+}
+
+function formatCriadoEm(dt) {
+  if (!dt) return '';
+  try {
+    const d = dt instanceof Date ? dt : new Date(dt);
+    if (isNaN(d)) return '';
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mn = String(d.getMinutes()).padStart(2,'0');
+    return dd+'.'+mm+'.'+d.getFullYear()+' · '+hh+':'+mn;
+  } catch(e){ return ''; }
+}
+
+let _projSeq = 0;
+function gerarCodigo(repPais) {
+  _projSeq++;
+  const iso = (repPais||'XX').substring(0,2).toUpperCase();
+  const seq = String(_projSeq).padStart(3,'0');
+  const rnd = String(Math.floor(Math.random()*90+10));
+  return iso+'-'+rnd+'-'+seq;
+}
+
+function buildCardV2(p, paisAt, nomeCliente) {
+  const fuso   = FUSOS[NORM[p.repPais]||p.repPais] || FUSOS[p.repPais] || '';
+  const lt     = localTimeFromFuso(fuso);
+  const avatar = ini(p.repNome);
+  const tel    = (p.repTel||'').replace(/^'/,'').trim();
+  const waNum  = tel.replace(/[^\d+]/g,'').replace(/^\+/,'');
+  const code   = gerarCodigo(p.repPais);
+  const prods  = p.produtos ? p.produtos.split(',').map(x=>x.trim()).filter(Boolean) : [];
+  const aplis  = p.aplicacoes && p.aplicacoes.length ? p.aplicacoes
+                 : (p.projetos ? p.projetos.split(',').map(x=>x.trim()).filter(Boolean) : []);
+  const vert   = p.vertical || p.area || '';
+  const criado = formatCriadoEm(p.criadoEm);
+  const DASH   = '<span class="proj-empty">\u2014</span>';
+
+  // Título no header
+  const tp = [];
+  if (p.cliente) tp.push(p.cliente.toUpperCase());
+  if (paisAt)    tp.push(paisAt);
+  if (vert)      tp.push(vert);
+  if (p.titulo)  tp.push(p.titulo.toUpperCase());
+  else if (aplis.length) tp.push(aplis[0].toUpperCase());
+  const title = tp.join(' \u00b7 ');
+
+  let h = '<div class="proj-card-v2">';
+
+  // ── HEADER ──────────────────────────────────────────────
+  h += '<div class="proj-hdr">';
+  h += '<span class="proj-hdr-code">'+esc(code)+'</span>';
+  h += '<div class="proj-hdr-title">'+esc(title)+'</div>';
+  h += '<div class="proj-hdr-status">'+statusBadge(p.status||'PROSPECCAO')+'</div>';
+  h += '</div>';
+
+  // ── BODY ────────────────────────────────────────────────
+  h += '<div class="proj-body-v2">';
+
+  // ── PAINEL ESQUERDO: Representante ──────────────────────
+  h += '<div class="proj-rep-panel">';
+  h += '<div class="proj-rep-section-lbl">01 Representante</div>';
+
+  // Avatar + Nome + Localização
+  h += '<div class="proj-rep-top">';
+  h += '<div class="proj-rep-avatar">'+esc(avatar)+'</div>';
+  h += '<div>';
+  h += '<div class="proj-rep-name">'+esc(p.repNome||'—')+'</div>';
+  h += '<div class="proj-rep-loc">'+esc(p.repCidade||'—')+(fuso?' \u00b7 '+fuso:'')+'</div>';
+  h += '</div></div>';
+
+  // Relógio + badge expediente
+  if (lt) {
+    h += '<div class="proj-rep-time">';
+    h += '<span class="proj-rep-clock" data-fuso="'+fuso+'">'+lt.time+'</span>';
+    h += '<span class="proj-rep-tz">'+fuso+'</span>';
+    h += '<span class="badge-exp '+(lt.commercial?'open':'closed')+'" data-fuso="'+fuso+'">'+(lt.commercial?'Em Expediente':'Fora do expediente')+'</span>';
+    h += '</div>';
+  }
+
+  // Contatos
+  h += '<div class="proj-rep-contacts">';
+  if (p.repEmail) {
+    h += '<div class="proj-contact-row">';
+    h += '<a class="proj-contact-btn" href="mailto:'+esc(p.repEmail)+'">✉ '+esc(p.repEmail)+'</a>';
+    h += '<span class="proj-copy" data-copy="'+esc(p.repEmail)+'" onclick="copyText(this.dataset.copy,this)" title="Copiar">⎘</span>';
+    h += '</div>';
+  }
+  if (waNum) {
+    h += '<div class="proj-contact-row">';
+    h += '<a class="proj-contact-btn wa" href="https://wa.me/'+waNum+'" target="_blank">💬 WhatsApp</a>';
+    h += '</div>';
+  }
+  if (tel) {
+    h += '<div class="proj-contact-row">';
+    h += '<a class="proj-contact-btn tel" href="tel:'+esc(tel)+'">📞 '+esc(tel)+'</a>';
+    h += '<span class="proj-copy" data-copy="'+esc(tel)+'" onclick="copyText(this.dataset.copy,this)" title="Copiar">⎘</span>';
+    h += '</div>';
+  }
+  h += '</div>'; // contacts
+  h += '</div>'; // rep-panel
+
+  // ── PAINEL DIREITO: Projeto ──────────────────────────────
+  h += '<div class="proj-info-panel">';
+  h += '<div class="proj-info-section-lbl">02 Projeto</div>';
+
+  // Metadados: Vertical · Cliente Final · Área do Cliente · Aplicação
+  const primeiraApli = aplis.length ? aplis[0] : '';
+  h += '<div class="proj-meta-row">';
+  // Vertical
+  h += '<div class="proj-meta-field">';
+  h += '<div class="proj-meta-label">Vertical</div>';
+  h += '<div class="proj-meta-value">';
+  if (vert) h += '<span class="proj-vert-dot"></span>'+esc(vert);
+  else h += DASH;
+  h += '</div></div>';
+  // Cliente Final
+  h += '<div class="proj-meta-field">';
+  h += '<div class="proj-meta-label">Cliente</div>';
+  h += '<div class="proj-meta-value">'+(nomeCliente||p.cliente ? esc(nomeCliente||p.cliente) : DASH)+'</div>';
+  h += '</div>';
+  // Área do Cliente
+  h += '<div class="proj-meta-field">';
+  h += '<div class="proj-meta-label">Área do Cliente</div>';
+  h += '<div class="proj-meta-value">'+(p.areaCliente ? esc(p.areaCliente) : DASH)+'</div>';
+  h += '</div>';
+  // Aplicação
+  h += '<div class="proj-meta-field">';
+  h += '<div class="proj-meta-label">Aplicação</div>';
+  h += '<div class="proj-meta-value">'+(primeiraApli ? esc(primeiraApli) : DASH)+'</div>';
+  h += '</div>';
+  h += '</div>'; // proj-meta-row
+
+  // Produtos + Aplicação
+  h += '<div class="proj-prods-apli">';
+
+  // Coluna Produtos
+  h += '<div>';
+  h += '<div class="proj-col-label">Produtos <span style="float:right;font-weight:400;color:#BBBBBB;letter-spacing:0">Qtd.</span></div>';
+  if (prods.length) {
+    prods.forEach(prod => {
+      const pts  = prod.split(':');
+      const nome = pts[0].trim();
+      const qty  = pts[1] ? pts[1].trim() : '';
+      h += '<div class="proj-prod-row">';
+      h += '<div class="proj-prod-left"><div class="proj-prod-dash"></div><span class="proj-prod-name">'+esc(nome)+'</span></div>';
+      h += '<span class="proj-prod-qty">'+(qty ? esc(qty) : '—')+'</span>';
+      h += '</div>';
+    });
+  } else {
+    h += '<div class="proj-prod-row"><div class="proj-prod-left"><div class="proj-prod-dash"></div><span class="proj-prod-name">'+DASH+'</span></div><span class="proj-prod-qty">—</span></div>';
+  }
+  h += '</div>';
+
+
+  h += '</div>'; // proj-prods-apli
+
+  // Observações
+  h += '<div class="proj-obs-block">';
+  h += '<div class="proj-obs-lbl">Observações</div>';
+  h += '<div class="proj-obs-txt">'+(p.obs ? esc(p.obs) : DASH)+'</div>';
+  h += '</div>';
+
+  h += '</div>'; // info-panel
+  h += '</div>'; // body-v2
+
+  // Footer
+  if (criado) {
+    h += '<div class="proj-footer-v2">Cadastrado <b>'+criado+'</b></div>';
+  }
+
+  h += '</div>'; // proj-card-v2
+  return h;
+}
+
+function buildRepCard(p) {
+  const fuso   = FUSOS[NORM[p.repPais]||p.repPais] || FUSOS[p.repPais] || '';
+  const lt     = localTimeFromFuso(fuso);
+  const avatar = ini(p.repNome);
+  const tel    = (p.repTel||'').replace(/[^\d+]/g,'');
+  const waNum  = tel.replace(/^\+/,'').replace(/\s/g,'');
+
+  let html = '<div class="rep-card">';
+  html += '<div class="rep-avatar">'+avatar+'</div>';
+  html += '<div class="rep-info">';
+  html += '<div class="rep-name-text">'+esc(p.repNome)+'</div>';
+
+  // Contatos clicáveis
+  html += '<div class="rep-contacts">';
+  if (p.repEmail) {
+    html += '<a class="rep-contact-btn" href="mailto:'+esc(p.repEmail)+'" title="Enviar e-mail">✉ '+esc(p.repEmail)+'</a>';
+    html += '<span class="copy-btn" data-copy="'+esc(p.repEmail)+'" onclick="copyText(this.dataset.copy,this)" title="Copiar e-mail">⎘</span>';
+  }
+  if (waNum) {
+    html += '<a class="rep-contact-btn wa" href="https://wa.me/'+waNum+'" target="_blank" title="WhatsApp">💬 WhatsApp</a>';
+  }
+  if (p.repCidade) {
+    html += '<span class="tag loc">📍 '+esc(p.repCidade)+(fuso?' · '+fuso:'')+'</span>';
+  }
+  html += '</div>';
+
+  // Hora local
+  if (lt) {
+    const cls  = lt.commercial ? 'open' : 'closed';
+    const lbl  = lt.commercial ? '🟢 Horário comercial' : '🔴 Fora do expediente';
+    html += '<div class="rep-time">';
+    html += '<span class="rep-clock">🕐 '+lt.time+'</span>';
+    html += '<span class="rep-tz">'+fuso+'</span>';
+    html += '<span class="rep-commercial '+cls+'">'+lbl+'</span>';
+    html += '</div>';
+  }
+
+  html += '</div></div>';
+  return html;
+}
+
+function copyText(txt, el) {
+  navigator.clipboard.writeText(txt).then(() => {
+    const orig = el.textContent;
+    el.textContent = '✓ copiado';
+    setTimeout(() => el.textContent = orig, 1500);
+  });
+}
+
+async function carregarDados() {
+  document.getElementById('mapa').innerHTML = '<div class="loading"><div class="spinner"></div><div>Carregando dados da planilha...</div></div>';
+  try {
+    const resp = await fetch(APPS_URL + '?action=getData');
+    const json = await resp.json();
+    if (json.status === 'ok' && json.rows && json.rows.length > 0) {
+      renderMapa(construirArvore(json.rows), json.rows.length);
+    } else {
+      renderMapa({}, 0);
+    }
+  } catch(e) {
+    document.getElementById('mapa').innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><h3>Erro ao carregar</h3><p>Verifique se o Apps Script v5 está implantado.<br><small style="font-family:JetBrains Mono,monospace;opacity:.6">'+esc(e.message)+'</small></p></div>';
+  }
+}
+
+carregarDados();
+</script>
+</body>
+</html>
