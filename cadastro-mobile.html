@@ -76,27 +76,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);fon
 .proj-btn.del{border-color:rgba(227,6,19,.4);color:rgba(227,6,19,.8)}
 .proj-card-body{padding:14px}
 
-/* STATUS PILLS */
-.status-pills{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
-.status-pill{height:36px;border-radius:8px;border:1px solid var(--border);background:var(--white);color:var(--mid);font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s}
-.status-pill.sel{background:var(--red);color:#fff;border-color:var(--red)}
-.status-pill.sel-PROSPECCAO{background:#3B82F6;color:#fff;border-color:#3B82F6}
-.status-pill.sel-OPORTUNIDADE{background:#EAB308;color:#fff;border-color:#EAB308}
-.status-pill.sel-POC{background:#F97316;color:#fff;border-color:#F97316}
-.status-pill.sel-PROPOSTA{background:#8B5CF6;color:#fff;border-color:#8B5CF6}
-.status-pill.sel-PROJETO_ATIVO{background:#22C55E;color:#fff;border-color:#22C55E}
-.status-pill.sel-HOMOLOGACAO{background:#3B82F6;color:#fff;border-color:#3B82F6}
-.status-pill.sel-CERTIFICACAO{background:#0EA5E9;color:#fff;border-color:#0EA5E9}
-.status-pill.sel-EM_PAUSA{background:#6B7280;color:#fff;border-color:#6B7280}
-.status-pill.sel-PERDIDO{background:#EF4444;color:#fff;border-color:#EF4444}
+/* status pills removed — using select */
 
 /* PRODUTO LINHA */
 .prod-lines{margin-bottom:8px}
-.prod-line{display:grid;grid-template-columns:1fr 120px 32px;gap:6px;align-items:center;margin-bottom:6px}
-.prod-line select{height:42px;font-size:13px}
-.prod-line-rm{width:32px;height:42px;border-radius:6px;border:1px solid var(--border);background:var(--white);color:#CCC;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.prod-line{display:flex;gap:6px;align-items:center;margin-bottom:8px}
+.prod-line select{height:46px;font-size:13px;flex:1;min-width:0}
+.prod-line .faixa-sel{width:100px;flex-shrink:0}
+.prod-line-rm{width:36px;height:46px;flex-shrink:0;border-radius:6px;border:1px solid var(--border);background:var(--white);color:#CCC;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 .prod-line-rm:active{color:var(--red);border-color:var(--red)}
-.add-prod-btn{width:100%;height:40px;background:var(--bg);border:1px dashed var(--border);border-radius:8px;color:var(--red);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.add-prod-btn{width:100%;height:44px;background:var(--bg);border:1px dashed #CCCCCC;border-radius:8px;color:var(--red);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px}
+.add-prod-btn:active{background:#FDECEE}
 
 /* DIVIDER */
 .divider{height:1px;background:var(--bg);margin:14px 0}
@@ -178,27 +168,33 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);fon
     <input id="sobrenome" type="text" placeholder="Seu sobrenome" autocomplete="family-name">
   </div>
   <div class="field">
-    <label>WhatsApp / Celular <span class="req">*</span></label>
-    <div class="ddi-row">
-      <select id="ddi"></select>
-      <input id="whats" type="tel" placeholder="99 99999-9999" autocomplete="tel">
-    </div>
-  </div>
-  <div class="field">
-    <label>E-mail <span class="req">*</span></label>
-    <input id="email" type="email" placeholder="seu@email.com" autocomplete="email">
+    <label>Empresa <span class="req">*</span></label>
+    <input id="empresa" type="text" placeholder="Empresa onde trabalha" autocomplete="organization">
   </div>
   <div class="field">
     <label>País <span class="req">*</span></label>
-    <select id="pais" onchange="autoDDI(this.value)"></select>
+    <div style="position:relative">
+      <select id="pais" onchange="autoDDI(this.value)" style="padding-right:36px"></select>
+      <i class="ti ti-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:#888;font-size:16px"></i>
+    </div>
   </div>
   <div class="field">
     <label>Cidade <span class="req">*</span></label>
     <input id="cidade" type="text" placeholder="Sua cidade" autocomplete="address-level2">
   </div>
   <div class="field">
-    <label>Empresa <span class="req">*</span></label>
-    <input id="empresa" type="text" placeholder="Empresa onde trabalha" autocomplete="organization">
+    <label>WhatsApp / Celular <span class="req">*</span></label>
+    <div class="ddi-row">
+      <div style="position:relative">
+        <select id="ddi" style="padding-right:28px"></select>
+        <i class="ti ti-chevron-down" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;color:#888;font-size:14px"></i>
+      </div>
+      <input id="whats" type="tel" placeholder="99 99999-9999" autocomplete="tel">
+    </div>
+  </div>
+  <div class="field">
+    <label>E-mail <span class="req">*</span></label>
+    <input id="email" type="email" placeholder="seu@email.com" autocomplete="email">
   </div>
   <div class="field">
     <label>LinkedIn</label>
@@ -819,25 +815,44 @@ function renderProjetos(){
       const body=document.createElement('div');
       body.className='proj-card-body';
 
-      // Título
-      body.appendChild(mField('Título do projeto','text',proj.titulo,'Ex: Expansão Hub Logístico',v=>uProj(proj.id,'titulo',v)));
+      // Título — textarea expansível
+      const titF=document.createElement('div'); titF.className='field';
+      titF.innerHTML='<label>Título do projeto</label>';
+      const titTa=document.createElement('textarea');
+      titTa.placeholder='Ex: Expansão Hub Logístico SP';
+      titTa.style.cssText='min-height:52px;height:auto;padding:12px 14px';
+      titTa.maxLength=80;
+      titTa.value=proj.titulo||'';
+      titTa.rows=2;
+      (function(pid){titTa.oninput=function(){
+        uProj(pid,'titulo',this.value);
+        this.style.height='auto';
+        this.style.height=this.scrollHeight+'px';
+      };})(proj.id);
+      setTimeout(()=>{titTa.style.height='auto';titTa.style.height=titTa.scrollHeight+'px';},0);
+      titF.appendChild(titTa);
+      body.appendChild(titF);
 
-      // Status pills
+      // Status select
       const stWrap=document.createElement('div');
-      stWrap.innerHTML='<div class="field-label-sm">Status</div>';
-      const pills=document.createElement('div');
-      pills.className='status-pills';
+      stWrap.className='field';
+      stWrap.innerHTML='<label>Status</label>';
+      const stSel=document.createElement('select');
+      stSel.style.cssText='border-color:'+(proj.status?'var(--border)':'var(--border)');
+      const stPh=document.createElement('option');
+      stPh.value=''; stPh.textContent='— status —';
+      if(!proj.status) stPh.selected=true;
+      stSel.appendChild(stPh);
       STATUS_OPTS.filter(s=>s.v).forEach(s=>{
-        const btn=document.createElement('button');
-        btn.className='status-pill'+(proj.status===s.v?' sel sel-'+s.v:'');
-        btn.textContent=s.l;
-        (function(pid,sv){btn.onclick=()=>{
-          linhas.find(p=>p.id===pid).status=sv;
-          renderProjetos();
-        };})(proj.id,s.v);
-        pills.appendChild(btn);
+        const o=document.createElement('option');
+        o.value=s.v; o.textContent=s.l;
+        if(s.v===proj.status) o.selected=true;
+        stSel.appendChild(o);
       });
-      stWrap.appendChild(pills);
+      (function(pid){stSel.onchange=function(){
+        linhas.find(p=>p.id===pid).status=this.value;
+      };})(proj.id);
+      stWrap.appendChild(stSel);
       body.appendChild(stWrap);
 
       body.appendChild(document.createElement('div')).className='divider';
@@ -904,19 +919,23 @@ function renderProjetos(){
       const newPSel=document.createElement('select');
       newPSel.innerHTML='<option value="">— produto —</option>'+PRODUTOS.map(p=>`<option>${p}</option>`).join('');
       const newFSel=document.createElement('select');
+      newFSel.className='faixa-sel';
       ['1–50','51–100','101–200','201–500','501–1000','1000+','5000+'].forEach(f=>{
         const o=document.createElement('option'); o.value=f; o.textContent=f; newFSel.appendChild(o);
       });
+      // Linha de seleção + botão adicionar separado
+      addPLine.appendChild(newPSel);
+      addPLine.appendChild(newFSel);
+      prodLines.appendChild(addPLine);
       const addPBtn=document.createElement('button');
-      addPBtn.className='prod-line-rm'; addPBtn.style.cssText='background:var(--red);border-color:var(--red);color:#fff;font-size:18px';
-      addPBtn.textContent='+';
+      addPBtn.className='add-prod-btn';
+      addPBtn.innerHTML='<i class="ti ti-plus"></i> Adicionar produto';
       (function(pid){addPBtn.onclick=()=>{
         if(!newPSel.value) return;
         addTagProd(pid,newPSel.value+':'+newFSel.value);
         newPSel.value='';
       };})(proj.id);
-      addPLine.appendChild(newPSel); addPLine.appendChild(newFSel); addPLine.appendChild(addPBtn);
-      prodLines.appendChild(addPLine);
+      prodLines.appendChild(addPBtn);
       prodWrap.appendChild(prodLines);
       body.appendChild(prodWrap);
 
@@ -928,7 +947,14 @@ function renderProjetos(){
       const obsTa=document.createElement('textarea');
       obsTa.placeholder='Detalhes relevantes do projeto (até 500 caracteres)...';
       obsTa.maxLength=500; obsTa.value=proj.obs||'';
-      (function(pid){obsTa.oninput=()=>uProj(pid,'obs',obsTa.value);})(proj.id);
+      obsTa.rows=3; obsTa.style.minHeight='80px';
+      (function(pid){obsTa.oninput=function(){
+        uProj(pid,'obs',this.value);
+        this.style.height='auto';
+        this.style.height=this.scrollHeight+'px';
+        obsCount.textContent=this.value.length+'/500';
+      };})(proj.id);
+      setTimeout(()=>{obsTa.style.height='auto';obsTa.style.height=obsTa.scrollHeight+'px';},0);
       const obsCount=document.createElement('div');
       obsCount.className='char-count';
       obsCount.textContent=(proj.obs||'').length+'/500';
