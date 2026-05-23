@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>PROMONT — Cadastro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --red:#E30613;--dark:#2C2C2C;--mid:#4A4A4A;
+  --border:#E4E4E4;--bg:#F5F5F5;--white:#fff;
+  --radius:10px;--inp-h:48px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);font-size:15px;min-height:100vh}
+
+/* HEADER */
+.hdr{background:var(--white);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.hdr img{height:36px;width:auto}
+.hdr-text{flex:1}
+.hdr-title{font-size:13px;font-weight:700;color:var(--dark)}
+.hdr-sub{font-size:11px;color:#888;margin-top:1px}
+
+/* WELCOME BANNER */
+.welcome{background:var(--dark);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;margin:12px 12px 0}
+.welcome{border-radius:var(--radius)}
+.w-avatar{width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.w-name{font-size:15px;font-weight:700}
+.w-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+.w-id{font-size:10px;color:rgba(255,255,255,.4);font-family:monospace;margin-left:auto;white-space:nowrap}
+
+/* RECOVERY */
+.recovery-bar{background:#FFF8F0;border:1px solid #FFE4B5;border-radius:var(--radius);margin:12px 12px 0;padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:12px;color:#92400E}
+.recovery-bar button{background:none;border:none;color:var(--red);font-weight:600;font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0}
+.recovery-box{background:var(--white);border-radius:var(--radius);margin:12px 12px 0;padding:16px;border:1px solid var(--border)}
+.recovery-box input{width:100%;height:var(--inp-h);border:1px solid var(--border);border-radius:8px;padding:0 14px;font-size:15px;font-family:inherit;outline:none}
+.recovery-box input:focus{border-color:var(--red)}
+
+/* SECTIONS */
+.section{background:var(--white);border-radius:var(--radius);margin:12px 12px 0;padding:16px;border:1px solid var(--border)}
+.section-title{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);padding-bottom:12px;border-bottom:1px solid var(--bg);margin-bottom:16px}
+.section-title i{color:var(--red);font-size:14px}
+
+/* FORM FIELDS */
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--mid);margin-bottom:6px}
+.field label .req{color:var(--red);margin-left:2px}
+.field input,.field select,.field textarea{
+  width:100%;height:var(--inp-h);
+  border:1px solid var(--border);border-radius:8px;
+  padding:0 14px;font-size:15px;font-family:inherit;
+  background:var(--white);color:var(--dark);outline:none;
+  appearance:none;-webkit-appearance:none;
+  transition:border-color .15s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red)}
+.field textarea{height:auto;min-height:90px;padding:12px 14px;resize:none;line-height:1.5}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ddi-row{display:grid;grid-template-columns:130px 1fr;gap:8px}
+.char-count{font-size:11px;color:#AAA;text-align:right;margin-top:4px}
+
+/* PROJETOS */
+.proj-add-btn{width:100%;height:48px;background:var(--red);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-bottom:12px}
+.proj-add-btn:active{background:#B30410}
+
+.proj-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px}
+.proj-card:last-child{margin-bottom:0}
+.proj-card-hdr{background:var(--dark);padding:10px 14px;display:flex;align-items:center;gap:8px}
+.proj-card-num{font-size:11px;font-weight:700;color:var(--red);letter-spacing:.05em;text-transform:uppercase}
+.proj-card-preview{font-size:11px;color:rgba(255,255,255,.5);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-card-actions{display:flex;gap:6px;flex-shrink:0}
+.proj-btn{width:30px;height:30px;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
+.proj-btn.del{border-color:rgba(227,6,19,.4);color:rgba(227,6,19,.8)}
+.proj-card-body{padding:14px}
+
+/* STATUS PILLS */
+.status-pills{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.status-pill{height:36px;border-radius:8px;border:1px solid var(--border);background:var(--white);color:var(--mid);font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s}
+.status-pill.sel{background:var(--red);color:#fff;border-color:var(--red)}
+.status-pill.sel-PROSPECCAO{background:#3B82F6;color:#fff;border-color:#3B82F6}
+.status-pill.sel-OPORTUNIDADE{background:#EAB308;color:#fff;border-color:#EAB308}
+.status-pill.sel-POC{background:#F97316;color:#fff;border-color:#F97316}
+.status-pill.sel-PROPOSTA{background:#8B5CF6;color:#fff;border-color:#8B5CF6}
+.status-pill.sel-PROJETO_ATIVO{background:#22C55E;color:#fff;border-color:#22C55E}
+.status-pill.sel-HOMOLOGACAO{background:#3B82F6;color:#fff;border-color:#3B82F6}
+.status-pill.sel-CERTIFICACAO{background:#0EA5E9;color:#fff;border-color:#0EA5E9}
+.status-pill.sel-EM_PAUSA{background:#6B7280;color:#fff;border-color:#6B7280}
+.status-pill.sel-PERDIDO{background:#EF4444;color:#fff;border-color:#EF4444}
+
+/* PRODUTO LINHA */
+.prod-lines{margin-bottom:8px}
+.prod-line{display:grid;grid-template-columns:1fr 120px 32px;gap:6px;align-items:center;margin-bottom:6px}
+.prod-line select{height:42px;font-size:13px}
+.prod-line-rm{width:32px;height:42px;border-radius:6px;border:1px solid var(--border);background:var(--white);color:#CCC;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.prod-line-rm:active{color:var(--red);border-color:var(--red)}
+.add-prod-btn{width:100%;height:40px;background:var(--bg);border:1px dashed var(--border);border-radius:8px;color:var(--red);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--bg);margin:14px 0}
+.field-label-sm{font-size:12px;font-weight:600;color:var(--mid);margin-bottom:8px}
+
+/* DICA */
+.dica{background:#F0F7FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 12px;font-size:12px;color:#1E40AF;margin-top:12px;display:flex;gap:8px}
+
+/* FOOTER ACTIONS */
+.footer{padding:16px 12px 32px;display:flex;flex-direction:column;gap:10px}
+.btn-submit{width:100%;height:52px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.btn-submit:disabled{opacity:.6}
+.btn-draft{width:100%;height:44px;background:var(--white);color:var(--mid);border:1px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer}
+
+/* ERROR / TOAST */
+.error-box{background:#FFF1F2;border:1px solid #FECDD3;border-radius:8px;padding:12px 14px;font-size:13px;color:#BE123C;margin:0 12px;display:none;align-items:center;gap:8px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:12px 20px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:#BE123C}
+
+.spin{animation:spin 1s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <img src="data:image/webp;base64,UklGRoIGAABXRUJQVlA4THYGAAAvbMALELXQ3v7PkOx8Y+PS5qWtyZ7fedIXwfGJbdu2bTu5PJexbdu27aRrqn6LP6COZg52n/PdqeS36t7ItW3r2J7Z/f5js/zLOClTsrRtlrbNkqVt68cz8u0vedPlAnIfH4O2jSR5744/wgPyRbOyIAEgYOVqHrJt27Zt27Zt27Zt2/60bdt1005AbJsRMVHTFjWjFFE3Er+1wF8JYtuMSjrEawRdxHP0SdUmoSEEcbvURtxokxDZEPTbJESpZkGRCJV8KAqFIwqhiOdAt2iIXO3hiELolsqBCEFkales4YiAo0IiUb7mwA+JEYdKVUQQsQnfxItoCCDmIX4jqCIuo8gWIyqt+ktVxGNU6sWYeTIJlwTC7+ZAzalSG5VZETGu1Ebcxj0hiEKI36UyIogiU0Yk0W02j343/ovUr1YiKiG2leqISUIhiq11lIhspT7uaYW4pIdPVgm1Wg2KXK0C76xqIXIjbw3H86Xx2Xd3Ak5cTb3+0njeGo77vgmsfJeQK+fx2mjeGk5VHrk+LWvQhfwJ35+amOLXMN+nupix4DfoAubbm92gpd04ixNXx3nblJgduD0h7w3OqcvTnj9xNW8Nx75qZ75X+O24J2ajZnLg9jjvmoDZlkdoadmVlM6FXmF24HZCnurK/6Xz0M3YV+0s9Iqg1W+mdK58l9az2LM0w5Hro7Hy3bgareCmGVw5DyfNDtyekO+ac+2sNPLXzuKj/rGXxjPnN9oO3+4Qz6/ayW5QtpDYEm6bkgvnx33u/HSXIV+1c+W8FPl/2+2uCUxbCBp2Jq5uv8TFtouHeK2GeOsxpQz1qM/andJ55mLsq3bmexW/bQ/E7Kv21PMvjafDbMMzeAnVUPRCBJUQv/FLl5a04x6sY6FX+K18Nx3m+Vn/9HkJl1cmFaIW4hDiOuK2ImIfohIIuBZ6xoZn0jnXu2itfpPOda+kdPd1DrqQWbvjVy71iA1PpLN6A8EnUfRaWFWhV4VOwaJ2Me9SxTuZXKp4p1kVTXyySlQrl6gp+uxA3X+1bhSREI/1EMUQs/QQwzJyCUFB0qVw2YG6FWooekVEPTXEKRwRQCUd4rMW4j26JRpGJOGYQFvo5MAfsRDjEI/7EN/D+xC3uxAhMSK6Ia739SginiOWoUgWI4pyHUWPIuJ1B4pMMVaIJywSnou+KwqfhctCr+UJccSIhhAU8RDxwlHEwjuRYh4NAVRidSjinWjRiX+iIeIpjo3OzB1pvKIQr0IICLhBxEyDhMdUFAWF20K3GKPQqHciFYXXolkZ0WIUMgmHhN9UFL6PzTzpYlyeSMIk0XsqCsFeoZGriTmk2BRJCr1ihWaTyaRICutihVSi52RSJBsrEyuKdpFJkZws1HOIHWTSZWMpInUxKVPIJ5rGpExRL1E6JmUKlxwpT9KDZEopMfNkYnLSt8rqaiWcc5F0kXRVWCaq5aK3S/juwUGIGViFMa4L5kS5XJwcq9foWplWpYMxRua4rsRIx+qsEmo5ODn60iH89nkPH+E5lHRwQ3kLhXlxUzyGonrtTDDgIRS1fYW5K6V4DcNAvxNReNY2BIN+wp+wa+FghrtgVviNgvl+hkGg32sw+w17ginxRthX2FACLpQ/4fkdNhUVOxTMXQgLuglWvxLHIn+ivAZrnxhm7UeCKjuip6fnNvwJuw89PT2XYpjovIZBYOK2aGi8h3VBZ7/Gbxhjn2FPUCGR5K4Y8yfOBPNJoW42jszwFMzGhL2FdcGUUtKZfC7M6jtCI6XkSlVDel+C2b7gWLO70NeyeK7U7SvsilbQ1bC3cKCMsc9cNoSOU4ljx1gxvuVxrNkYG9NNhfYdpZYfJKOgk3gizKwV1N6DmfVSw+oNp1ljQ2gkdtdbA3eVujWGQeFY1M3zLgiSRuK5Um9hRbEpmLitFFsKE/uLHeGV2FlU72EK+LfYErnEnmJ0BoVaUQyDTiKZUiKZUiKZcpknlyvRNwUkkslJkikokWTS0aTI0sQSfaZDkUI1YZNLkcIkoZhPIIX7DuEmtYRVURilRdHzCrGEcqQOhWBnRrT/qCVMczSRUnRdoCscykgU+4Vl1BUeV0gXo6jfRKoK3yu0ilHI9B91RasyYjnicoQOpOxAM0DMqHBh0NoUBRFijFHILnQTMypczLCB1BhOWIwxNpG0ieYDGNEVLrRYhzgxxrglkZqoMIDBXeED6CNkBgE3" alt="Promont">
+  <div class="hdr-text">
+    <div class="hdr-title" id="hdr-title">Cadastro de Representante</div>
+    <div class="hdr-sub" id="hdr-sub">Preencha seus dados e projetos</div>
+  </div>
+</header>
+
+<!-- WELCOME (hidden by default) -->
+<div class="welcome" id="welcomeBanner" style="display:none">
+  <div class="w-avatar" id="w-avatar">?</div>
+  <div>
+    <div class="w-name" id="w-name"></div>
+    <div class="w-sub" id="w-sub"></div>
+  </div>
+  <div class="w-id" id="w-id"></div>
+</div>
+
+<!-- RECOVERY BAR -->
+<div class="recovery-bar" id="recoveryBar">
+  <i class="ti ti-key"></i>
+  <span>Já é representante?</span>
+  <button onclick="toggleRecovery()">Recuperar acesso</button>
+</div>
+
+<div class="recovery-box" id="recoveryBox" style="display:none">
+  <div class="field">
+    <label>E-mail ou telefone cadastrado</label>
+    <input id="recoveryInput" type="text" placeholder="seu@email.com ou +55 11 99999-9999">
+  </div>
+  <button onclick="recuperarAcesso()" style="width:100%;height:48px;background:var(--dark);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:10px">
+    <i class="ti ti-send"></i> Enviar link de acesso
+  </button>
+</div>
+
+<!-- ERROR -->
+<div class="error-box" id="error-box">
+  <i class="ti ti-alert-circle"></i>
+  <span id="error-msg"></span>
+</div>
+
+<!-- DADOS PESSOAIS -->
+<div class="section">
+  <div class="section-title"><i class="ti ti-user"></i> Dados Pessoais</div>
+
+  <div class="field">
+    <label>Nome <span class="req">*</span></label>
+    <input id="nome" type="text" placeholder="Seu primeiro nome" autocomplete="given-name">
+  </div>
+  <div class="field">
+    <label>Sobrenome <span class="req">*</span></label>
+    <input id="sobrenome" type="text" placeholder="Seu sobrenome" autocomplete="family-name">
+  </div>
+  <div class="field">
+    <label>WhatsApp / Celular <span class="req">*</span></label>
+    <div class="ddi-row">
+      <select id="ddi"></select>
+      <input id="whats" type="tel" placeholder="99 99999-9999" autocomplete="tel">
+    </div>
+  </div>
+  <div class="field">
+    <label>E-mail <span class="req">*</span></label>
+    <input id="email" type="email" placeholder="seu@email.com" autocomplete="email">
+  </div>
+  <div class="field">
+    <label>País <span class="req">*</span></label>
+    <select id="pais" onchange="autoDDI(this.value)"></select>
+  </div>
+  <div class="field">
+    <label>Cidade <span class="req">*</span></label>
+    <input id="cidade" type="text" placeholder="Sua cidade" autocomplete="address-level2">
+  </div>
+  <div class="field">
+    <label>Empresa <span class="req">*</span></label>
+    <input id="empresa" type="text" placeholder="Empresa onde trabalha" autocomplete="organization">
+  </div>
+  <div class="field">
+    <label>LinkedIn</label>
+    <input id="linkedin" type="url" placeholder="linkedin.com/in/seuperfil" autocomplete="url">
+  </div>
+</div>
+
+<!-- ÁREA DE ATUAÇÃO -->
+<div class="section">
+  <div class="section-title"><i class="ti ti-map-pin"></i> Área de Atuação — Clientes e Projetos</div>
+  <p style="font-size:13px;color:#888;margin-bottom:14px">Adicione um ou mais projetos. O status indica a fase atual de cada um.</p>
+  <button class="proj-add-btn" onclick="addProjeto()">
+    <i class="ti ti-plus"></i> Adicionar projeto
+  </button>
+  <div id="projetos-container"></div>
+  <div class="dica">
+    <i class="ti ti-info-circle" style="flex-shrink:0"></i>
+    Use o título do projeto para identificar rapidamente cada iniciativa.
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="error-box" id="error-box2" style="display:none">
+    <i class="ti ti-alert-circle"></i><span id="error-msg2"></span>
+  </div>
+  <button class="btn-submit" id="btn-enviar" onclick="enviar()">
+    <i class="ti ti-send" id="btn-icon"></i>
+    <span id="btn-label">Enviar cadastro</span>
+  </button>
+  <button class="btn-draft" onclick="salvarRascunho()">
+    <i class="ti ti-download"></i> Salvar rascunho
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbz3sokUShIvH1eYGiVBNbNHw1hTsaIPxnUpZ59tHodrCzmn53U6pHoxZPl9TkpTLoAaVw/exec';
+
+const PAISES_DATA = [
+  {iso:'CA',nome:'Canadá',flag:'🇨🇦',sub:'América do Norte'},
+  {iso:'US',nome:'Estados Unidos',flag:'🇺🇸',sub:'América do Norte'},
+  {iso:'MX',nome:'México',flag:'🇲🇽',sub:'América do Norte'},
+  {iso:'BZ',nome:'Belize',flag:'🇧🇿',sub:'América Central Continental'},
+  {iso:'CR',nome:'Costa Rica',flag:'🇨🇷',sub:'América Central Continental'},
+  {iso:'SV',nome:'El Salvador',flag:'🇸🇻',sub:'América Central Continental'},
+  {iso:'GT',nome:'Guatemala',flag:'🇬🇹',sub:'América Central Continental'},
+  {iso:'HN',nome:'Honduras',flag:'🇭🇳',sub:'América Central Continental'},
+  {iso:'NI',nome:'Nicarágua',flag:'🇳🇮',sub:'América Central Continental'},
+  {iso:'PA',nome:'Panamá',flag:'🇵🇦',sub:'América Central Continental'},
+  {iso:'CU',nome:'Cuba',flag:'🇨🇺',sub:'Caribe — Grandes Antilhas'},
+  {iso:'HT',nome:'Haiti',flag:'🇭🇹',sub:'Caribe — Grandes Antilhas'},
+  {iso:'JM',nome:'Jamaica',flag:'🇯🇲',sub:'Caribe — Grandes Antilhas'},
+  {iso:'DO',nome:'República Dominicana',flag:'🇩🇴',sub:'Caribe — Grandes Antilhas'},
+  {iso:'BS',nome:'Bahamas',flag:'🇧🇸',sub:'Caribe — Grandes Antilhas'},
+  {iso:'AG',nome:'Antígua e Barbuda',flag:'🇦🇬',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'BB',nome:'Barbados',flag:'🇧🇧',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'DM',nome:'Dominica',flag:'🇩🇲',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'GD',nome:'Granada',flag:'🇬🇩',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'LC',nome:'Santa Lúcia',flag:'🇱🇨',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'KN',nome:'São Cristóvão e Névis',flag:'🇰🇳',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'VC',nome:'São Vicente e Granadinas',flag:'🇻🇨',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'TT',nome:'Trinidad e Tobago',flag:'🇹🇹',sub:'Caribe — Pequenas Antilhas'},
+  {iso:'PR',nome:'Porto Rico',flag:'🇵🇷',sub:'Caribe — Adm. EUA'},
+  {iso:'VI',nome:'Ilhas Virgens Americanas',flag:'🇻🇮',sub:'Caribe — Adm. EUA'},
+  {iso:'AI',nome:'Anguila',flag:'🇦🇮',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'BM',nome:'Bermudas',flag:'🇧🇲',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'KY',nome:'Ilhas Cayman',flag:'🇰🇾',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'VG',nome:'Ilhas Virgens Britânicas',flag:'🇻🇬',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'MS',nome:'Montserrat',flag:'🇲🇸',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'TC',nome:'Turcas e Caicos',flag:'🇹🇨',sub:'Caribe — Adm. Reino Unido'},
+  {iso:'GP',nome:'Guadalupe',flag:'🇬🇵',sub:'Caribe — Adm. França'},
+  {iso:'MQ',nome:'Martinica',flag:'🇲🇶',sub:'Caribe — Adm. França'},
+  {iso:'BL',nome:'São Bartolomeu',flag:'🇧🇱',sub:'Caribe — Adm. França'},
+  {iso:'MF',nome:'São Martinho (Norte)',flag:'🇲🇫',sub:'Caribe — Adm. França'},
+  {iso:'AW',nome:'Aruba',flag:'🇦🇼',sub:'Caribe — Adm. Holanda'},
+  {iso:'CW',nome:'Curaçao',flag:'🇨🇼',sub:'Caribe — Adm. Holanda'},
+  {iso:'SX',nome:'São Martinho (Sul)',flag:'🇸🇽',sub:'Caribe — Adm. Holanda'},
+  {iso:'AR',nome:'Argentina',flag:'🇦🇷',sub:'América do Sul'},
+  {iso:'BO',nome:'Bolívia',flag:'🇧🇴',sub:'América do Sul'},
+  {iso:'BR',nome:'Brasil',flag:'🇧🇷',sub:'América do Sul'},
+  {iso:'CL',nome:'Chile',flag:'🇨🇱',sub:'América do Sul'},
+  {iso:'CO',nome:'Colômbia',flag:'🇨🇴',sub:'América do Sul'},
+  {iso:'EC',nome:'Equador',flag:'🇪🇨',sub:'América do Sul'},
+  {iso:'GY',nome:'Guiana',flag:'🇬🇾',sub:'América do Sul'},
+  {iso:'PY',nome:'Paraguai',flag:'🇵🇾',sub:'América do Sul'},
+  {iso:'PE',nome:'Peru',flag:'🇵🇪',sub:'América do Sul'},
+  {iso:'SR',nome:'Suriname',flag:'🇸🇷',sub:'América do Sul'},
+  {iso:'UY',nome:'Uruguai',flag:'🇺🇾',sub:'América do Sul'},
+  {iso:'VE',nome:'Venezuela',flag:'🇻🇪',sub:'América do Sul'},
+  {iso:'PT',nome:'Portugal',flag:'🇵🇹',sub:'Ibéria'},
+  {iso:'ES',nome:'Espanha',flag:'🇪🇸',sub:'Ibéria'},
+  {iso:'FR',nome:'França',flag:'🇫🇷',sub:'Europa Ocidental'},
+  {iso:'DE',nome:'Alemanha',flag:'🇩🇪',sub:'Europa Ocidental'},
+  {iso:'GB',nome:'Reino Unido',flag:'🇬🇧',sub:'Europa Ocidental'},
+  {iso:'IT',nome:'Itália',flag:'🇮🇹',sub:'Europa Ocidental'},
+  {iso:'NL',nome:'Países Baixos',flag:'🇳🇱',sub:'Europa Ocidental'},
+  {iso:'BE',nome:'Bélgica',flag:'🇧🇪',sub:'Europa Ocidental'},
+  {iso:'CH',nome:'Suíça',flag:'🇨🇭',sub:'Europa Ocidental'},
+  {iso:'AT',nome:'Áustria',flag:'🇦🇹',sub:'Europa Ocidental'},
+  {iso:'LU',nome:'Luxemburgo',flag:'🇱🇺',sub:'Europa Ocidental'},
+  {iso:'SE',nome:'Suécia',flag:'🇸🇪',sub:'Europa do Norte'},
+  {iso:'NO',nome:'Noruega',flag:'🇳🇴',sub:'Europa do Norte'},
+  {iso:'DK',nome:'Dinamarca',flag:'🇩🇰',sub:'Europa do Norte'},
+  {iso:'FI',nome:'Finlândia',flag:'🇫🇮',sub:'Europa do Norte'},
+  {iso:'IE',nome:'Irlanda',flag:'🇮🇪',sub:'Europa do Norte'},
+  {iso:'IS',nome:'Islândia',flag:'🇮🇸',sub:'Europa do Norte'},
+  {iso:'GR',nome:'Grécia',flag:'🇬🇷',sub:'Europa do Sul'},
+  {iso:'HR',nome:'Croácia',flag:'🇭🇷',sub:'Europa do Sul'},
+  {iso:'RS',nome:'Sérvia',flag:'🇷🇸',sub:'Europa do Sul'},
+  {iso:'SI',nome:'Eslovênia',flag:'🇸🇮',sub:'Europa do Sul'},
+  {iso:'BA',nome:'Bósnia e Herzegovina',flag:'🇧🇦',sub:'Europa do Sul'},
+  {iso:'ME',nome:'Montenegro',flag:'🇲🇪',sub:'Europa do Sul'},
+  {iso:'MK',nome:'Macedônia do Norte',flag:'🇲🇰',sub:'Europa do Sul'},
+  {iso:'AL',nome:'Albânia',flag:'🇦🇱',sub:'Europa do Sul'},
+  {iso:'PL',nome:'Polônia',flag:'🇵🇱',sub:'Europa do Leste'},
+  {iso:'CZ',nome:'República Tcheca',flag:'🇨🇿',sub:'Europa do Leste'},
+  {iso:'HU',nome:'Hungria',flag:'🇭🇺',sub:'Europa do Leste'},
+  {iso:'RO',nome:'Romênia',flag:'🇷🇴',sub:'Europa do Leste'},
+  {iso:'SK',nome:'Eslováquia',flag:'🇸🇰',sub:'Europa do Leste'},
+  {iso:'BG',nome:'Bulgária',flag:'🇧🇬',sub:'Europa do Leste'},
+  {iso:'UA',nome:'Ucrânia',flag:'🇺🇦',sub:'Europa do Leste'},
+  {iso:'MD',nome:'Moldávia',flag:'🇲🇩',sub:'Europa do Leste'},
+  {iso:'BY',nome:'Bielorrússia',flag:'🇧🇾',sub:'Europa do Leste'},
+  {iso:'EE',nome:'Estônia',flag:'🇪🇪',sub:'Países Bálticos'},
+  {iso:'LV',nome:'Letônia',flag:'🇱🇻',sub:'Países Bálticos'},
+  {iso:'LT',nome:'Lituânia',flag:'🇱🇹',sub:'Países Bálticos'},
+  {iso:'AO',nome:'Angola',flag:'🇦🇴',sub:'África — Língua Portuguesa'},
+  {iso:'MZ',nome:'Moçambique',flag:'🇲🇿',sub:'África — Língua Portuguesa'},
+  {iso:'CV',nome:'Cabo Verde',flag:'🇨🇻',sub:'África — Língua Portuguesa'},
+  {iso:'ST',nome:'São Tomé e Príncipe',flag:'🇸🇹',sub:'África — Língua Portuguesa'},
+  {iso:'GW',nome:'Guiné-Bissau',flag:'🇬🇼',sub:'África — Língua Portuguesa'},
+  {iso:'GQ',nome:'Guiné Equatorial',flag:'🇬🇶',sub:'África — Língua Portuguesa'},
+  {iso:'MA',nome:'Marrocos',flag:'🇲🇦',sub:'África do Norte'},
+  {iso:'DZ',nome:'Argélia',flag:'🇩🇿',sub:'África do Norte'},
+  {iso:'TN',nome:'Tunísia',flag:'🇹🇳',sub:'África do Norte'},
+  {iso:'LY',nome:'Líbia',flag:'🇱🇾',sub:'África do Norte'},
+  {iso:'EG',nome:'Egito',flag:'🇪🇬',sub:'África do Norte'},
+  {iso:'SD',nome:'Sudão',flag:'🇸🇩',sub:'África do Norte'},
+  {iso:'NG',nome:'Nigéria',flag:'🇳🇬',sub:'África Ocidental'},
+  {iso:'GH',nome:'Gana',flag:'🇬🇭',sub:'África Ocidental'},
+  {iso:'SN',nome:'Senegal',flag:'🇸🇳',sub:'África Ocidental'},
+  {iso:'CI',nome:'Costa do Marfim',flag:'🇨🇮',sub:'África Ocidental'},
+  {iso:'CM',nome:'Camarões',flag:'🇨🇲',sub:'África Ocidental'},
+  {iso:'ML',nome:'Mali',flag:'🇲🇱',sub:'África Ocidental'},
+  {iso:'BF',nome:'Burkina Faso',flag:'🇧🇫',sub:'África Ocidental'},
+  {iso:'GN',nome:'Guiné',flag:'🇬🇳',sub:'África Ocidental'},
+  {iso:'NE',nome:'Níger',flag:'🇳🇪',sub:'África Ocidental'},
+  {iso:'TG',nome:'Togo',flag:'🇹🇬',sub:'África Ocidental'},
+  {iso:'BJ',nome:'Benim',flag:'🇧🇯',sub:'África Ocidental'},
+  {iso:'SL',nome:'Serra Leoa',flag:'🇸🇱',sub:'África Ocidental'},
+  {iso:'LR',nome:'Libéria',flag:'🇱🇷',sub:'África Ocidental'},
+  {iso:'MR',nome:'Mauritânia',flag:'🇲🇷',sub:'África Ocidental'},
+  {iso:'GM',nome:'Gâmbia',flag:'🇬🇲',sub:'África Ocidental'},
+  {iso:'CD',nome:'República Democrática do Congo',flag:'🇨🇩',sub:'África Central'},
+  {iso:'CG',nome:'República do Congo',flag:'🇨🇬',sub:'África Central'},
+  {iso:'GA',nome:'Gabão',flag:'🇬🇦',sub:'África Central'},
+  {iso:'CF',nome:'República Centro-Africana',flag:'🇨🇫',sub:'África Central'},
+  {iso:'TD',nome:'Chade',flag:'🇹🇩',sub:'África Central'},
+  {iso:'KE',nome:'Quênia',flag:'🇰🇪',sub:'África Oriental'},
+  {iso:'TZ',nome:'Tanzânia',flag:'🇹🇿',sub:'África Oriental'},
+  {iso:'ET',nome:'Etiópia',flag:'🇪🇹',sub:'África Oriental'},
+  {iso:'UG',nome:'Uganda',flag:'🇺🇬',sub:'África Oriental'},
+  {iso:'RW',nome:'Ruanda',flag:'🇷🇼',sub:'África Oriental'},
+  {iso:'BI',nome:'Burundi',flag:'🇧🇮',sub:'África Oriental'},
+  {iso:'SO',nome:'Somália',flag:'🇸🇴',sub:'África Oriental'},
+  {iso:'DJ',nome:'Djibuti',flag:'🇩🇯',sub:'África Oriental'},
+  {iso:'ER',nome:'Eritreia',flag:'🇪🇷',sub:'África Oriental'},
+  {iso:'ZA',nome:'África do Sul',flag:'🇿🇦',sub:'África Austral'},
+  {iso:'ZW',nome:'Zimbábue',flag:'🇿🇼',sub:'África Austral'},
+  {iso:'ZM',nome:'Zâmbia',flag:'🇿🇲',sub:'África Austral'},
+  {iso:'BW',nome:'Botsuana',flag:'🇧🇼',sub:'África Austral'},
+  {iso:'NA',nome:'Namíbia',flag:'🇳🇦',sub:'África Austral'},
+  {iso:'MW',nome:'Malaui',flag:'🇲🇼',sub:'África Austral'},
+  {iso:'SZ',nome:'Essuatíni',flag:'🇸🇿',sub:'África Austral'},
+  {iso:'LS',nome:'Lesoto',flag:'🇱🇸',sub:'África Austral'},
+  {iso:'MG',nome:'Madagascar',flag:'🇲🇬',sub:'África Austral'},
+  {iso:'AE',nome:'Emirados Árabes Unidos',flag:'🇦🇪',sub:'Golfo Pérsico'},
+  {iso:'SA',nome:'Arábia Saudita',flag:'🇸🇦',sub:'Golfo Pérsico'},
+  {iso:'QA',nome:'Catar',flag:'🇶🇦',sub:'Golfo Pérsico'},
+  {iso:'KW',nome:'Kuwait',flag:'🇰🇼',sub:'Golfo Pérsico'},
+  {iso:'BH',nome:'Bahrein',flag:'🇧🇭',sub:'Golfo Pérsico'},
+  {iso:'OM',nome:'Omã',flag:'🇴🇲',sub:'Golfo Pérsico'},
+  {iso:'IL',nome:'Israel',flag:'🇮🇱',sub:'Levante & Outros'},
+  {iso:'TR',nome:'Turquia',flag:'🇹🇷',sub:'Levante & Outros'},
+  {iso:'JO',nome:'Jordânia',flag:'🇯🇴',sub:'Levante & Outros'},
+  {iso:'LB',nome:'Líbano',flag:'🇱🇧',sub:'Levante & Outros'},
+  {iso:'IQ',nome:'Iraque',flag:'🇮🇶',sub:'Levante & Outros'},
+  {iso:'IR',nome:'Irã',flag:'🇮🇷',sub:'Levante & Outros'},
+  {iso:'SY',nome:'Síria',flag:'🇸🇾',sub:'Levante & Outros'},
+  {iso:'YE',nome:'Iêmen',flag:'🇾🇪',sub:'Levante & Outros'},
+  {iso:'PS',nome:'Palestina',flag:'🇵🇸',sub:'Levante & Outros'},
+  {iso:'GE',nome:'Geórgia',flag:'🇬🇪',sub:'Cáucaso'},
+  {iso:'AM',nome:'Armênia',flag:'🇦🇲',sub:'Cáucaso'},
+  {iso:'AZ',nome:'Azerbaijão',flag:'🇦🇿',sub:'Cáucaso'},
+  {iso:'KZ',nome:'Cazaquistão',flag:'🇰🇿',sub:'Ásia Central'},
+  {iso:'UZ',nome:'Uzbequistão',flag:'🇺🇿',sub:'Ásia Central'},
+  {iso:'TM',nome:'Turcomenistão',flag:'🇹🇲',sub:'Ásia Central'},
+  {iso:'KG',nome:'Quirguistão',flag:'🇰🇬',sub:'Ásia Central'},
+  {iso:'TJ',nome:'Tadjiquistão',flag:'🇹🇯',sub:'Ásia Central'},
+  {iso:'AF',nome:'Afeganistão',flag:'🇦🇫',sub:'Ásia Central'},
+  {iso:'IN',nome:'Índia',flag:'🇮🇳',sub:'Ásia do Sul'},
+  {iso:'PK',nome:'Paquistão',flag:'🇵🇰',sub:'Ásia do Sul'},
+  {iso:'BD',nome:'Bangladesh',flag:'🇧🇩',sub:'Ásia do Sul'},
+  {iso:'LK',nome:'Sri Lanka',flag:'🇱🇰',sub:'Ásia do Sul'},
+  {iso:'NP',nome:'Nepal',flag:'🇳🇵',sub:'Ásia do Sul'},
+  {iso:'MM',nome:'Myanmar',flag:'🇲🇲',sub:'Ásia do Sul'},
+  {iso:'CN',nome:'China',flag:'🇨🇳',sub:'Ásia Oriental'},
+  {iso:'JP',nome:'Japão',flag:'🇯🇵',sub:'Ásia Oriental'},
+  {iso:'KR',nome:'Coreia do Sul',flag:'🇰🇷',sub:'Ásia Oriental'},
+  {iso:'TW',nome:'Taiwan',flag:'🇹🇼',sub:'Ásia Oriental'},
+  {iso:'HK',nome:'Hong Kong',flag:'🇭🇰',sub:'Ásia Oriental'},
+  {iso:'MN',nome:'Mongólia',flag:'🇲🇳',sub:'Ásia Oriental'},
+  {iso:'SG',nome:'Singapura',flag:'🇸🇬',sub:'Ásia do Sudeste'},
+  {iso:'MY',nome:'Malásia',flag:'🇲🇾',sub:'Ásia do Sudeste'},
+  {iso:'TH',nome:'Tailândia',flag:'🇹🇭',sub:'Ásia do Sudeste'},
+  {iso:'ID',nome:'Indonésia',flag:'🇮🇩',sub:'Ásia do Sudeste'},
+  {iso:'VN',nome:'Vietnã',flag:'🇻🇳',sub:'Ásia do Sudeste'},
+  {iso:'PH',nome:'Filipinas',flag:'🇵🇭',sub:'Ásia do Sudeste'},
+  {iso:'KH',nome:'Camboja',flag:'🇰🇭',sub:'Ásia do Sudeste'},
+  {iso:'LA',nome:'Laos',flag:'🇱🇦',sub:'Ásia do Sudeste'},
+  {iso:'BN',nome:'Brunei',flag:'🇧🇳',sub:'Ásia do Sudeste'},
+  {iso:'TL',nome:'Timor-Leste',flag:'🇹🇱',sub:'Ásia do Sudeste'},
+  {iso:'AU',nome:'Austrália',flag:'🇦🇺',sub:'Oceania'},
+  {iso:'NZ',nome:'Nova Zelândia',flag:'🇳🇿',sub:'Oceania'},
+  {iso:'PG',nome:'Papua Nova Guiné',flag:'🇵🇬',sub:'Oceania'},
+  {iso:'FJ',nome:'Fiji',flag:'🇫🇯',sub:'Oceania'},
+  {iso:'SB',nome:'Ilhas Salomão',flag:'🇸🇧',sub:'Oceania'},
+  {iso:'VU',nome:'Vanuatu',flag:'🇻🇺',sub:'Oceania'},
+  {iso:'WS',nome:'Samoa',flag:'🇼🇸',sub:'Oceania'},
+  {iso:'TO',nome:'Tonga',flag:'🇹🇴',sub:'Oceania'},
+  {iso:'KI',nome:'Kiribati',flag:'🇰🇮',sub:'Oceania'},
+  {iso:'FM',nome:'Micronésia',flag:'🇫🇲',sub:'Oceania'},
+  {iso:'PW',nome:'Palau',flag:'🇵🇼',sub:'Oceania'},
+  {iso:'MH',nome:'Ilhas Marshall',flag:'🇲🇭',sub:'Oceania'},
+  {iso:'NR',nome:'Nauru',flag:'🇳🇷',sub:'Oceania'},
+  {iso:'TV',nome:'Tuvalu',flag:'🇹🇻',sub:'Oceania'},
+];
+
+const DDI_MAP = {
+  "CA":"+1",
+  "US":"+1",
+  "MX":"+52",
+  "BZ":"+501",
+  "CR":"+506",
+  "SV":"+503",
+  "GT":"+502",
+  "HN":"+504",
+  "NI":"+505",
+  "PA":"+507",
+  "CU":"+53",
+  "HT":"+509",
+  "JM":"+1-876",
+  "DO":"+1-809",
+  "BS":"+1-242",
+  "AG":"+1-268",
+  "BB":"+1-246",
+  "DM":"+1-767",
+  "GD":"+1-473",
+  "LC":"+1-758",
+  "KN":"+1-869",
+  "VC":"+1-784",
+  "TT":"+1-868",
+  "PR":"+1-787",
+  "VI":"+1-340",
+  "AI":"+1-264",
+  "BM":"+1-441",
+  "KY":"+1-345",
+  "VG":"+1-284",
+  "MS":"+1-664",
+  "TC":"+1-649",
+  "GP":"+590",
+  "MQ":"+596",
+  "BL":"+590",
+  "MF":"+590",
+  "AW":"+297",
+  "CW":"+599",
+  "SX":"+1-721",
+  "AR":"+54",
+  "BO":"+591",
+  "BR":"+55",
+  "CL":"+56",
+  "CO":"+57",
+  "EC":"+593",
+  "GY":"+592",
+  "PY":"+595",
+  "PE":"+51",
+  "SR":"+597",
+  "UY":"+598",
+  "VE":"+58",
+  "PT":"+351",
+  "ES":"+34",
+  "FR":"+33",
+  "DE":"+49",
+  "GB":"+44",
+  "IT":"+39",
+  "NL":"+31",
+  "BE":"+32",
+  "CH":"+41",
+  "AT":"+43",
+  "LU":"+352",
+  "SE":"+46",
+  "NO":"+47",
+  "DK":"+45",
+  "FI":"+358",
+  "IE":"+353",
+  "IS":"+354",
+  "GR":"+30",
+  "HR":"+385",
+  "RS":"+381",
+  "SI":"+386",
+  "BA":"+387",
+  "ME":"+382",
+  "MK":"+389",
+  "AL":"+355",
+  "PL":"+48",
+  "CZ":"+420",
+  "HU":"+36",
+  "RO":"+40",
+  "SK":"+421",
+  "BG":"+359",
+  "UA":"+380",
+  "MD":"+373",
+  "BY":"+375",
+  "EE":"+372",
+  "LV":"+371",
+  "LT":"+370",
+  "AO":"+244",
+  "MZ":"+258",
+  "CV":"+238",
+  "ST":"+239",
+  "GW":"+245",
+  "GQ":"+240",
+  "MA":"+212",
+  "DZ":"+213",
+  "TN":"+216",
+  "LY":"+218",
+  "EG":"+20",
+  "SD":"+249",
+  "NG":"+234",
+  "GH":"+233",
+  "SN":"+221",
+  "CI":"+225",
+  "CM":"+237",
+  "ML":"+223",
+  "BF":"+226",
+  "GN":"+224",
+  "NE":"+227",
+  "TG":"+228",
+  "BJ":"+229",
+  "SL":"+232",
+  "LR":"+231",
+  "MR":"+222",
+  "GM":"+220",
+  "CD":"+243",
+  "CG":"+242",
+  "GA":"+241",
+  "CF":"+236",
+  "TD":"+235",
+  "KE":"+254",
+  "TZ":"+255",
+  "ET":"+251",
+  "UG":"+256",
+  "RW":"+250",
+  "BI":"+257",
+  "SO":"+252",
+  "DJ":"+253",
+  "ER":"+291",
+  "ZA":"+27",
+  "ZW":"+263",
+  "ZM":"+260",
+  "BW":"+267",
+  "NA":"+264",
+  "MW":"+265",
+  "SZ":"+268",
+  "LS":"+266",
+  "MG":"+261",
+  "AE":"+971",
+  "SA":"+966",
+  "QA":"+974",
+  "KW":"+965",
+  "BH":"+973",
+  "OM":"+968",
+  "IL":"+972",
+  "TR":"+90",
+  "JO":"+962",
+  "LB":"+961",
+  "IQ":"+964",
+  "IR":"+98",
+  "SY":"+963",
+  "YE":"+967",
+  "PS":"+970",
+  "GE":"+995",
+  "AM":"+374",
+  "AZ":"+994",
+  "KZ":"+7",
+  "UZ":"+998",
+  "TM":"+993",
+  "KG":"+996",
+  "TJ":"+992",
+  "AF":"+93",
+  "IN":"+91",
+  "PK":"+92",
+  "BD":"+880",
+  "LK":"+94",
+  "NP":"+977",
+  "MM":"+95",
+  "CN":"+86",
+  "JP":"+81",
+  "KR":"+82",
+  "TW":"+886",
+  "HK":"+852",
+  "MN":"+976",
+  "SG":"+65",
+  "MY":"+60",
+  "TH":"+66",
+  "ID":"+62",
+  "VN":"+84",
+  "PH":"+63",
+  "KH":"+855",
+  "LA":"+856",
+  "BN":"+673",
+  "TL":"+670",
+  "AU":"+61",
+  "NZ":"+64",
+  "PG":"+675",
+  "FJ":"+679",
+  "SB":"+677",
+  "VU":"+678",
+  "WS":"+685",
+  "TO":"+676",
+  "KI":"+686",
+  "FM":"+691",
+  "PW":"+680",
+  "MH":"+692",
+  "NR":"+674",
+  "TV":"+688",
+};
+
+const VERTICAIS = ['Logística','Energia','Telecom','Mineração','Oil & Gas','Automação Industrial','Varejo','Segurança','Outro'];
+const APLICACOES = ['Storage','Logística Last-Mile','Frotas / Caminhões','E-commerce','Portaria','Canteiro de Obras','Datacenter','Varejo','Manutenção','Outro'];
+const AREAS_CLIENTE = ['TI / Tecnologia','Segurança','Engenharia','Logística','Facilities','Operações','Compras / Procurement','Projetos','Manutenção','P&D','Jurídico','Financeiro','Diretoria','Outro'];
+const PRODUTOS = ['CADEADO PAD-I','CADEADO PAD-C','CADEADO PAD-C IOT','UNILOCK COVER IOT','MÓDULO UNILOCK ONE IOT','MÓDULO UNILOCK ONE WIFI'];
+const STATUS_OPTS = [
+  {v:'',             l:'— status —'},
+  {v:'PROSPECCAO',   l:'🔵 Prospecção'},
+  {v:'OPORTUNIDADE', l:'🟡 Oportunidade'},
+  {v:'POC',          l:'🟠 POC / Piloto'},
+  {v:'PROPOSTA',     l:'🟣 Proposta'},
+  {v:'PROJETO_ATIVO',l:'🟢 Projeto Ativo'},
+  {v:'HOMOLOGACAO',  l:'🔷 Homologação'},
+  {v:'CERTIFICACAO', l:'📋 Certificação'},
+  {v:'EM_PAUSA',     l:'⚫ Em Pausa'},
+  {v:'PERDIDO',      l:'🔴 Perdido'},
+];
+
+function buildPaisOptions(current) {
+  const subsSeen = [];
+  let h = '<option value="">— país —</option>';
+  PAISES_DATA.forEach(p => {
+    if (!subsSeen.includes(p.sub)) {
+      if (subsSeen.length) h += '</optgroup>';
+      h += '<optgroup label="' + p.sub + '">';
+      subsSeen.push(p.sub);
+    }
+    const sel = p.nome === current ? ' selected' : '';
+    h += '<option value="' + p.nome + '"' + sel + '>' + p.flag + ' ' + p.nome + '</option>';
+  });
+  if (subsSeen.length) h += '</optgroup>';
+  return h;
+}
+
+
+let repId=null, repToken=null, rowId=1, linhas=[];
+
+// ── INIT ────────────────────────────────────────────────────
+(function init(){
+  // Popular selects de país e DDI
+  document.getElementById('pais').innerHTML = buildPaisOptions('');
+  const ddiSel = document.getElementById('ddi');
+  ddiSel.innerHTML = Object.entries(DDI_MAP).map(([iso,ddi])=>
+    `<option value="${ddi}">${ddi}</option>`
+  ).join('');
+  ddiSel.value = '+55';
+
+  const token = new URLSearchParams(location.search).get('token') ||
+                localStorage.getItem('promont_rep_token');
+  if (token) { repToken=token; carregarPerfil(token); }
+  else addProjeto();
+})();
+
+function toggleRecovery(){
+  const b = document.getElementById('recoveryBox');
+  b.style.display = b.style.display==='none'?'block':'none';
+}
+
+async function carregarPerfil(token){
+  try{
+    const r = await fetch(APPS_URL+'?action=getProfile&token='+token);
+    const j = await r.json();
+    if(j.status==='ok'){
+      repId=j.perfil.repId; repToken=j.perfil.token;
+      const p=j.perfil;
+      sv('nome',p.nome); sv('sobrenome',p.sobrenome);
+      sv('pais',p.pais); sv('cidade',p.cidade);
+      sv('empresa',p.empresa); sv('email',p.email);
+      const tel=(p.telefone||'').split(' ');
+      if(tel[0]) document.getElementById('ddi').value=tel[0];
+      sv('whats', tel.slice(1).join(' '));
+      sv('linkedin',p.linkedin);
+      // Welcome banner
+      const av=ini(p.nome+' '+p.sobrenome);
+      document.getElementById('w-avatar').textContent=av;
+      document.getElementById('w-name').textContent='Olá, '+p.nome+'!';
+      document.getElementById('w-sub').textContent=(p.empresa||'')+' · '+(p.pais||'');
+      document.getElementById('w-id').textContent=repId||'';
+      document.getElementById('welcomeBanner').style.display='flex';
+      document.getElementById('recoveryBar').style.display='none';
+      document.getElementById('hdr-title').textContent='Atualizar Cadastro';
+      document.getElementById('hdr-sub').textContent='Seus dados foram carregados.';
+      document.getElementById('btn-label').textContent='Salvar atualização';
+      localStorage.setItem('promont_rep_token',token);
+      linhas = j.atividades&&j.atividades.length ? j.atividades.map(a=>{
+        return {
+          id:'p'+(rowId++), titulo:a.titulo||'', pais:a.pais||'',
+          cliente:a.cliente||'', vertical:a.vertical||a.area||'',
+          areaCli:a.area_cliente||a.areaCli||'',
+          aplicacao:a.aplicacao||(a.projetos&&a.projetos[0])||'',
+          prods:a.produtos||[], obs:a.obs||'', status:a.status||'',
+          collapsed:false
+        };
+      }) : [];
+      if(!linhas.length) addProjeto();
+      else renderProjetos();
+    } else { addProjeto(); }
+  } catch(e){ addProjeto(); }
+}
+
+// ── PROJETOS ─────────────────────────────────────────────────
+function addProjeto(){
+  linhas.push({id:'p'+(rowId++),titulo:'',pais:'',cliente:'',vertical:'',areaCli:'',aplicacao:'',prods:[],obs:'',status:'',collapsed:false});
+  renderProjetos();
+  setTimeout(()=>{
+    const cards=document.querySelectorAll('.proj-card');
+    if(cards.length && cards[cards.length-1].scrollIntoView) cards[cards.length-1].scrollIntoView({behavior:'smooth',block:'nearest'});
+  },100);
+}
+
+function removeProjeto(id){
+  linhas=linhas.filter(p=>p.id!==id);
+  renderProjetos();
+}
+
+function dupProjeto(id){
+  const src=linhas.find(p=>p.id===id);
+  const idx=linhas.indexOf(src);
+  linhas.splice(idx+1,0,{...src,id:'p'+(rowId++),titulo:src.titulo?src.titulo+' (cópia)':'',prods:[...src.prods],collapsed:false});
+  renderProjetos();
+}
+
+function toggleProjeto(id){
+  const p=linhas.find(p=>p.id===id);
+  if(p){ p.collapsed=!p.collapsed; renderProjetos(); }
+}
+
+function uProj(id,f,v){ const p=linhas.find(p=>p.id===id); if(p) p[f]=v; }
+
+function addTagProd(id,val){
+  const p=linhas.find(p=>p.id===id); if(!p) return;
+  const nome=val.split(':')[0];
+  const existe=p.prods.some(x=>x.split(':')[0]===nome);
+  if(existe) p.prods=p.prods.map(x=>x.split(':')[0]===nome?val:x);
+  else p.prods.push(val);
+  renderProjetos();
+}
+
+function rmProd(id,idx){
+  const p=linhas.find(p=>p.id===id); if(!p) return;
+  p.prods.splice(idx,1);
+  renderProjetos();
+}
+
+function renderProjetos(){
+  const cont=document.getElementById('projetos-container');
+  cont.innerHTML='';
+  linhas.forEach((proj,num)=>{
+    const card=document.createElement('div');
+    card.className='proj-card';
+    card.id='proj-'+proj.id;
+
+    // Header
+    const hdr=document.createElement('div');
+    hdr.className='proj-card-hdr';
+    const numEl=document.createElement('span');
+    numEl.className='proj-card-num';
+    numEl.textContent='PROJETO #'+(num+1);
+    const preview=document.createElement('span');
+    preview.className='proj-card-preview';
+    preview.textContent=proj.titulo||proj.cliente||'';
+    const acts=document.createElement('div');
+    acts.className='proj-card-actions';
+    const dupBtn=document.createElement('button');
+    dupBtn.className='proj-btn'; dupBtn.innerHTML='<i class="ti ti-copy"></i>';
+    (function(pid){dupBtn.onclick=()=>dupProjeto(pid);})(proj.id);
+    const delBtn=document.createElement('button');
+    delBtn.className='proj-btn del'; delBtn.innerHTML='<i class="ti ti-trash"></i>';
+    (function(pid){delBtn.onclick=()=>removeProjeto(pid);})(proj.id);
+    const togBtn=document.createElement('button');
+    togBtn.className='proj-btn';
+    togBtn.innerHTML=proj.collapsed?'<i class="ti ti-chevron-down"></i>':'<i class="ti ti-chevron-up"></i>';
+    (function(pid){togBtn.onclick=()=>toggleProjeto(pid);})(proj.id);
+    acts.appendChild(dupBtn); acts.appendChild(delBtn); acts.appendChild(togBtn);
+    hdr.appendChild(numEl); hdr.appendChild(preview); hdr.appendChild(acts);
+    card.appendChild(hdr);
+
+    if(!proj.collapsed){
+      const body=document.createElement('div');
+      body.className='proj-card-body';
+
+      // Título
+      body.appendChild(mField('Título do projeto','text',proj.titulo,'Ex: Expansão Hub Logístico',v=>uProj(proj.id,'titulo',v)));
+
+      // Status pills
+      const stWrap=document.createElement('div');
+      stWrap.innerHTML='<div class="field-label-sm">Status</div>';
+      const pills=document.createElement('div');
+      pills.className='status-pills';
+      STATUS_OPTS.filter(s=>s.v).forEach(s=>{
+        const btn=document.createElement('button');
+        btn.className='status-pill'+(proj.status===s.v?' sel sel-'+s.v:'');
+        btn.textContent=s.l;
+        (function(pid,sv){btn.onclick=()=>{
+          linhas.find(p=>p.id===pid).status=sv;
+          renderProjetos();
+        };})(proj.id,s.v);
+        pills.appendChild(btn);
+      });
+      stWrap.appendChild(pills);
+      body.appendChild(stWrap);
+
+      body.appendChild(document.createElement('div')).className='divider';
+
+      // País
+      const paisF=document.createElement('div'); paisF.className='field';
+      paisF.innerHTML='<label>País <span class="req">*</span></label>';
+      const paisSel=document.createElement('select');
+      paisSel.innerHTML=buildPaisOptions(proj.pais);
+      (function(pid){paisSel.onchange=()=>uProj(pid,'pais',paisSel.value);})(proj.id);
+      paisF.appendChild(paisSel); body.appendChild(paisF);
+
+      // Cliente
+      body.appendChild(mField('Cliente','text',proj.cliente,'Nome do cliente',v=>uProj(proj.id,'cliente',v)));
+
+      // Vertical
+      body.appendChild(mSelect('Vertical',VERTICAIS,'— vertical —',proj.vertical,v=>uProj(proj.id,'vertical',v)));
+
+      // Área do Cliente
+      body.appendChild(mSelect('Área do Cliente',AREAS_CLIENTE,'— área —',proj.areaCli,v=>uProj(proj.id,'areaCli',v)));
+
+      // Aplicação
+      body.appendChild(mSelect('Aplicação',APLICACOES,'— aplicação —',proj.aplicacao,v=>uProj(proj.id,'aplicacao',v)));
+
+      body.appendChild(document.createElement('div')).className='divider';
+
+      // Produtos
+      const prodWrap=document.createElement('div');
+      prodWrap.innerHTML='<div class="field-label-sm">Produtos e projeção</div>';
+      const prodLines=document.createElement('div');
+      prodLines.className='prod-lines';
+      proj.prods.forEach((prod,i)=>{
+        const pts=prod.split(':');
+        const nome=pts[0]; const faixa=pts[1]||'';
+        const line=document.createElement('div');
+        line.className='prod-line';
+        const pSel=document.createElement('select');
+        PRODUTOS.forEach(p=>{
+          const o=document.createElement('option'); o.value=p; o.textContent=p;
+          if(p===nome) o.selected=true; pSel.appendChild(o);
+        });
+        (function(pid,idx){pSel.onchange=function(){
+          const p=linhas.find(x=>x.id===pid);
+          if(p){ const f=p.prods[idx].split(':')[1]||'1–50'; p.prods[idx]=this.value+':'+f; }
+        };})(proj.id,i);
+        const fSel=document.createElement('select');
+        ['1–50','51–100','101–200','201–500','501–1000','1000+','5000+'].forEach(f=>{
+          const o=document.createElement('option'); o.value=f; o.textContent=f;
+          if(f===faixa) o.selected=true; fSel.appendChild(o);
+        });
+        (function(pid,idx){fSel.onchange=function(){
+          const p=linhas.find(x=>x.id===pid);
+          if(p){ const n=p.prods[idx].split(':')[0]; p.prods[idx]=n+':'+this.value; }
+        };})(proj.id,i);
+        const rm=document.createElement('button');
+        rm.className='prod-line-rm'; rm.textContent='×';
+        (function(pid,idx){rm.onclick=()=>rmProd(pid,idx);})(proj.id,i);
+        line.appendChild(pSel); line.appendChild(fSel); line.appendChild(rm);
+        prodLines.appendChild(line);
+      });
+      // Add produto
+      const addPLine=document.createElement('div');
+      addPLine.className='prod-line';
+      const newPSel=document.createElement('select');
+      newPSel.innerHTML='<option value="">— produto —</option>'+PRODUTOS.map(p=>`<option>${p}</option>`).join('');
+      const newFSel=document.createElement('select');
+      ['1–50','51–100','101–200','201–500','501–1000','1000+','5000+'].forEach(f=>{
+        const o=document.createElement('option'); o.value=f; o.textContent=f; newFSel.appendChild(o);
+      });
+      const addPBtn=document.createElement('button');
+      addPBtn.className='prod-line-rm'; addPBtn.style.cssText='background:var(--red);border-color:var(--red);color:#fff;font-size:18px';
+      addPBtn.textContent='+';
+      (function(pid){addPBtn.onclick=()=>{
+        if(!newPSel.value) return;
+        addTagProd(pid,newPSel.value+':'+newFSel.value);
+        newPSel.value='';
+      };})(proj.id);
+      addPLine.appendChild(newPSel); addPLine.appendChild(newFSel); addPLine.appendChild(addPBtn);
+      prodLines.appendChild(addPLine);
+      prodWrap.appendChild(prodLines);
+      body.appendChild(prodWrap);
+
+      body.appendChild(document.createElement('div')).className='divider';
+
+      // Obs
+      const obsF=document.createElement('div'); obsF.className='field';
+      obsF.innerHTML='<label>Observações</label>';
+      const obsTa=document.createElement('textarea');
+      obsTa.placeholder='Detalhes relevantes do projeto (até 500 caracteres)...';
+      obsTa.maxLength=500; obsTa.value=proj.obs||'';
+      (function(pid){obsTa.oninput=()=>uProj(pid,'obs',obsTa.value);})(proj.id);
+      const obsCount=document.createElement('div');
+      obsCount.className='char-count';
+      obsCount.textContent=(proj.obs||'').length+'/500';
+      obsTa.addEventListener('input',()=>obsCount.textContent=obsTa.value.length+'/500');
+      obsF.appendChild(obsTa); obsF.appendChild(obsCount);
+      body.appendChild(obsF);
+
+      card.appendChild(body);
+    }
+    cont.appendChild(card);
+  });
+}
+
+// ── HELPERS DE CAMPO ─────────────────────────────────────────
+function mField(label,type,val,ph,onChange){
+  const div=document.createElement('div'); div.className='field';
+  div.innerHTML=`<label>${label}</label>`;
+  const inp=document.createElement('input');
+  inp.type=type; inp.placeholder=ph; inp.value=val||'';
+  inp.oninput=()=>onChange(inp.value);
+  div.appendChild(inp); return div;
+}
+
+function mSelect(label,opts,ph,val,onChange){
+  const div=document.createElement('div'); div.className='field';
+  div.innerHTML=`<label>${label}</label>`;
+  const sel=document.createElement('select');
+  const ph_opt=document.createElement('option');
+  ph_opt.value=''; ph_opt.textContent=ph;
+  if(!val) ph_opt.selected=true;
+  sel.appendChild(ph_opt);
+  opts.forEach(o=>{
+    const opt=document.createElement('option'); opt.value=o; opt.textContent=o;
+    if(o===val) opt.selected=true; sel.appendChild(opt);
+  });
+  sel.onchange=()=>onChange(sel.value);
+  div.appendChild(sel); return div;
+}
+
+// ── UTILS ────────────────────────────────────────────────────
+function gv(id){ return (document.getElementById(id)||{}).value?.trim()||''; }
+function sv(id,val){ const el=document.getElementById(id); if(el) el.value=val||''; }
+function ini(s){ return (s||'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('')||'?'; }
+function autoDDI(code){ if(DDI_MAP[code]) document.getElementById('ddi').value=DDI_MAP[code]; }
+function showError(m){ const b=document.getElementById('error-box'); document.getElementById('error-msg').textContent=m; b.style.display='flex'; }
+function hideError(){ document.getElementById('error-box').style.display='none'; }
+function showToast(msg,err=false){
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.className='toast'+(err?' err':'');
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
+function setSending(s){
+  const b=document.getElementById('btn-enviar');
+  b.disabled=s;
+  document.getElementById('btn-label').textContent=s?'Enviando...':(repToken?'Salvar atualização':'Enviar cadastro');
+  document.getElementById('btn-icon').className=s?'ti ti-loader-2 spin':'ti ti-send';
+}
+
+// ── COLETA ───────────────────────────────────────────────────
+function coletarDados(){
+  return {
+    timestamp:new Date().toISOString(),
+    dadosPessoais:{
+      repId:repId||null, token:repToken||null,
+      nome:gv('nome'), sobrenome:gv('sobrenome'),
+      pais:gv('pais'), cidade:gv('cidade'),
+      empresa:gv('empresa'), email:gv('email'),
+      telefone:gv('ddi')+' '+gv('whats'), linkedin:gv('linkedin')
+    },
+    atuacao:linhas.filter(p=>p.cliente&&p.cliente.trim()).map(p=>{
+      return {
+        titulo:p.titulo||'', pais:p.pais, cliente:p.cliente,
+        vertical:p.vertical||'', area:p.vertical||'',
+        area_cliente:p.areaCli||'', aplicacao:p.aplicacao||'',
+        produtos:p.prods, qtd_estimada:'',
+        projetos:p.aplicacao?[p.aplicacao]:[],
+        status:p.status||'', obs:p.obs||''
+      };
+    })
+  };
+}
+
+function salvarRascunho(){
+  const b=new Blob([JSON.stringify(coletarDados(),null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(b);
+  a.download='rascunho_promont.json'; a.click();
+}
+
+async function enviar(){
+  const req=['nome','sobrenome','pais','cidade','empresa','email','whats'];
+  let ok=true;
+  req.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el||!el.value.trim()){ if(el) el.style.borderColor='var(--red)'; ok=false; }
+    else if(el) el.style.borderColor='var(--border)';
+  });
+  if(!ok){ showError('Preencha todos os campos obrigatórios (*).'); return; }
+  hideError(); setSending(true);
+  try{
+    const dados=coletarDados();
+    const url=APPS_URL+'?data='+encodeURIComponent(JSON.stringify(dados));
+    let resultado=null;
+    try{ const resp=await fetch(url,{method:'GET'}); if(resp.ok) resultado=await resp.json(); }
+    catch(corsErr){ await fetch(url,{method:'GET',mode:'no-cors'}); }
+    await new Promise(r=>setTimeout(r,2000));
+    setSending(false);
+    if(resultado&&resultado.token){
+      localStorage.setItem('promont_rep_token',resultado.token);
+      repToken=resultado.token; repId=resultado.repId;
+    }
+    showToast(repToken?'✅ Cadastro atualizado! Verifique seu e-mail.':'✅ Enviado! Verifique seu e-mail para o link de acesso.');
+    if(!repToken) setTimeout(()=>location.reload(),3500);
+  } catch(e){
+    setSending(false);
+    showError('Não foi possível enviar. Verifique sua conexão.');
+  }
+}
+
+async function recuperarAcesso(){
+  const q=document.getElementById('recoveryInput').value.trim();
+  if(!q){ showToast('Informe e-mail ou telefone','err'); return; }
+  try{
+    const r=await fetch(APPS_URL+'?action=recoverAccess&query='+encodeURIComponent(q));
+    const j=await r.json();
+    showToast(j.status==='ok'?'✅ Link enviado para o seu e-mail!':'❌ '+j.message, j.status!=='ok');
+  } catch(e){ showToast('Erro ao conectar. Tente novamente.','err'); }
+}
+</script>
+</body>
+</html>
