@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROMONT — Recuperar Senha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#F5F5F5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08),0 8px 32px rgba(0,0,0,.06);width:100%;max-width:400px;overflow:hidden}
+.card-header{background:#2C2C2C;padding:24px 32px;text-align:center}
+.card-header img{height:36px;width:auto;margin-bottom:12px}
+.card-header h1{color:#fff;font-size:16px;font-weight:700}
+.card-header p{color:rgba(255,255,255,.5);font-size:12px;margin-top:4px}
+.card-body{padding:28px 32px}
+.field label{display:block;font-size:12px;font-weight:600;color:#4A4A4A;margin-bottom:6px}
+.field input{width:100%;height:46px;border:1px solid #E4E4E4;border-radius:8px;padding:0 14px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
+.field input:focus{border-color:#E30613}
+.desc{font-size:13px;color:#666;line-height:1.5;margin-bottom:20px}
+.btn{width:100%;height:48px;background:#E30613;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:12px;transition:background .15s}
+.btn:hover{background:#B30410}
+.btn:disabled{opacity:.6}
+.btn-sec{width:100%;height:44px;background:#fff;color:#666;border:1px solid #E4E4E4;border-radius:8px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:10px}
+.btn-sec:hover{border-color:#2C2C2C;color:#2C2C2C}
+.msg-box{border-radius:8px;padding:12px 14px;font-size:13px;margin-bottom:16px;display:none}
+.msg-box.ok{background:#F0FDF4;border:1px solid #BBF7D0;color:#166534}
+.msg-box.err{background:#FFF1F2;border:1px solid #FECDD3;color:#BE123C}
+
+/* FASE REDEFINIR */
+.fase{display:none}
+.fase.ativa{display:block}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/webp;base64,UklGRoIGAABXRUJQVlA4THYGAAAvbMALELXQ3v7PkOx8Y+PS5qWtyZ7fedIXwfGJbdu2bTu5PJexbdu27aRrqn6LP6COZg52n/PdqeS36t7ItW3r2J7Z/f5js/zLOClTsrRtlrbNkqVt68cz8u0vedPlAnIfH4O2jSR5744/wgPyRbOyIAEgYOVqHrJt27Zt27Zt27Zt2/60bdt1005AbJsRMVHTFjWjFFE3Er+1wF8JYtuMSjrEawRdxHP0SdUmoSEEcbvURtxokxDZEPTbJESpZkGRCJV8KAqFIwqhiOdAt2iIXO3hiELolsqBCEFkales4YiAo0IiUb7mwA+JEYdKVUQQsQnfxItoCCDmIX4jqCIuo8gWIyqt+ktVxGNU6sWYeTIJlwTC7+ZAzalSG5VZETGu1Ebcxj0hiEKI36UyIogiU0Yk0W02j343/ovUr1YiKiG2leqISUIhiq11lIhspT7uaYW4pIdPVgm1Wg2KXK0C76xqIXIjbw3H86Xx2Xd3Ak5cTb3+0njeGo77vgmsfJeQK+fx2mjeGk5VHrk+LWvQhfwJ35+amOLXMN+nupix4DfoAubbm92gpd04ixNXx3nblJgduD0h7w3OqcvTnj9xNW8Nx75qZ75X+O24J2ajZnLg9jjvmoDZlkdoadmVlM6FXmF24HZCnurK/6Xz0M3YV+0s9Iqg1W+mdK58l9az2LM0w5Hro7Hy3bgareCmGVw5DyfNDtyekO+ac+2sNPLXzuKj/rGXxjPnN9oO3+4Qz6/ayW5QtpDYEm6bkgvnx33u/HSXIV+1c+W8FPl/2+2uCUxbCBp2Jq5uv8TFtouHeK2GeOsxpQz1qM/andJ55mLsq3bmexW/bQ/E7Kv21PMvjafDbMMzeAnVUPRCBJUQv/FLl5a04x6sY6FX+K18Nx3m+Vn/9HkJl1cmFaIW4hDiOuK2ImIfohIIuBZ6xoZn0jnXu2itfpPOda+kdPd1DrqQWbvjVy71iA1PpLN6A8EnUfRaWFWhV4VOwaJ2Me9SxTuZXKp4p1kVTXyySlQrl6gp+uxA3X+1bhSREI/1EMUQs/QQwzJyCUFB0qVw2YG6FWooekVEPTXEKRwRQCUd4rMW4j26JRpGJOGYQFvo5MAfsRDjEI/7EN/D+xC3uxAhMSK6Ia739SginiOWoUgWI4pyHUWPIuJ1B4pMMVaIJywSnou+KwqfhctCr+UJccSIhhAU8RDxwlHEwjuRYh4NAVRidSjinWjRiX+iIeIpjo3OzB1pvKIQr0IICLhBxEyDhMdUFAWF20K3GKPQqHciFYXXolkZ0WIUMgmHhN9UFL6PzTzpYlyeSMIk0XsqCsFeoZGriTmk2BRJCr1ihWaTyaRICutihVSi52RSJBsrEyuKdpFJkZws1HOIHWTSZWMpInUxKVPIJ5rGpExRL1E6JmUKlxwpT9KDZEopMfNkYnLSt8rqaiWcc5F0kXRVWCaq5aK3S/juwUGIGViFMa4L5kS5XJwcq9foWplWpYMxRua4rsRIx+qsEmo5ODn60iH89nkPH+E5lHRwQ3kLhXlxUzyGonrtTDDgIRS1fYW5K6V4DcNAvxNReNY2BIN+wp+wa+FghrtgVviNgvl+hkGg32sw+w17ginxRthX2FACLpQ/4fkdNhUVOxTMXQgLuglWvxLHIn+ivAZrnxhm7UeCKjuip6fnNvwJuw89PT2XYpjovIZBYOK2aGi8h3VBZ7/Gbxhjn2FPUCGR5K4Y8yfOBPNJoW42jszwFMzGhL2FdcGUUtKZfC7M6jtCI6XkSlVDel+C2b7gWLO70NeyeK7U7SvsilbQ1bC3cKCMsc9cNoSOU4ljx1gxvuVxrNkYG9NNhfYdpZYfJKOgk3gizKwV1N6DmfVSw+oNp1ljQ2gkdtdbA3eVujWGQeFY1M3zLgiSRuK5Um9hRbEpmLitFFsKE/uLHeGV2FlU72EK+LfYErnEnmJ0BoVaUQyDTiKZUiKZUiKZcpknlyvRNwUkkslJkikokWTS0aTI0sQSfaZDkUI1YZNLkcIkoZhPIIX7DuEmtYRVURilRdHzCrGEcqQOhWBnRrT/qCVMczSRUnRdoCscykgU+4Vl1BUeV0gXo6jfRKoK3yu0ilHI9B91RasyYjnicoQOpOxAM0DMqHBh0NoUBRFijFHILnQTMypczLCB1BhOWIwxNpG0ieYDGNEVLrRYhzgxxrglkZqoMIDBXeED6CNkBgE3" alt="PROMONT">
+    <h1 id="hdr-title">Recuperar Senha</h1>
+    <p id="hdr-sub">Informe seu e-mail cadastrado</p>
+  </div>
+  <div class="card-body">
+    <div class="msg-box" id="msg-box"></div>
+
+    <!-- FASE 1: solicitar link -->
+    <div class="fase ativa" id="fase-solicitar">
+      <p class="desc">Enviaremos um link para redefinir sua senha no e-mail cadastrado.</p>
+      <div class="field">
+        <label>E-mail</label>
+        <input id="email-rec" type="email" placeholder="seu@email.com"
+               onkeydown="if(event.key==='Enter') solicitarLink()">
+      </div>
+      <button class="btn" id="btn-solicitar" onclick="solicitarLink()">Enviar link</button>
+      <button class="btn-sec" onclick="window.location.href='login.html'">← Voltar ao login</button>
+    </div>
+
+    <!-- FASE 2: nova senha (token via URL) -->
+    <div class="fase" id="fase-redefinir">
+      <p class="desc">Defina sua nova senha. Use pelo menos 8 caracteres.</p>
+      <div class="field" style="margin-bottom:14px">
+        <label>Nova senha</label>
+        <input id="nova-senha" type="password" placeholder="••••••••" minlength="8">
+      </div>
+      <div class="field">
+        <label>Confirmar nova senha</label>
+        <input id="conf-senha" type="password" placeholder="••••••••"
+               onkeydown="if(event.key==='Enter') redefinirSenha()">
+      </div>
+      <button class="btn" id="btn-redefinir" onclick="redefinirSenha()">Salvar nova senha</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbz3sokUShIvH1eYGiVBNbNHw1hTsaIPxnUpZ59tHodrCzmn53U6pHoxZPl9TkpTLoAaVw/exec';
+
+// Verificar se veio com token (redefinição)
+(function init() {
+  const token = new URLSearchParams(location.search).get('reset_token');
+  if (token) {
+    document.getElementById('fase-solicitar').classList.remove('ativa');
+    document.getElementById('fase-redefinir').classList.add('ativa');
+    document.getElementById('hdr-title').textContent = 'Redefinir Senha';
+    document.getElementById('hdr-sub').textContent = 'Crie sua nova senha';
+  }
+})();
+
+async function solicitarLink() {
+  const email = document.getElementById('email-rec').value.trim();
+  if (!email) { showMsg('Informe seu e-mail.', 'err'); return; }
+  document.getElementById('btn-solicitar').disabled = true;
+  document.getElementById('btn-solicitar').textContent = 'Enviando...';
+  try {
+    const resp = await fetch(APPS_URL + '?action=recuperarSenha&email=' + encodeURIComponent(email));
+    const json = await resp.json();
+    // Sempre mostrar mensagem positiva (não revelar se email existe)
+    showMsg('Se este e-mail estiver cadastrado, você receberá um link em instantes.', 'ok');
+    document.getElementById('email-rec').disabled = true;
+  } catch(e) {
+    showMsg('Não foi possível conectar. Tente novamente.', 'err');
+  }
+  document.getElementById('btn-solicitar').disabled = false;
+  document.getElementById('btn-solicitar').textContent = 'Enviar link';
+}
+
+async function redefinirSenha() {
+  const token    = new URLSearchParams(location.search).get('reset_token');
+  const nova     = document.getElementById('nova-senha').value;
+  const conf     = document.getElementById('conf-senha').value;
+  if (!nova || nova.length < 8) { showMsg('A senha deve ter pelo menos 8 caracteres.', 'err'); return; }
+  if (nova !== conf)            { showMsg('As senhas não coincidem.', 'err'); return; }
+  document.getElementById('btn-redefinir').disabled = true;
+  document.getElementById('btn-redefinir').textContent = 'Salvando...';
+  try {
+    const resp = await fetch(APPS_URL + '?action=redefinirSenha&reset_token=' + encodeURIComponent(token) + '&nova_senha=' + encodeURIComponent(nova));
+    const json = await resp.json();
+    if (json.status === 'ok') {
+      showMsg('Senha redefinida! Redirecionando...', 'ok');
+      setTimeout(() => window.location.href = 'login.html', 2000);
+    } else {
+      showMsg(json.message || 'Link inválido ou expirado.', 'err');
+    }
+  } catch(e) {
+    showMsg('Não foi possível conectar. Tente novamente.', 'err');
+  }
+  document.getElementById('btn-redefinir').disabled = false;
+  document.getElementById('btn-redefinir').textContent = 'Salvar nova senha';
+}
+
+function showMsg(msg, tipo) {
+  const b = document.getElementById('msg-box');
+  b.textContent = msg;
+  b.className = 'msg-box ' + tipo;
+  b.style.display = 'block';
+}
+</script>
+</body>
+</html>

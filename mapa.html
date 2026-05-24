@@ -1839,6 +1839,41 @@ async function carregarDados() {
   }
 }
 
+// ── PROTEÇÃO DE SESSÃO ────────────────────────────────────
+(function checkAuth() {
+  try {
+    const s = JSON.parse(localStorage.getItem('promont_session') || 'null');
+    if (!s || !s.token || s.expira < Date.now()) {
+      // Sessão ausente ou expirada — redirecionar para login
+      localStorage.removeItem('promont_session');
+      window.location.href = 'login.html';
+      return;
+    }
+    // Sessão válida — mostrar nome do usuário no header
+    const badgeEl = document.getElementById('badge');
+    if (badgeEl && s.nome) {
+      const userEl = document.createElement('span');
+      userEl.style.cssText = 'font-size:11px;color:rgba(255,255,255,.5);margin-left:8px';
+      userEl.textContent = s.nome + ' · ' + (s.nivel||'');
+      badgeEl.parentElement.appendChild(userEl);
+    }
+    // Botão sair
+    const hdrActions = document.querySelector('.hdr-actions');
+    if (hdrActions) {
+      const sairBtn = document.createElement('button');
+      sairBtn.className = 'btn-hdr';
+      sairBtn.innerHTML = '<i class="ti ti-logout"></i> Sair';
+      sairBtn.onclick = function() {
+        localStorage.removeItem('promont_session');
+        window.location.href = 'login.html';
+      };
+      hdrActions.appendChild(sairBtn);
+    }
+  } catch(e) {
+    window.location.href = 'login.html';
+  }
+})();
+
 carregarDados();
 </script>
 </body>

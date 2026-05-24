@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROMONT — Acesso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#F5F5F5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08),0 8px 32px rgba(0,0,0,.06);width:100%;max-width:400px;overflow:hidden}
+.card-header{background:#2C2C2C;padding:28px 32px;text-align:center}
+.card-header img{height:44px;width:auto;margin-bottom:16px}
+.card-header h1{color:#fff;font-size:18px;font-weight:700;letter-spacing:.04em}
+.card-header p{color:rgba(255,255,255,.5);font-size:12px;margin-top:4px}
+.card-body{padding:28px 32px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:#4A4A4A;margin-bottom:6px}
+.field input{width:100%;height:46px;border:1px solid #E4E4E4;border-radius:8px;padding:0 14px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;background:#fff}
+.field input:focus{border-color:#E30613}
+.field input.err{border-color:#E30613;background:#FFF1F2}
+.btn{width:100%;height:48px;background:#E30613;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;transition:background .15s}
+.btn:hover{background:#B30410}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.error-box{background:#FFF1F2;border:1px solid #FECDD3;border-radius:6px;padding:10px 14px;font-size:13px;color:#BE123C;margin-bottom:16px;display:none}
+.forgot{text-align:center;margin-top:16px}
+.forgot a{font-size:12px;color:#888;text-decoration:none;cursor:pointer}
+.forgot a:hover{color:#E30613;text-decoration:underline}
+.divider{border:none;border-top:1px solid #F0F0F0;margin:20px 0}
+.restricted{text-align:center;font-size:11px;color:#BBBBBB;display:flex;align-items:center;justify-content:center;gap:6px}
+.spin{animation:spin 1s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/webp;base64,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" alt="PROMONT">
+    <p style="color:#fff;font-size:13px;font-weight:500;margin-top:4px">Plataforma Comercial Internacional</p>
+  </div>
+  <div class="card-body">
+    <div class="error-box" id="error-box"></div>
+    <div id="box-login">
+    <div class="field">
+      <label>E-mail</label>
+      <input id="email" type="email" placeholder="seu@email.com" autocomplete="email"
+             onkeydown="if(event.key==='Enter') document.getElementById('senha').focus()">
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input id="senha" type="password" placeholder="••••••••" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter') entrar()">
+    </div>
+    <button class="btn" id="btn-login" onclick="entrar()">
+      <span id="btn-icon">→</span>
+      <span id="btn-label">Acessar</span>
+    </button>
+    <div class="forgot">
+      <a onclick="irParaRecuperar()">Esqueci minha senha</a>
+      <span style="color:#E4E4E4;margin:0 8px">·</span>
+      <a onclick="irParaPrimeiroAcesso()">Primeiro acesso</a>
+    </div>
+    </div>
+    <!-- PRIMEIRO ACESSO (hidden) -->
+    <div id="box-primeiro" style="display:none">
+      <hr class="divider" style="margin:16px 0 20px">
+      <p style="font-size:13px;color:#666;line-height:1.5;margin-bottom:16px">
+        Informe seu e-mail cadastrado. Você receberá um link para definir sua senha.
+      </p>
+      <div class="field">
+        <label>E-mail</label>
+        <input id="email-primeiro" type="email" placeholder="seu@email.com"
+               onkeydown="if(event.key==='Enter') enviarPrimeiroAcesso()">
+      </div>
+      <button class="btn" id="btn-primeiro" onclick="enviarPrimeiroAcesso()"
+              style="background:#2C2C2C">
+        <span>✉</span> Enviar link de acesso
+      </button>
+      <button onclick="voltarLogin()"
+              style="width:100%;height:40px;background:#fff;border:1px solid #E4E4E4;border-radius:8px;font-size:13px;color:#888;font-family:inherit;cursor:pointer;margin-top:8px">
+        ← Voltar ao login
+      </button>
+    </div>
+
+    <hr class="divider">
+    <div class="restricted">
+      <span>🔒</span>
+      <span>Acesso restrito — PROMONT Internacional</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbz3sokUShIvH1eYGiVBNbNHw1hTsaIPxnUpZ59tHodrCzmn53U6pHoxZPl9TkpTLoAaVw/exec';
+const SESSION_HOURS = 8;
+
+// Se já tem sessão válida, vai direto pro mapa
+(function checkSession() {
+  try {
+    const s = JSON.parse(localStorage.getItem('promont_session') || 'null');
+    if (s && s.token && s.expira > Date.now()) {
+      window.location.href = 'mapa.html';
+    }
+  } catch(e) {}
+})();
+
+async function entrar() {
+  const email = document.getElementById('email').value.trim();
+  const senha = document.getElementById('senha').value;
+  if (!email || !senha) { showError('Preencha e-mail e senha.'); return; }
+
+  setSending(true);
+  try {
+    const resp = await fetch(APPS_URL + '?action=login&email=' + encodeURIComponent(email) + '&senha=' + encodeURIComponent(senha));
+    const json = await resp.json();
+    if (json.status === 'ok') {
+      const expira = Date.now() + SESSION_HOURS * 60 * 60 * 1000;
+      localStorage.setItem('promont_session', JSON.stringify({
+        token:  json.token,
+        email:  json.email,
+        nome:   json.nome,
+        nivel:  json.nivel,
+        expira: expira
+      }));
+      window.location.href = 'mapa.html';
+    } else if (json.status === 'primeiro_acesso') {
+      // Senha ainda não definida — email enviado
+      document.getElementById('btn-login').disabled = true;
+      showInfo('Primeiro acesso detectado. Enviamos um link para ' + document.getElementById('email').value + ' — verifique sua caixa de entrada.');
+    } else {
+      showError(json.message || 'E-mail ou senha incorretos.');
+      document.getElementById('senha').value = '';
+      document.getElementById('senha').classList.add('err');
+    }
+  } catch(e) {
+    showError('Não foi possível conectar. Verifique sua internet.');
+  }
+  setSending(false);
+}
+
+function irParaRecuperar() {
+  window.location.href = 'recuperar-senha.html';
+}
+
+    function irParaPrimeiroAcesso() {
+      document.getElementById('box-login').style.display = 'none';
+      document.getElementById('box-primeiro').style.display = 'block';
+      document.getElementById('email-primeiro').focus();
+    }
+
+    function voltarLogin() {
+      document.getElementById('box-login').style.display = 'block';
+      document.getElementById('box-primeiro').style.display = 'none';
+      document.getElementById('error-box').style.display = 'none';
+    }
+
+    function hideMsg() {
+      document.getElementById('error-box').style.display = 'none';
+    }
+
+    async function enviarPrimeiroAcesso() {
+      const email = document.getElementById('email-primeiro').value.trim();
+      if (!email) { showError('Informe seu e-mail.'); return; }
+      const btn = document.getElementById('btn-primeiro');
+      btn.disabled = true; btn.textContent = 'Enviando...';
+      try {
+        const resp = await fetch(APPS_URL + '?action=recuperarSenha&email=' + encodeURIComponent(email));
+        showInfo('Se este e-mail estiver cadastrado, voce receberá o link em instantes.');
+        document.getElementById('email-primeiro').disabled = true;
+      } catch(e) {
+        showError('Nao foi possivel conectar. Tente novamente.');
+      }
+      btn.disabled = false; btn.textContent = 'Enviar link de acesso';
+    }
+
+function setSending(s) {
+  document.getElementById('btn-login').disabled = s;
+  document.getElementById('btn-icon').textContent = s ? '↻' : '→';
+  document.getElementById('btn-label').textContent = s ? 'Verificando...' : 'Acessar';
+  if (s) document.getElementById('btn-icon').classList.add('spin');
+  else   document.getElementById('btn-icon').classList.remove('spin');
+}
+
+function showError(msg) {
+  const b = document.getElementById('error-box');
+  b.textContent = msg;
+  b.className = 'error-box';
+  b.style.display = 'block';
+}
+function showInfo(msg) {
+  const b = document.getElementById('error-box');
+  b.textContent = msg;
+  b.style.background = '#F0FDF4';
+  b.style.border = '1px solid #BBF7D0';
+  b.style.color = '#166534';
+  b.style.display = 'block';
+}
+</script>
+</body>
+</html>
