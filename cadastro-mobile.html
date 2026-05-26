@@ -734,20 +734,8 @@ async function carregarPerfil(token){
       // Setar país (select precisa encontrar a opção pelo value)
       const paisEl = document.getElementById('pais');
       if (paisEl) {
-        // Garantir que o select está populado
-        if (paisEl.options.length <= 1) {
-          paisEl.innerHTML = buildPaisOptions('');
-        }
-        paisEl.value = p.pais;
-        // fallback: procurar por texto se value não bater
-        if (!paisEl.value && p.pais) {
-          for (let opt of paisEl.options) {
-            if (opt.textContent.includes(p.pais) || opt.value === p.pais) {
-              paisEl.value = opt.value;
-              break;
-            }
-          }
-        }
+        if (paisEl.options.length <= 1) paisEl.innerHTML = buildPaisOptions('');
+        setPaisValue(paisEl, p.pais);
       }
       sv('cidade',p.cidade);
       autoDDI(p.pais);
