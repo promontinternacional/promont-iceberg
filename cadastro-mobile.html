@@ -80,7 +80,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);fon
 
 /* PRODUTO LINHA */
 .prod-lines{margin-bottom:8px;display:flex;flex-direction:column;gap:8px}
-.prod-line-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:1fr 110px 36px;gap:8px;align-items:end}
+.prod-line-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:1fr 110px 36px;gap:8px;align-items:start}
 .prod-line-col{display:flex;flex-direction:column;gap:4px}
 .prod-line-lbl{font-size:11px;font-weight:600;color:#888;letter-spacing:.03em}
 .prod-line-col select{height:44px;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:0 10px;background:var(--white);width:100%;appearance:none;-webkit-appearance:none;font-family:inherit;color:var(--dark)}
@@ -683,8 +683,11 @@ let repId=null, repToken=null, rowId=1, linhas=[];
   // Popular selects de país e DDI
   document.getElementById('pais').innerHTML = buildPaisOptions('');
   const ddiSel = document.getElementById('ddi');
+  // Mapa iso → nome+flag para exibição no DDI
+  const ISO_NOME = {};
+  PAISES_DATA.forEach(p => { ISO_NOME[p.iso] = p.nome; });
   ddiSel.innerHTML = Object.entries(DDI_MAP).map(([iso,ddi])=>
-    `<option value="${ddi}">${ddi}</option>`
+    `<option value="${ddi}">${ISO_NOME[iso]||iso} ${ddi}</option>`
   ).join('');
   ddiSel.value = '+55';
 
@@ -708,6 +711,7 @@ async function carregarPerfil(token){
       const p=j.perfil;
       sv('nome',p.nome); sv('sobrenome',p.sobrenome);
       sv('pais',p.pais); sv('cidade',p.cidade);
+      autoDDI(p.pais); // atualizar DDI de acordo com o país
       sv('empresa',p.empresa); sv('email',p.email);
       const tel=(p.telefone||'').split(' ');
       if(tel[0]) document.getElementById('ddi').value=tel[0];
@@ -731,7 +735,10 @@ async function carregarPerfil(token){
           cliente:a.cliente||'', vertical:a.vertical||a.area||'',
           areaCli:a.area_cliente||a.areaCli||'',
           aplicacao:a.aplicacao||(a.projetos&&a.projetos[0])||'',
-          prods:a.produtos||[], obs:a.obs||'', status:a.status||'',
+          prods: Array.isArray(a.produtos)
+            ? a.produtos
+            : (a.produtos ? String(a.produtos).split(',').map(x=>x.trim()).filter(Boolean) : []),
+          obs:a.obs||'', status:a.status||'',
           collapsed:false
         };
       }) : [];
@@ -1019,7 +1026,13 @@ function mSelect(label,opts,ph,val,onChange){
 function gv(id){ return (document.getElementById(id)||{}).value?.trim()||''; }
 function sv(id,val){ const el=document.getElementById(id); if(el) el.value=val||''; }
 function ini(s){ return (s||'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('')||'?'; }
-function autoDDI(code){ if(DDI_MAP[code]) document.getElementById('ddi').value=DDI_MAP[code]; }
+function autoDDI(nomePais){
+  // Encontrar ISO pelo nome do país
+  const p = PAISES_DATA.find(x => x.nome === nomePais);
+  if (p && DDI_MAP[p.iso]) {
+    document.getElementById('ddi').value = DDI_MAP[p.iso];
+  }
+}
 function showError(m){ const b=document.getElementById('error-box'); document.getElementById('error-msg').textContent=m; b.style.display='flex'; }
 function hideError(){ document.getElementById('error-box').style.display='none'; }
 function showToast(msg,err=false){

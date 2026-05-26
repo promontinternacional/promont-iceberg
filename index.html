@@ -780,7 +780,18 @@ async function carregarPerfil(token) {
       localStorage.setItem('promont_rep_token', token);
       preencherPerfil(json.perfil);
       linhas = json.atividades && json.atividades.length > 0
-        ? json.atividades.map(a => ({id:'r'+(rowId++),pais:a.pais||'',cliente:a.cliente||'',area:a.area||'',prods:a.produtos||[],qtd:a.qtd||'',projs:a.projetos||[],status:a.status||'PROSPECCAO',obs:a.obs||''}))
+        ? json.atividades.map(a => ({
+          id:'r'+(rowId++),
+          titulo:   a.titulo||'',
+          pais:     a.pais||'',
+          cliente:  a.cliente||'',
+          vertical: a.vertical||a.area||'',
+          areaCli:  a.area_cliente||a.areaCli||'',
+          aplicacao:a.aplicacao||(a.projetos&&a.projetos[0])||'',
+          prods:    Array.isArray(a.produtos) ? a.produtos : (a.produtos ? a.produtos.split(',').map(x=>x.trim()).filter(Boolean) : []),
+          status:   a.status||'PROSPECCAO',
+          obs:      a.obs||''
+        }))
         : [];
       renderLinhas();
       if (!linhas.length) addProjeto();
@@ -814,8 +825,20 @@ function preencherPerfil(p) {
   // Telefone
   const tel = p.telefone||'';
   const m = tel.match(/^(\+[\d-]+)\s(.+)$/);
-  if (m) { document.getElementById('ddi').value=m[1]; sv('whats',m[2]); }
-  else sv('whats',tel.replace(/^'/,''));
+  if (m) {
+    // Garantir DDI populado antes de setar valor
+    const ddiEl = document.getElementById('ddi');
+    if (ddiEl && ddiEl.options.length === 0) {
+      const ISO_NOME = {};
+      PAISES_DATA.forEach(p => { ISO_NOME[p.iso] = p.nome; });
+      ddiEl.innerHTML = Object.entries(DDI_MAP).map(([iso,ddi]) =>
+        '<option value="' + ddi + '">' + (ISO_NOME[iso]||iso) + ' ' + ddi + '</option>'
+      ).join('');
+    }
+    document.getElementById('ddi').value = m[1];
+    sv('whats', m[2]);
+  }
+  else sv('whats', tel.replace(/^'/,''));
 }
 
 // ── RECOVERY ─────────────────────────────────────────────────
@@ -1277,6 +1300,18 @@ function salvarRascunho() {
   const a = document.createElement('a'); a.href=URL.createObjectURL(b);
   a.download='rascunho_promont.json'; a.click();
 }
+// ── POPULAR SELECT DDI ───────────────────────────────────────
+(function initDDI() {
+  const sel = document.getElementById('ddi');
+  if (!sel) return;
+  const ISO_NOME = {};
+  PAISES_DATA.forEach(p => { ISO_NOME[p.iso] = p.nome; });
+  sel.innerHTML = Object.entries(DDI_MAP).map(([iso,ddi]) =>
+    '<option value="' + ddi + '">' + (ISO_NOME[iso]||iso) + ' ' + ddi + '</option>'
+  ).join('');
+  sel.value = '+55'; // padrão Brasil
+})();
+
 </script>
 </body>
 </html>
