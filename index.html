@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -816,12 +817,29 @@ async function carregarPerfil(token) {
   }
 }
 
+function setPaisValue(selEl, nomePais) {
+  if (!selEl || !nomePais) return;
+  const norm = nomePais.trim().toLowerCase();
+  // Tentar setar pelo value direto (ISO ou nome)
+  selEl.value = nomePais.trim();
+  if (selEl.value) return;
+  // Buscar pelo texto da opção (contém nome do país)
+  for (let opt of selEl.options) {
+    const optText = (opt.textContent||'').toLowerCase().replace(/[^a-záàãâéêíóõôúüçñ ]/gi,'').trim();
+    const optVal  = (opt.value||'').toLowerCase();
+    if (optVal === norm || optText === norm || optText.includes(norm) || norm.includes(optVal)) {
+      selEl.value = opt.value;
+      if (selEl.value) return;
+    }
+  }
+}
+
 function preencherPerfil(p) {
   sv('nome',p.nome); sv('sobrenome',p.sobrenome); sv('cidade',p.cidade);
   sv('empresa',p.empresa); sv('email',p.email); sv('linkedin',p.linkedin||'');
   // País
   const ps = document.getElementById('pais');
-  for (let o of ps.options) { if (o.value===p.pais) { ps.value=p.pais; break; } }
+  setPaisValue(ps, p.pais);
   // Telefone
   const tel = p.telefone||'';
   const m = tel.match(/^(\+[\d-]+)\s(.+)$/);
@@ -1044,6 +1062,7 @@ function renderProjetos() {
     const paisSel = document.createElement('select');
     paisSel.className = 'linha-inp';
     paisSel.innerHTML = buildPaisOptions(proj.pais);
+    setPaisValue(paisSel, proj.pais);
     paisSel.onchange = (function(pid){ return function(){ uProj(pid,'pais',this.value); }; })(proj.id);
     paisWrap.appendChild(paisSel); row2.appendChild(paisWrap);
 
