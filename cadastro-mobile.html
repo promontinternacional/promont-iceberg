@@ -668,11 +668,32 @@ function buildPaisOptions(current) {
       h += '<optgroup label="' + p.sub + '">';
       subsSeen.push(p.sub);
     }
-    const sel = p.nome === current ? ' selected' : '';
+    const norm = (current||'').trim().toLowerCase();
+    const sel = (p.nome.toLowerCase() === norm) ? ' selected' : '';
     h += '<option value="' + p.nome + '"' + sel + '>' + p.flag + ' ' + p.nome + '</option>';
   });
   if (subsSeen.length) h += '</optgroup>';
   return h;
+}
+
+// Setar select de país de forma robusta
+function setPaisValue(selEl, input) {
+  if (!selEl || !input) return;
+  const norm = input.trim().toLowerCase();
+  // Tentar setar pelo value direto (nome)
+  selEl.value = input.trim();
+  if (selEl.value) return;
+  // Tentar via PAISES_DATA: pode ter vindo como ISO
+  const byISO = PAISES_DATA.find(p => p.iso.toLowerCase() === norm);
+  if (byISO) { selEl.value = byISO.nome; if (selEl.value) return; }
+  // Fallback: busca por texto
+  for (let opt of selEl.options) {
+    if (opt.value.toLowerCase() === norm ||
+        opt.textContent.toLowerCase().includes(norm)) {
+      selEl.value = opt.value;
+      if (selEl.value) return;
+    }
+  }
 }
 
 
@@ -710,8 +731,26 @@ async function carregarPerfil(token){
       repId=j.perfil.repId; repToken=j.perfil.token;
       const p=j.perfil;
       sv('nome',p.nome); sv('sobrenome',p.sobrenome);
-      sv('pais',p.pais); sv('cidade',p.cidade);
-      autoDDI(p.pais); // atualizar DDI de acordo com o país
+      // Setar país (select precisa encontrar a opção pelo value)
+      const paisEl = document.getElementById('pais');
+      if (paisEl) {
+        // Garantir que o select está populado
+        if (paisEl.options.length <= 1) {
+          paisEl.innerHTML = buildPaisOptions('');
+        }
+        paisEl.value = p.pais;
+        // fallback: procurar por texto se value não bater
+        if (!paisEl.value && p.pais) {
+          for (let opt of paisEl.options) {
+            if (opt.textContent.includes(p.pais) || opt.value === p.pais) {
+              paisEl.value = opt.value;
+              break;
+            }
+          }
+        }
+      }
+      sv('cidade',p.cidade);
+      autoDDI(p.pais);
       sv('empresa',p.empresa); sv('email',p.email);
       const tel=(p.telefone||'').split(' ');
       if(tel[0]) document.getElementById('ddi').value=tel[0];
@@ -875,7 +914,8 @@ function renderProjetos(){
       const paisF=document.createElement('div'); paisF.className='field';
       paisF.innerHTML='<label>País <span class="req">*</span></label>';
       const paisSel=document.createElement('select');
-      paisSel.innerHTML=buildPaisOptions(proj.pais);
+      paisSel.innerHTML=buildPaisOptions(proj.pais||'');
+      setPaisValue(paisSel, proj.pais);
       (function(pid){paisSel.onchange=()=>uProj(pid,'pais',paisSel.value);})(proj.id);
       paisF.appendChild(paisSel); body.appendChild(paisF);
 
