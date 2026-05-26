@@ -167,6 +167,11 @@ input.err,select.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10
 .btn-add-proj:hover{background:#B30410}
 .proj-dica{font-size:11px;color:#888;padding:10px 14px;background:#F9FAFB;border:1px solid #F0F0F0;border-radius:6px;margin-top:4px}
 
+
+/* Remove setas do input number */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
 </style>
 </head>
 <body>
@@ -302,6 +307,18 @@ input.err,select.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10
 <div id="toast" class="toast"></div>
 
 <script>
+
+  // ── DETECÇÃO MOBILE — redireciona se necessário ──────────
+  (function detectMobile() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      || window.innerWidth < 768;
+    if (isMobile) {
+      // Preservar token e qualquer parâmetro da URL
+      const params = window.location.search;
+      window.location.replace('cadastro-mobile.html' + params);
+    }
+  })();
+
 const APPS_URL = 'https://script.google.com/macros/s/AKfycbz3sokUShIvH1eYGiVBNbNHw1hTsaIPxnUpZ59tHodrCzmn53U6pHoxZPl9TkpTLoAaVw/exec';
 const DDI_MAP = {
   "CA":"+1",
@@ -1096,14 +1113,13 @@ function renderProjetos() {
         const p = linhas.find(x=>x.id===pid);
         if(p){ const f=p.prods[idx].split(':')[1]||'1–50'; p.prods[idx]=this.value+':'+f; }
       }; })(proj.id, i);
-      // Select faixa
-      const fSel = document.createElement('select');
-      fSel.className = 'linha-inp'; fSel.style.width='110px';
-      ['1–50','51–100','101–200','201–500','501–1000','1000+','5000+'].forEach(f => {
-        const o=document.createElement('option'); o.value=f; o.textContent=f;
-        if(f===faixa) o.selected=true; fSel.appendChild(o);
-      });
-      fSel.onchange = (function(pid,idx){ return function(){
+      // Input quantidade livre
+      const fSel = document.createElement('input');
+      fSel.type = 'number'; fSel.min = '1'; fSel.placeholder = 'Qtd.';
+      fSel.className = 'linha-inp'; fSel.style.width='90px';
+      fSel.value = faixa || '';
+      fSel.required = true;
+      fSel.oninput = (function(pid,idx){ return function(){
         const p=linhas.find(x=>x.id===pid);
         if(p){ const n=p.prods[idx].split(':')[0]; p.prods[idx]=n+':'+this.value; }
       }; })(proj.id, i);
@@ -1121,11 +1137,9 @@ function renderProjetos() {
     const newProdSel = document.createElement('select');
     newProdSel.className = 'linha-inp'; newProdSel.style.flex='1';
     newProdSel.innerHTML = '<option value="">— produto —</option>' + PRODUTOS.map(p=>'<option>'+p+'</option>').join('');
-    const newFaixaSel = document.createElement('select');
-    newFaixaSel.className = 'linha-inp'; newFaixaSel.style.width='110px';
-    ['1–50','51–100','101–200','201–500','501–1000','1000+','5000+'].forEach(f=>{
-      const o=document.createElement('option'); o.value=f; o.textContent=f; newFaixaSel.appendChild(o);
-    });
+    const newFaixaSel = document.createElement('input');
+    newFaixaSel.type='number'; newFaixaSel.min='1'; newFaixaSel.placeholder='Qtd.';
+    newFaixaSel.className = 'linha-inp'; newFaixaSel.style.width='90px';
     const addProdBtn = document.createElement('button');
     addProdBtn.className = 'proj-add-prod'; addProdBtn.type='button';
     addProdBtn.innerHTML = '<i class="ti ti-plus"></i> Adicionar produto';

@@ -111,6 +111,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);fon
 
 .spin{animation:spin 1s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* Remove setas do input number */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
 </style>
 </head>
 <body>
@@ -907,12 +912,10 @@ function renderProjetos(){
         // Col Faixa
         const colF=document.createElement('div'); colF.className='prod-line-col';
         const lblF=document.createElement('div'); lblF.className='prod-line-lbl'; lblF.textContent='Quantidade';
-        const fSel=document.createElement('select');
-        ['1–50','51–100','101–200','201–500','501–1000','1000+','5000+'].forEach(f=>{
-          const o=document.createElement('option'); o.value=f; o.textContent=f;
-          if(f===faixa) o.selected=true; fSel.appendChild(o);
-        });
-        (function(pid,idx){fSel.onchange=function(){
+        const fSel=document.createElement('input');
+        fSel.type='number'; fSel.min='1'; fSel.placeholder='Qtd.';
+        fSel.value=faixa||''; fSel.required=true;
+        (function(pid,idx){fSel.oninput=function(){
           const p=linhas.find(x=>x.id===pid);
           if(p){ const n=p.prods[idx].split(':')[0]; p.prods[idx]=n+':'+this.value; }
         };})(proj.id,i);
@@ -930,11 +933,9 @@ function renderProjetos(){
       addPLine.className='prod-line';
       const newPSel=document.createElement('select');
       newPSel.innerHTML='<option value="">— produto —</option>'+PRODUTOS.map(p=>`<option>${p}</option>`).join('');
-      const newFSel=document.createElement('select');
+      const newFSel=document.createElement('input');
+      newFSel.type='number'; newFSel.min='1'; newFSel.placeholder='Qtd.';
       newFSel.className='faixa-sel';
-      ['1–50','51–100','101–200','201–500','501–1000','1000+','5000+'].forEach(f=>{
-        const o=document.createElement('option'); o.value=f; o.textContent=f; newFSel.appendChild(o);
-      });
       // Linha nova seleção como card
       addPLine.className='prod-line-card';
       const colNewP=document.createElement('div'); colNewP.className='prod-line-col';
