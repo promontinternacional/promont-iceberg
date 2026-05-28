@@ -147,7 +147,7 @@ input.err,select.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10
 .proj-title-counter{font-size:10px;color:#AAAAAA;white-space:nowrap;flex-shrink:0}
 .proj-row1{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .proj-row2{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px}
-.proj-row3{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.proj-row3{display:flex;flex-direction:column;gap:10px}
 .proj-prod-line{display:flex;align-items:center;gap:6px;margin-bottom:4px}
 .proj-prod-line select{font-size:11px;padding:4px 6px;border:1px solid #E4E4E4;border-radius:4px;background:#fff;cursor:pointer}
 .proj-prod-line select:first-child{flex:1}
@@ -173,6 +173,20 @@ input.err,select.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield}
+
+.prod-moeda{width:70px;font-size:11px}
+.prod-valor{width:100px;font-size:11px;font-weight:600;color:#1A6B3A;
+            background:#F0FDF4;border:1px solid #BBF7D0;border-radius:4px;
+            padding:4px 6px;text-align:right;pointer-events:none}
+.prod-total{width:120px;font-size:11px;font-weight:700;color:#1A6B3A;
+            background:#DCFCE7;border:1px solid #86EFAC;border-radius:4px;
+            padding:4px 6px;text-align:right;pointer-events:none}
+.proj-soma-wrap{display:flex;justify-content:flex-end;align-items:center;
+                gap:8px;margin-top:6px;padding-right:26px}
+.proj-soma-label{font-size:11px;font-weight:600;color:#4A4A4A}
+.proj-soma-val{font-size:13px;font-weight:700;color:#1A6B3A;
+               background:#DCFCE7;border:1px solid #86EFAC;border-radius:6px;
+               padding:5px 12px}
 </style>
 </head>
 <body>
@@ -521,7 +535,107 @@ const DDI_MAP = {
   "TV":"+688",
 };
 const VERTICAIS = ['Logística','Energia','Telecom','Mineração','Oil & Gas','Automação Industrial','Varejo','Segurança','Outro'];
-const PRODUTOS = ['CADEADO PAD-I','CADEADO PAD-C','CADEADO PAD-C IOT','UNILOCK COVER IOT','MÓDULO UNILOCK ONE IOT','MÓDULO UNILOCK ONE WIFI'];
+// ── TABELA DE PREÇOS MVP (fonte: contrato março 2026) ────────
+const PRECO_BASE = {
+  'Unilock Pad I - BLE':               263,
+  'Unilock Pad I - Kit HSL Standard':  345,
+  'Unilock Pad I - Kit HSL Container': 454,
+  'Unilock Pad C - BLE':               290,
+  'Unilock One - BLE':                 100,
+  'Unilock One - WiFi/BLE':            154,
+  'Unilock One - NBIoT/BLE':           154,
+  'Unilock One - WiFi/ETH/BLE':        172,
+  'Unilock Cover - NBIoT/BLE':         227,
+  'Unilock Chain - WiFi/ETH/BLE':      509,
+  'HaspLock Standard':                  82,
+  'HaspLock Container':                191,
+  'Fastening Bracket - CBS (Aéreo)':     2,
+  'Fastening Bracket - TMP (Manhole)':  38,
+  'Battery 4.000mAh PRO':               26,
+  'RedSquare PRO':                       81,
+  'RedSquare SLM (Slim)':               70,
+  'SGR - Licença Mensal':                1,
+  'SGR - Licença Anual':                10,
+  'Analytics - Mensal':                0.5,
+  'Analytics - Anual':                   5,
+  'NB-IoT/CAT M1 - Mensal':             2,
+  'NB-IoT/CAT M1 - Anual':             24,
+};
+// Faixas: [qtd_min, desconto_decimal]
+const FAIXAS_DESC = [[1,0],[10,0],[100,0.03],[300,0.05],[500,0.07]];
+// Câmbio padrão (ajustável)
+const CAMBIO = { BRL: 5.70, EUR: 0.92 };
+
+function calcPrecoNum(produto, qtd, moeda) {
+  const base = PRECO_BASE[produto];
+  if (!base || !qtd) return null;
+  let desc = 0;
+  for (const [min, d] of FAIXAS_DESC) {
+    if (qtd >= min) desc = d;
+  }
+  const usd = parseFloat((base * (1 - desc)).toFixed(2));
+  if (moeda === 'BRL') return parseFloat((usd * CAMBIO.BRL).toFixed(2));
+  if (moeda === 'EUR') return parseFloat((usd * CAMBIO.EUR).toFixed(2));
+  return usd;
+}
+
+function formatVal(num, moeda) {
+  const n = parseFloat(num);
+  if (isNaN(n)) return '—';
+  const fmt = n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  if (moeda === 'BRL') return 'R$ ' + fmt;
+  if (moeda === 'EUR') return '€ ' + fmt;
+  return '$ ' + fmt;
+}
+
+function calcPreco(produto, qtd, moeda) {
+  const v = calcPrecoNum(produto, qtd, moeda);
+  return v !== null ? formatVal(v, moeda) : '';
+}
+
+function atualizarSoma(pid, moeda) {
+  const somaEl = document.getElementById('soma-' + pid);
+  if (!somaEl) return;
+  const somaValEl = somaEl.querySelector('.proj-soma-val');
+  if (!somaValEl) return;
+  const proj = linhas.find(p => p.id === pid);
+  if (!proj) return;
+  let total = 0; let temValor = false;
+  proj.prods.forEach(pr => {
+    const pts = pr.split(':');
+    const nome = pts[0]; const qtd = parseInt(pts[1])||0;
+    const m = pts[2] || moeda || 'USD';
+    const v = calcPrecoNum(nome, qtd, m);
+    if (v !== null && qtd) { total += v * qtd; temValor = true; }
+  });
+  somaValEl.textContent = temValor ? formatVal(total, moeda || 'USD') : '—';
+}
+
+const PRODUTOS = [
+  'Unilock Pad I - BLE',
+  'Unilock Pad I - Kit HSL Standard',
+  'Unilock Pad I - Kit HSL Container',
+  'Unilock Pad C - BLE',
+  'Unilock One - BLE',
+  'Unilock One - WiFi/BLE',
+  'Unilock One - NBIoT/BLE',
+  'Unilock One - WiFi/ETH/BLE',
+  'Unilock Cover - NBIoT/BLE',
+  'Unilock Chain - WiFi/ETH/BLE',
+  'HaspLock Standard',
+  'HaspLock Container',
+  'Fastening Bracket - CBS (Aéreo)',
+  'Fastening Bracket - TMP (Manhole)',
+  'Battery 4.000mAh PRO',
+  'RedSquare PRO',
+  'RedSquare SLM (Slim)',
+  'SGR - Licença Mensal',
+  'SGR - Licença Anual',
+  'Analytics - Mensal',
+  'Analytics - Anual',
+  'NB-IoT/CAT M1 - Mensal',
+  'NB-IoT/CAT M1 - Anual'
+];
 const APLICACOES = ['Storage','Logística Last-Mile','Frotas / Caminhões','E-commerce','Portaria','Canteiro de Obras','Datacenter','Varejo','Manutenção','Outro'];
 const STATUS_OPTS = [
   {v:'',             l:'— status —'},
@@ -1138,6 +1252,39 @@ function renderProjetos() {
     prodWrap.className = 'proj-field';
     prodWrap.innerHTML = '<div class="proj-field-label">Produtos e quantidades</div>';
 
+    // Soma total dos produtos
+    const somaWrap = document.createElement('div');
+    somaWrap.className = 'proj-soma-wrap';
+    somaWrap.id = 'soma-' + proj.id;
+    const somaLabel = document.createElement('span');
+    somaLabel.className = 'proj-soma-label';
+    somaLabel.textContent = 'VALOR TOTAL DO PROJETO:';
+    const somaVal = document.createElement('span');
+    somaVal.className = 'proj-soma-val';
+    somaVal.textContent = '—';
+    somaWrap.appendChild(somaLabel);
+    somaWrap.appendChild(somaVal);
+    prodWrap.appendChild(somaWrap);
+
+    // recalcSoma: soma os totDiv já calculados no prodWrap
+    function recalcSoma() {
+      var tots = prodWrap.querySelectorAll('.prod-total');
+      var total = 0; var tem = false;
+      var moedaRef = 'USD';
+      tots.forEach(function(t){
+        var txt = (t.textContent||'').trim();
+        if(!txt || txt==='—') return;
+        // Detectar moeda pelo prefixo
+        var num;
+        if(txt.startsWith('R$')){ moedaRef='BRL'; num=parseFloat(txt.replace('R$','').replace(/\./g,'').replace(',','.').trim()); }
+        else if(txt.startsWith('€')){ moedaRef='EUR'; num=parseFloat(txt.replace('€','').replace(/\./g,'').replace(',','.').trim()); }
+        else { moedaRef='USD'; num=parseFloat(txt.replace('$','').replace(/\./g,'').replace(',','.').trim()); }
+        if(!isNaN(num)){ total+=num; tem=true; }
+      });
+      somaVal.textContent = tem ? formatVal(total, moedaRef) : '—';
+    }
+
+
     // Linhas de produto existentes
     proj.prods.forEach((prod, i) => {
       const parts = prod.split(':');
@@ -1169,9 +1316,64 @@ function renderProjetos() {
       const rmBtn = document.createElement('button');
       rmBtn.className = 'proj-prod-rm'; rmBtn.textContent = '×';
       (function(pid,idx){ rmBtn.onclick = () => rmProd(pid,idx); })(proj.id, i);
-      line.appendChild(pSel); line.appendChild(fSel); line.appendChild(rmBtn);
+      // Select moeda
+      const mSel = document.createElement('select');
+      mSel.className = 'linha-inp prod-moeda';
+      ['USD','BRL','EUR'].forEach(m => {
+        const o = document.createElement('option'); o.value=m; o.textContent=m;
+        mSel.appendChild(o);
+      });
+      const partsM = (proj.prods[i]||'').split(':');
+      mSel.value = partsM[2] || 'USD';
+
+      // Valor unitário
+      const valDiv = document.createElement('div');
+      valDiv.className = 'prod-valor';
+      valDiv.title = 'Valor unitário';
+
+      // Valor total (qtd × un)
+      const totDiv = document.createElement('div');
+      totDiv.className = 'prod-total';
+      totDiv.title = 'Total desta linha';
+
+      function atualizarValor() {
+        const qtd   = parseInt(fSel.value)||0;
+        const prod  = pSel.value;
+        const moeda = mSel.value;
+        const un    = calcPrecoNum(prod, qtd, moeda);
+        valDiv.textContent = un !== null ? formatVal(un, moeda) + '/un' : '—';
+        totDiv.textContent = un !== null && qtd ? formatVal(un * qtd, moeda) : '—';
+        // Recalcular soma via referência direta ao somaVal
+        recalcSoma();
+      }
+      atualizarValor();
+
+      (function(pid,idx2){
+        mSel.onchange = function() {
+          const p = linhas.find(x=>x.id===pid);
+          if(p){
+            const pts = p.prods[idx2].split(':');
+            p.prods[idx2] = (pts[0]||'') + ':' + (pts[1]||'') + ':' + this.value;
+          }
+          atualizarValor();
+        };
+        fSel.oninput = (function(origFn){ return function(e){
+          if(origFn) origFn.call(this,e);
+          atualizarValor();
+        };})(fSel.oninput);
+        pSel.onchange = (function(origFn){ return function(e){
+          if(origFn) origFn.call(this,e);
+          atualizarValor();
+        };})(pSel.onchange);
+      })(proj.id, i);
+
+      line.appendChild(pSel); line.appendChild(fSel);
+      line.appendChild(mSel); line.appendChild(valDiv); line.appendChild(totDiv);
+      line.appendChild(rmBtn);
       prodWrap.appendChild(line);
     });
+
+    recalcSoma(); // soma após criar todas as linhas
 
     // Botão adicionar produto
     const addProdWrap = document.createElement('div');
@@ -1193,8 +1395,9 @@ function renderProjetos() {
     addProdWrap.appendChild(newProdSel); addProdWrap.appendChild(newFaixaSel); addProdWrap.appendChild(addProdBtn);
     prodWrap.appendChild(addProdWrap);
     row3.appendChild(prodWrap);
+    body.appendChild(row3);
 
-    // Observações
+    // Observações — abaixo dos produtos, largura total
     const obsWrap = document.createElement('div');
     obsWrap.className = 'proj-obs-wrap proj-field';
     obsWrap.innerHTML = '<div class="proj-field-label">Observações (até 500 caracteres)</div>';
@@ -1211,9 +1414,8 @@ function renderProjetos() {
       counter.textContent=this.value.length+'/500';
     }; })(proj.id, obsCounter);
     obsWrap.appendChild(obsTa); obsWrap.appendChild(obsCounter);
-    row3.appendChild(obsWrap);
+    body.appendChild(obsWrap);
 
-    body.appendChild(row3);
     wrap.appendChild(body);
     cont.appendChild(wrap);
   });
@@ -1295,7 +1497,12 @@ function coletarDados() {
     dadosPessoais: {
       repId: repId||null, token: repToken||null,
       nome: gv('nome'), sobrenome: gv('sobrenome'),
-      pais: gv('pais'), cidade: gv('cidade'),
+      pais: (function(){
+        const iso = gv('pais');
+        const p = PAISES_DATA.find(x => x.iso === iso);
+        return p ? p.nome : iso; // retorna nome se encontrar, senão ISO
+      })(),
+      cidade: gv('cidade'),
       empresa: gv('empresa'), email: gv('email'),
       telefone: gv('ddi')+' '+gv('whats'), linkedin: gv('linkedin')
     },
@@ -1303,7 +1510,11 @@ function coletarDados() {
       .filter(p => p.cliente && p.cliente.trim())
       .map(p => ({
         titulo: p.titulo||'',
-        pais: p.pais, cliente: p.cliente,
+        pais: (function(){
+          const p2 = PAISES_DATA.find(x => x.iso === p.pais || x.nome === p.pais);
+          return p2 ? p2.nome : p.pais;
+        })(),
+        cliente: p.cliente,
         vertical: p.vertical||'', area: p.vertical||'',
         area_cliente: p.areaCli||'',
         aplicacao: p.aplicacao||'',
