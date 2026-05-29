@@ -152,7 +152,7 @@ button{font-family:inherit}
 }
 .cont-title{flex:1; min-width:0}
 .cont-name{font-size:17px; font-weight:800; letter-spacing:-.01em; color:var(--ink)}
-.cont-meta{font-size:12px; color:var(--slate); margin-top:2px}
+.cont-meta{font-size:11px;color:var(--slate);margin-top:3px;display:flex;flex-wrap:wrap;align-items:center;gap:4px}
 .cont-meta b{color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums}
 .chev{
   width:32px; height:32px; flex-shrink:0; border-radius:8px;
@@ -502,6 +502,8 @@ button{font-family:inherit}
 .proj-prod-qty, .proj-prod-val, .proj-soma-val,
 .proj-rep-clock, .badge-exp,
 .proj-focal-tel { text-transform: none !important; }
+.cont-sep{color:#CCCCCC;font-size:10px;margin:0 2px}
+.cont-valor{font-weight:700;color:#1A6B3A}
 </style>
 </head>
 <body>
@@ -1413,13 +1415,58 @@ function renderMapa(tree, totalRows) {
     const emoji = (cont.match(/^\p{Emoji}/u)||[''])[0];
     const nome  = cont.replace(/^\p{Emoji}\s*/u,'');
     const totalPaisesCont = Object.values(subs).flat().length;
-    const isOpen = false; // sempre fechado no início
+    const isOpen = false;
+
+    // ── Stats do continente ──────────────────────────────────
+    let contReps=new Set(), contClis=new Set(), contProjs=0, contValor=0;
+    if (tree[cont]) {
+      for (const subData of Object.values(tree[cont])) {        // sub-regiões
+        for (const paisData of Object.values(subData)) {         // países
+          for (const emps of Object.values(paisData)) {          // empresas
+            for (const projs of Object.values(emps)) {           // clientes → [projetos]
+              projs.forEach(p => {
+              contReps.add(p.repNome||'');
+              contClis.add(p.cliente||'');
+              contProjs++;
+              // Calcular valor total dos produtos
+              if (p.produtos) {
+                p.produtos.split(',').forEach(pr => {
+                  const pts = pr.trim().split(':');
+                  const nome2 = pts[0]; const qtd = parseInt(pts[1])||0;
+                  const moeda = pts[2]||'USD';
+                  const un = calcPrecoMapa(nome2, qtd, moeda);
+                  if (un !== null && qtd) {
+                    // Converter tudo para USD para somar
+                    let usd = un * qtd;
+                    if (moeda==='BRL') usd = usd / CAMBIO_MAPA.BRL;
+                    else if (moeda==='EUR') usd = usd / CAMBIO_MAPA.EUR;
+                    contValor += usd;
+                  }
+                });
+              }
+              });
+            }
+          }
+        }
+      }
+    }
+    const fmtContValor = contValor > 0 ? '$ '+contValor.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0}) : '—';
 
     html += '<section class="cont '+(isOpen?'open':'')+'" data-key="'+key+'">';
     html +=   '<header class="cont-head" onclick="this.parentNode.classList.toggle(\'open\')">';
     html +=     '<div class="cont-emoji">'+emoji+'</div>';
-    html +=     '<div class="cont-title"><div class="cont-name">'+esc(nome)+'</div>';
-    html +=       '<div class="cont-meta"><b>'+contPaises+'</b> de <b>'+totalPaisesCont+'</b> país'+(totalPaisesCont===1?'':'es')+' com representação</div></div>';
+    html +=     '<div class="cont-title">';
+    html +=       '<div class="cont-name">'+esc(nome)+'</div>';
+    html +=       '<div class="cont-meta">';
+    html +=         '<span><b>'+contPaises+'</b> país'+(contPaises===1?'':'es')+'</span>';
+    if (contProjs > 0) {
+      html +=       '<span class="cont-sep">·</span><span><b>'+contReps.size+'</b> rep'+(contReps.size===1?'':'s')+'</span>';
+      html +=       '<span class="cont-sep">·</span><span><b>'+contClis.size+'</b> cliente'+(contClis.size===1?'':'s')+'</span>';
+      html +=       '<span class="cont-sep">·</span><span><b>'+contProjs+'</b> projeto'+(contProjs===1?'':'s')+'</span>';
+      html +=       '<span class="cont-sep">·</span><span class="cont-valor">'+fmtContValor+'</span>';
+    }
+    html +=       '</div>';
+    html +=     '</div>';
     html +=     '<div class="chev">'+CHEV+'</div>';
     html +=   '</header>';
     html +=   '<div class="cont-body">';
