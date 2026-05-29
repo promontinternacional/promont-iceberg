@@ -1287,10 +1287,11 @@ function renderProjetos() {
           inp.className = 'linha-inp';
           inp.style.cssText = 'font-size:11px' + (def.w?';width:'+def.w:'');
           inp.value = fc[def.k]||'';
-          (function(pid,idx2,k){ inp.oninput = function(){
+          (function(pid,idx2,k,isText){ inp.oninput = function(){
+            if(isText) this.value = this.value.toUpperCase();
             const pp=linhas.find(x=>x.id===pid);
             if(pp && pp.focalContacts[idx2]) pp.focalContacts[idx2][k]=this.value;
-          };})(proj.id, fi, def.k);
+          };})(proj.id, fi, def.k, !def.type);
           wrap.appendChild(lbl); wrap.appendChild(inp);
           item.appendChild(wrap);
         });

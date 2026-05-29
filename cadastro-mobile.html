@@ -945,10 +945,11 @@ function renderProjetos(){
             inp.type=def.type||'text'; inp.placeholder=def.ph;
             inp.style.cssText='height:42px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13px;font-family:inherit;width:100%;box-sizing:border-box';
             inp.value=fc[def.k]||'';
-            (function(pid,idx2,k){inp.oninput=function(){
+            (function(pid,idx2,k,isText){inp.oninput=function(){
+              if(isText) this.value=this.value.toUpperCase();
               const p2=linhas.find(x=>x.id===pid);
               if(p2&&p2.focalContacts[idx2]) p2.focalContacts[idx2][k]=this.value;
-            };})(proj.id,fi,def.k);
+            };})(proj.id,fi,def.k,!def.type);
             g1.appendChild(inp);
           });
           card.appendChild(g1);

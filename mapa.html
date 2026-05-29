@@ -478,6 +478,12 @@ button{font-family:inherit}
 
 
 .proj-empty{color:#CCCCCC;font-style:normal}
+.proj-focal-block{margin:6px 0 2px;padding-top:6px;border-top:1px solid #F0F0F0}
+.proj-focal-lbl{font-size:8px;font-weight:700;color:#BBBBBB;letter-spacing:.1em;margin-bottom:4px}
+.proj-focal-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:2px}
+.proj-focal-name{font-size:10px;font-weight:600;color:#2C2C2C}
+.proj-focal-cel{font-size:10px;color:#555;text-decoration:none}
+.proj-focal-email{font-size:10px;color:#1A6B3A;text-decoration:none}
 </style>
 </head>
 <body>
@@ -1742,9 +1748,14 @@ function buildCardV2(p, paisAt, nomeCliente) {
     h += '</div>';
   }
   if (p.repLinkedin) {
-    const li = p.repLinkedin.startsWith('http') ? p.repLinkedin : 'https://'+p.repLinkedin;
+    // Normalizar URL LinkedIn
+    let liUrl = p.repLinkedin.trim();
+    if (!liUrl.startsWith('http')) {
+      // remover linkedin.com/in/ se vier sem http
+      liUrl = 'https://www.linkedin.com/in/' + liUrl.replace(/^(https?:\/\/)?([^/]*linkedin\.com\/in\/)?/i,'');
+    }
     h += '<div class="proj-contact-row">';
-    h += '<a class="proj-contact-btn" href="'+esc(li)+'" target="_blank" style="background:#0A66C2;color:#fff;border-color:#0A66C2">💼 LinkedIn</a>';
+    h += '<a class="proj-contact-btn" href="'+esc(liUrl)+'" target="_blank" rel="noopener" style="background:#0A66C2;color:#fff;border-color:#0A66C2">💼 LinkedIn</a>';
     h += '</div>';
   }
   h += '</div>'; // contacts
@@ -1828,14 +1839,15 @@ function buildCardV2(p, paisAt, nomeCliente) {
     h += '<div class="proj-focal-block">';
     h += '<div class="proj-focal-lbl">FOCAL POINT CLIENTE</div>';
     p.focalContacts.forEach(fc => {
-      h += '<div class="proj-focal-row" style="margin-bottom:4px">';
+      h += '<div class="proj-focal-row">';
       const nm = [fc.nome, fc.sobrenome].filter(Boolean).join(' ');
       const meta = [fc.cargo, fc.area].filter(Boolean).join(' · ');
       if (nm||meta) h += '<span class="proj-focal-name">'+(nm?(esc(nm)+(meta?' · '+esc(meta):'')):esc(meta))+'</span>';
-      if (fc.email) h += '<a class="proj-contact-btn" href="mailto:'+esc(fc.email)+'">✉ '+esc(fc.email)+'</a>';
+      if (fc.email) h += '<a class="proj-focal-email" href="mailto:'+esc(fc.email)+'">✉ '+esc(fc.email)+'</a>';
       if (fc.celular) {
-        const tel = (fc.ddi||'')+' '+fc.celular;
-        h += '<span class="proj-focal-cel">📞 '+esc(tel.trim())+'</span>';
+        const telNum = ((fc.ddi||'').replace(/[^+\d]/g,'') + fc.celular.replace(/[^\d]/g,'')).trim();
+        const telDisplay = ((fc.ddi||'')+' '+fc.celular).trim();
+        h += '<a class="proj-focal-cel" href="tel:'+esc(telNum)+'" style="text-decoration:none">📞 '+esc(telDisplay)+'</a>';
       }
       h += '</div>';
     });
