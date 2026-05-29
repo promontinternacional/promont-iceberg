@@ -920,6 +920,29 @@ function renderProjetos(){
       stWrap.appendChild(stSel);
       body.appendChild(stWrap);
 
+      // Focal Point Cliente
+      const focalWrap=document.createElement('div'); focalWrap.className='field';
+      focalWrap.innerHTML='<label style="font-size:10px;font-weight:700;color:#888;letter-spacing:.08em">FOCAL POINT CLIENTE</label>';
+      const focalGrid=document.createElement('div');
+      focalGrid.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px';
+      const focalDefs=[
+        {key:'focalNome',ph:'Nome'},{key:'focalSobrenome',ph:'Sobrenome'},
+        {key:'focalCargo',ph:'Cargo'},{key:'focalArea',ph:'Área'},
+        {key:'focalEmail',ph:'E-mail',type:'email'},{key:'focalCelular',ph:'Celular',type:'tel'}
+      ];
+      focalDefs.forEach(function(def){
+        const inp=document.createElement('input');
+        inp.type=def.type||'text'; inp.placeholder=def.ph;
+        inp.style.cssText='height:42px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13px;font-family:inherit;width:100%;box-sizing:border-box';
+        inp.value=proj[def.key]||'';
+        (function(pid,k){inp.oninput=function(){
+          const p=linhas.find(x=>x.id===pid); if(p) p[k]=this.value;
+        };})(proj.id,def.key);
+        focalGrid.appendChild(inp);
+      });
+      focalWrap.appendChild(focalGrid);
+      body.appendChild(focalWrap);
+
       body.appendChild(document.createElement('div')).className='divider';
 
       // País
@@ -1116,6 +1139,9 @@ function coletarDados(){
         titulo:p.titulo||'', pais:p.pais, cliente:p.cliente,
         vertical:p.vertical||'', area:p.vertical||'',
         area_cliente:p.areaCli||'', aplicacao:p.aplicacao||'',
+        focal_nome:p.focalNome||'', focal_sobrenome:p.focalSobrenome||'',
+        focal_cargo:p.focalCargo||'', focal_area:p.focalArea||'',
+        focal_email:p.focalEmail||'', focal_celular:p.focalCelular||'',
         produtos:p.prods, qtd_estimada:'',
         projetos:p.aplicacao?[p.aplicacao]:[],
         status:p.status||'', obs:p.obs||''

@@ -1312,11 +1312,18 @@ function construirArvore(rows) {
     const aplicacao   = String(row[21]||'').trim();
     const vertFinal   = vertical || area;
     const apliList    = aplicacao ? [aplicacao] : (projetos ? projetos.split(',').map(x=>x.trim()).filter(Boolean) : []);
+    const focalNome      = String(row[22]||'').trim();
+    const focalSobrenome = String(row[23]||'').trim();
+    const focalCargo     = String(row[24]||'').trim();
+    const focalArea      = String(row[25]||'').trim();
+    const focalEmail     = String(row[26]||'').trim();
+    const focalCelular   = String(row[27]||'').trim();
     tree[cont][sub][paisAt][empresa][cliente].push({
       area, vertical:vertFinal, areaCliente:areaCliente2||'',
       aplicacoes:apliList, produtos, qtd, projetos, obs,
       titulo, criadoEm: row[0]||null,
-      repNome, repPais, repCidade, repEmail, repTel, status
+      repNome, repPais, repCidade, repEmail, repTel, status,
+      focalNome, focalSobrenome, focalCargo, focalArea, focalEmail, focalCelular
     });
   });
 
@@ -1814,6 +1821,23 @@ function buildCardV2(p, paisAt, nomeCliente) {
   h += '</div>'; // proj-prods-apli
 
   // Observações
+  // Focal Point Cliente
+  const temFocal = p.focalNome||p.focalEmail||p.focalCargo;
+  if (temFocal) {
+    h += '<div class="proj-focal-block">';
+    h += '<div class="proj-focal-lbl">FOCAL POINT CLIENTE</div>';
+    h += '<div class="proj-focal-row">';
+    const fparts = [
+      p.focalNome&&p.focalSobrenome ? p.focalNome+' '+p.focalSobrenome : p.focalNome||'',
+      p.focalCargo||'',
+      p.focalArea||'',
+    ].filter(Boolean);
+    if (fparts.length) h += '<span class="proj-focal-name">'+esc(fparts.join(' · '))+'</span>';
+    if (p.focalEmail) h += '<a class="proj-contact-btn" href="mailto:'+esc(p.focalEmail)+'">✉ '+esc(p.focalEmail)+'</a>';
+    if (p.focalCelular) h += '<span class="proj-focal-cel">📞 '+esc(p.focalCelular)+'</span>';
+    h += '</div></div>';
+  }
+
   h += '<div class="proj-obs-block">';
   h += '<div class="proj-obs-lbl">Observações</div>';
   h += '<div class="proj-obs-txt">'+(p.obs ? esc(p.obs) : DASH)+'</div>';
