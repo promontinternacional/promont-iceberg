@@ -1420,30 +1420,26 @@ function renderMapa(tree, totalRows) {
     // ── Stats do continente ──────────────────────────────────
     let contReps=new Set(), contClis=new Set(), contProjs=0, contValor=0;
     if (tree[cont]) {
-      for (const subData of Object.values(tree[cont])) {        // sub-regiões
-        for (const paisData of Object.values(subData)) {         // países
-          for (const emps of Object.values(paisData)) {          // empresas
-            for (const projs of Object.values(emps)) {           // clientes → [projetos]
+      for (const subObj of Object.values(tree[cont])) {          // sub-regiões
+        for (const empresaObj of Object.values(subObj)) {         // países → empresas
+          for (const cliObj of Object.values(empresaObj)) {       // empresas → clientes
+            for (const [cliNome, projs] of Object.entries(cliObj)) { // clientes → projetos
+              contClis.add(cliNome);
               projs.forEach(p => {
-              contReps.add(p.repNome||'');
-              contClis.add(p.cliente||'');
-              contProjs++;
-              // Calcular valor total dos produtos
-              if (p.produtos) {
-                p.produtos.split(',').forEach(pr => {
-                  const pts = pr.trim().split(':');
-                  const nome2 = pts[0]; const qtd = parseInt(pts[1])||0;
-                  const moeda = pts[2]||'USD';
-                  const un = calcPrecoMapa(nome2, qtd, moeda);
-                  if (un !== null && qtd) {
-                    // Converter tudo para USD para somar
-                    let usd = un * qtd;
-                    if (moeda==='BRL') usd = usd / CAMBIO_MAPA.BRL;
-                    else if (moeda==='EUR') usd = usd / CAMBIO_MAPA.EUR;
-                    contValor += usd;
-                  }
-                });
-              }
+                contReps.add(p.repEmpresa||p.repNome||'');
+                contProjs++;
+                if (p.produtos) {
+                  p.produtos.split(',').forEach(pr => {
+                    const pts = pr.trim().split(':');
+                    const un = calcPrecoMapa(pts[0], parseInt(pts[1])||0, pts[2]||'USD');
+                    if (un !== null && parseInt(pts[1])) {
+                      let usd = un * parseInt(pts[1]);
+                      if ((pts[2]||'USD')==='BRL') usd = usd / CAMBIO_MAPA.BRL;
+                      else if ((pts[2]||'USD')==='EUR') usd = usd / CAMBIO_MAPA.EUR;
+                      contValor += usd;
+                    }
+                  });
+                }
               });
             }
           }
@@ -1460,7 +1456,7 @@ function renderMapa(tree, totalRows) {
     html +=       '<div class="cont-meta">';
     html +=         '<span><b>'+contPaises+'</b> país'+(contPaises===1?'':'es')+'</span>';
     if (contProjs > 0) {
-      html +=       '<span class="cont-sep">·</span><span><b>'+contReps.size+'</b> rep'+(contReps.size===1?'':'s')+'</span>';
+      html +=       '<span class="cont-sep">·</span><span><b>'+contReps.size+'</b> parceiro'+(contReps.size===1?'':'s')+'</span>';
       html +=       '<span class="cont-sep">·</span><span><b>'+contClis.size+'</b> cliente'+(contClis.size===1?'':'s')+'</span>';
       html +=       '<span class="cont-sep">·</span><span><b>'+contProjs+'</b> projeto'+(contProjs===1?'':'s')+'</span>';
       html +=       '<span class="cont-sep">·</span><span class="cont-valor">'+fmtContValor+'</span>';
