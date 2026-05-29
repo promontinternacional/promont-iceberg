@@ -1624,6 +1624,45 @@ function gerarCodigo(repPais) {
   return iso+'-'+rnd+'-'+seq;
 }
 
+// ── TABELA DE PREÇOS (espelho do cadastro) ────────────────────
+const PRECO_BASE_MAPA = {
+  'Unilock Pad I - BLE':263,'Unilock Pad I - Kit HSL Standard':345,
+  'Unilock Pad I - Kit HSL Container':454,'Unilock Pad C - BLE':290,
+  'Unilock One - BLE':100,'Unilock One - WiFi/BLE':154,
+  'Unilock One - NBIoT/BLE':154,'Unilock One - WiFi/ETH/BLE':172,
+  'Unilock Cover - NBIoT/BLE':227,'Unilock Chain - WiFi/ETH/BLE':509,
+  'HaspLock Standard':82,'HaspLock Container':191,
+  'Fastening Bracket - CBS (Aéreo)':2,'Fastening Bracket - TMP (Manhole)':38,
+  'Battery 4.000mAh PRO':26,'RedSquare PRO':81,'RedSquare SLM (Slim)':70,
+  'SGR - Licença Mensal':1,'SGR - Licença Anual':10,
+  'Analytics - Mensal':0.5,'Analytics - Anual':5,
+  'NB-IoT/CAT M1 - Mensal':2,'NB-IoT/CAT M1 - Anual':24,
+  // aliases nomes antigos
+  'CADEADO PAD-I':263,'CADEADO PAD-C':290,'CADEADO PAD-C IOT':154,
+  'UNILOCK COVER IOT':227,'MÓDULO UNILOCK ONE IOT':154,'MÓDULO UNILOCK ONE WIFI':154,
+  'SGR — Licença Anual':10
+};
+const FAIXAS_MAPA = [[1,0],[10,0],[100,0.03],[300,0.05],[500,0.07]];
+const CAMBIO_MAPA = {BRL:5.70,EUR:0.92};
+
+function calcPrecoMapa(produto, qtd, moeda) {
+  const base = PRECO_BASE_MAPA[produto];
+  if (!base || !qtd) return null;
+  let desc = 0;
+  for (const [min,d] of FAIXAS_MAPA) { if (qtd>=min) desc=d; }
+  const usd = Math.round(base*(1-desc)*100)/100;
+  if (moeda==='BRL') return Math.round(usd*CAMBIO_MAPA.BRL*100)/100;
+  if (moeda==='EUR') return Math.round(usd*CAMBIO_MAPA.EUR*100)/100;
+  return usd;
+}
+function fmtValMapa(num, moeda) {
+  if (num===null||isNaN(num)) return '';
+  const s = num.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  if (moeda==='BRL') return 'R$ '+s;
+  if (moeda==='EUR') return '€ '+s;
+  return '$ '+s;
+}
+
 function buildCardV2(p, paisAt, nomeCliente) {
   const fuso   = FUSOS[NORM[p.repPais]||p.repPais] || FUSOS[p.repPais] || '';
   const lt     = localTimeFromFuso(fuso);
@@ -1736,21 +1775,38 @@ function buildCardV2(p, paisAt, nomeCliente) {
   // Produtos + Aplicação
   h += '<div class="proj-prods-apli">';
 
-  // Coluna Produtos
-  h += '<div>';
-  h += '<div class="proj-col-label">Produtos <span style="float:right;font-weight:400;color:#BBBBBB;letter-spacing:0">Qtd.</span></div>';
+  // Coluna Produtos com valores
+  h += '<div style="width:100%">';
+  h += '<div class="proj-col-label" style="display:grid;grid-template-columns:1fr 60px 100px 110px;gap:6px;padding-right:4px">';
+  h += '<span>Produto</span><span style="text-align:right">Qtd.</span>';
+  h += '<span style="text-align:right">Valor/un</span><span style="text-align:right">Total</span>';
+  h += '</div>';
+  let totalProjeto = 0; let temTotal = false;
+  const moedaRef = prods.length ? (prods[0].split(':')[2]||'USD') : 'USD';
   if (prods.length) {
     prods.forEach(prod => {
-      const pts  = prod.split(':');
-      const nome = pts[0].trim();
-      const qty  = pts[1] ? pts[1].trim() : '';
-      h += '<div class="proj-prod-row">';
+      const pts   = prod.split(':');
+      const nome  = pts[0].trim();
+      const qty   = parseInt(pts[1])||0;
+      const moeda = pts[2]||moedaRef;
+      const un    = calcPrecoMapa(nome, qty, moeda);
+      const tot   = (un!==null && qty) ? un*qty : null;
+      if (tot!==null) { totalProjeto+=tot; temTotal=true; }
+      h += '<div class="proj-prod-row" style="display:grid;grid-template-columns:1fr 60px 100px 110px;gap:6px;align-items:center">';
       h += '<div class="proj-prod-left"><div class="proj-prod-dash"></div><span class="proj-prod-name">'+esc(nome)+'</span></div>';
-      h += '<span class="proj-prod-qty">'+(qty ? esc(qty) : '—')+'</span>';
+      h += '<span class="proj-prod-qty" style="text-align:right">'+(qty||'—')+'</span>';
+      h += '<span class="proj-prod-qty" style="text-align:right;color:#1A6B3A">'+(un!==null?fmtValMapa(un,moeda):'—')+'</span>';
+      h += '<span class="proj-prod-qty" style="text-align:right;font-weight:700;color:#1A6B3A">'+(tot!==null?fmtValMapa(tot,moeda):'—')+'</span>';
       h += '</div>';
     });
+    if (temTotal) {
+      h += '<div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:6px;padding-top:5px;border-top:1px solid #E4E4E4">';
+      h += '<span style="font-size:10px;font-weight:600;color:#4A4A4A;letter-spacing:.05em">TOTAL DO PROJETO</span>';
+      h += '<span style="font-size:12px;font-weight:700;color:#1A6B3A;background:#DCFCE7;border:1px solid #86EFAC;border-radius:4px;padding:2px 8px">'+fmtValMapa(totalProjeto,moedaRef)+'</span>';
+      h += '</div>';
+    }
   } else {
-    h += '<div class="proj-prod-row"><div class="proj-prod-left"><div class="proj-prod-dash"></div><span class="proj-prod-name">'+DASH+'</span></div><span class="proj-prod-qty">—</span></div>';
+    h += '<div class="proj-prod-row"><div class="proj-prod-left"><div class="proj-prod-dash"></div><span class="proj-prod-name">'+DASH+'</span></div></div>';
   }
   h += '</div>';
 
