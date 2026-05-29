@@ -196,6 +196,19 @@ input[type=number]{-moz-appearance:textfield}
 .proj-focal-rm{width:28px;height:32px;border-radius:4px;border:1px solid #E4E4E4;background:#fff;color:#CCC;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .proj-focal-rm:hover{color:#E30613;border-color:#E30613}
 @media(max-width:900px){.proj-focal-item{grid-template-columns:repeat(2,1fr)}}
+
+/* Caixa alta em todos os campos de texto do cadastro */
+input[type=text].linha-inp,
+input[type=tel].linha-inp,
+textarea.linha-inp {
+  text-transform: uppercase;
+}
+/* Exceções: email, url, número */
+input[type=email].linha-inp,
+input[type=url].linha-inp,
+input[type=number].linha-inp {
+  text-transform: none;
+}
 </style>
 </head>
 <body>
@@ -1570,36 +1583,37 @@ function showToast(msg,err=false){
 
 // ── COLETA E ENVIO ────────────────────────────────────────────
 function coletarDados() {
+  const up = s => (s||'').toUpperCase();
   return {
     timestamp: new Date().toISOString(),
     dadosPessoais: {
       repId: repId||null, token: repToken||null,
-      nome: gv('nome'), sobrenome: gv('sobrenome'),
+      nome: (gv('nome')||'').toUpperCase(), sobrenome: (gv('sobrenome')||'').toUpperCase(),
       pais: (function(){
         const iso = gv('pais');
         const p = PAISES_DATA.find(x => x.iso === iso);
         return p ? p.nome : iso; // retorna nome se encontrar, senão ISO
       })(),
-      cidade: gv('cidade'),
+      cidade: (gv('cidade')||'').toUpperCase(),
       empresa: gv('empresa'), email: gv('email'),
       telefone: gv('ddi')+' '+gv('whats'), linkedin: gv('linkedin')
     },
     atuacao: linhas
       .filter(p => p.cliente && p.cliente.trim())
       .map(p => ({
-        titulo: p.titulo||'',
+        titulo: up(p.titulo||''),
         pais: (function(){
           const p2 = PAISES_DATA.find(x => x.iso === p.pais || x.nome === p.pais);
           return p2 ? p2.nome : p.pais;
         })(),
-        cliente: p.cliente,
+        cliente: up(p.cliente||''),
         vertical: p.vertical||'', area: p.vertical||'',
         area_cliente: p.areaCli||'',
         aplicacao: p.aplicacao||'',
         focal_contacts:  p.focalContacts||[],
         produtos: p.prods, qtd_estimada: '',
         projetos: p.aplicacao ? [p.aplicacao] : [],
-        status: p.status||'', obs: p.obs||''
+        status: p.status||'', obs: up(p.obs||'')
       }))
   };
 }

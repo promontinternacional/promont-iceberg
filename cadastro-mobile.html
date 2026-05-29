@@ -116,6 +116,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);fon
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield}
+
+/* Caixa alta em campos de texto */
+input[type=text], input[type=tel], textarea {
+  text-transform: uppercase;
+}
+input[type=email], input[type=url], input[type=number] {
+  text-transform: none;
+}
 </style>
 </head>
 <body>
@@ -1178,13 +1186,13 @@ function coletarDados(){
     },
     atuacao:linhas.filter(p=>p.cliente&&p.cliente.trim()).map(p=>{
       return {
-        titulo:p.titulo||'', pais:p.pais, cliente:p.cliente,
-        vertical:p.vertical||'', area:p.vertical||'',
+        titulo:(p.titulo||'').toUpperCase(), pais:p.pais, cliente:p.cliente,
+         area:p.vertical||'',
         area_cliente:p.areaCli||'', aplicacao:p.aplicacao||'',
         focal_contacts: p.focalContacts||[],
         produtos:p.prods, qtd_estimada:'',
         projetos:p.aplicacao?[p.aplicacao]:[],
-        status:p.status||'', obs:p.obs||''
+        status:p.status||'', obs:(p.obs||'').toUpperCase()
       };
     })
   };
