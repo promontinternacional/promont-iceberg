@@ -1324,7 +1324,11 @@ function construirArvore(rows) {
       area, vertical:vertFinal, areaCliente:areaCliente2||'',
       aplicacoes:apliList, produtos, qtd, projetos, obs,
       titulo, criadoEm: row[0]||null,
-      repNome, repPais, repCidade, repEmail, repTel, repLinkedin: String(row[8]||'').trim(), status,
+      repNome, repPais, repCidade, repEmail, repTel,
+      repLinkedin: String(row[8]||'').trim(),
+      repEmpresa: String(row[5]||'').trim(),
+      repToken:   String(row[23]||'').trim(),
+      status,
       focalContacts
     });
   });
@@ -1882,6 +1886,13 @@ function buildRepCard(p) {
   html += '<div class="rep-avatar">'+avatar+'</div>';
   html += '<div class="rep-info">';
   html += '<div class="rep-name-text">'+esc(p.repNome)+'</div>';
+  if (p.repEmpresa) {
+    html += '<div style="font-size:10px;color:#AAAAAA;margin-top:1px">'+esc(p.repEmpresa)+'</div>';
+  }
+  if (p.repToken) {
+    const editUrl = 'https://promontinternacional.github.io/promont-iceberg/?token='+encodeURIComponent(p.repToken);
+    html += '<a href="'+editUrl+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#E30613;margin-top:4px;text-decoration:none;font-weight:600">✏ Editar cadastro</a>';
+  }
 
   // Contatos clicáveis
   html += '<div class="rep-contacts">';
