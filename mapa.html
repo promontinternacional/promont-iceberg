@@ -1720,6 +1720,7 @@ function buildCardV2(p, paisAt, nomeCliente) {
   h += '<div class="proj-rep-avatar">'+esc(avatar)+'</div>';
   h += '<div>';
   h += '<div class="proj-rep-name">'+esc(p.repNome||'—')+'</div>';
+  if (p.repEmpresa) h += '<div style="font-size:10px;color:#AAAAAA;margin-top:1px;font-weight:500">'+esc(p.repEmpresa)+'</div>';
   h += '<div class="proj-rep-loc">'+esc(p.repCidade||'—')+(fuso?' \u00b7 '+fuso:'')+'</div>';
   h += '</div></div>';
 
@@ -1761,6 +1762,11 @@ function buildCardV2(p, paisAt, nomeCliente) {
     h += '<div class="proj-contact-row">';
     h += '<a class="proj-contact-btn" href="'+esc(liUrl)+'" target="_blank" rel="noopener" style="background:#0A66C2;color:#fff;border-color:#0A66C2">💼 LinkedIn</a>';
     h += '</div>';
+  }
+  // Link editar cadastro
+  if (p.repToken) {
+    const editUrl = 'https://promontinternacional.github.io/promont-iceberg/?token='+encodeURIComponent(p.repToken);
+    h += '<div style="padding:6px 0 2px"><a href="'+editUrl+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#E30613;text-decoration:none;font-weight:600">✏ Editar cadastro</a></div>';
   }
   h += '</div>'; // contacts
   h += '</div>'; // rep-panel
