@@ -189,8 +189,13 @@ input[type=number]{-moz-appearance:textfield}
                padding:5px 12px}
 .proj-row-focal{margin:8px 0 4px}
 .proj-focal-title{font-size:10px;font-weight:700;color:#888;letter-spacing:.08em;margin-bottom:6px}
-.proj-focal-fields{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-@media(max-width:900px){.proj-focal-fields{grid-template-columns:repeat(3,1fr)}}
+.proj-focal-item{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1.5fr 80px 1fr 32px;gap:6px;align-items:end;margin-bottom:8px;padding:8px;background:#FAFAFA;border:1px solid #F0F0F0;border-radius:6px}
+.proj-focal-item-header{font-size:10px;font-weight:600;color:#AAAAAA;margin-bottom:3px}
+.proj-focal-add{display:flex;align-items:center;gap:6px;color:#E30613;font-size:12px;font-weight:600;cursor:pointer;background:none;border:1px dashed #CCCCCC;border-radius:6px;padding:6px 12px;font-family:inherit}
+.proj-focal-add:hover{background:#FFF0F0;border-color:#E30613}
+.proj-focal-rm{width:28px;height:32px;border-radius:4px;border:1px solid #E4E4E4;background:#fff;color:#CCC;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.proj-focal-rm:hover{color:#E30613;border-color:#E30613}
+@media(max-width:900px){.proj-focal-item{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -910,12 +915,7 @@ async function carregarPerfil(token) {
           prods:    Array.isArray(a.produtos) ? a.produtos : (a.produtos ? a.produtos.split(',').map(x=>x.trim()).filter(Boolean) : []),
           status:   a.status||'PROSPECCAO',
           obs:      a.obs||'',
-          focalNome:      a.focal_nome||'',
-          focalSobrenome: a.focal_sobrenome||'',
-          focalCargo:     a.focal_cargo||'',
-          focalArea:      a.focal_area||'',
-          focalEmail:     a.focal_email||'',
-          focalCelular:   a.focal_celular||''
+          focalContacts:  Array.isArray(a.focal_contacts) ? a.focal_contacts : []
         }))
         : [];
       renderLinhas();
@@ -1253,41 +1253,71 @@ function renderProjetos() {
 
     body.appendChild(row2);
 
-    // Focal Point Cliente
+    // Focal Point Cliente — array
     const focalRow = document.createElement('div');
     focalRow.className = 'proj-row-focal';
     const focalLabel = document.createElement('div');
     focalLabel.className = 'proj-field-label proj-focal-title';
     focalLabel.textContent = 'FOCAL POINT CLIENTE';
     focalRow.appendChild(focalLabel);
-    const focalFields = document.createElement('div');
-    focalFields.className = 'proj-focal-fields';
-    const focalDefs = [
-      {key:'focalNome',      placeholder:'Nome',      save:'focal_nome'},
-      {key:'focalSobrenome', placeholder:'Sobrenome', save:'focal_sobrenome'},
-      {key:'focalCargo',     placeholder:'Cargo',     save:'focal_cargo'},
-      {key:'focalArea',      placeholder:'Área',      save:'focal_area'},
-      {key:'focalEmail',     placeholder:'E-mail',    save:'focal_email',  type:'email'},
-      {key:'focalCelular',   placeholder:'Celular',   save:'focal_celular', type:'tel'},
-    ];
-    focalDefs.forEach(def => {
-      const inp = document.createElement('input');
-      inp.type = def.type||'text';
-      inp.className = 'linha-inp';
-      inp.placeholder = def.placeholder;
-      inp.value = proj[def.key]||'';
-      (function(pid, saveKey){ inp.oninput = function(){
-        const p = linhas.find(x=>x.id===pid);
-        if(p) p[saveKey.replace('focal_','')] = this.value;
-      };})(proj.id, def.save);
-      // Salvar no objeto direto pelo key
-      (function(pid, k){ inp.oninput = function(){
-        const p = linhas.find(x=>x.id===pid);
-        if(p) p[k] = this.value;
-      };})(proj.id, def.key);
-      focalFields.appendChild(inp);
-    });
-    focalRow.appendChild(focalFields);
+    const focalList = document.createElement('div');
+
+    function renderFocais() {
+      focalList.innerHTML = '';
+      const p = linhas.find(x=>x.id===proj.id);
+      if (!p) return;
+      if (!p.focalContacts) p.focalContacts = [];
+      p.focalContacts.forEach(function(fc, fi) {
+        const item = document.createElement('div');
+        item.className = 'proj-focal-item';
+        const defs = [
+          {ph:'Nome',     k:'nome'},  {ph:'Sobrenome',k:'sobrenome'},
+          {ph:'Cargo',    k:'cargo'}, {ph:'Área',     k:'area'},
+          {ph:'E-mail',   k:'email',  type:'email'},
+          {ph:'+DDI',     k:'ddi',    w:'70px'},
+          {ph:'Celular',  k:'celular',type:'tel'},
+        ];
+        defs.forEach(function(def){
+          const wrap = document.createElement('div');
+          const lbl = document.createElement('div');
+          lbl.className = 'proj-focal-item-header';
+          lbl.textContent = def.ph;
+          const inp = document.createElement('input');
+          inp.type = def.type||'text';
+          inp.className = 'linha-inp';
+          inp.style.cssText = 'font-size:11px' + (def.w?';width:'+def.w:'');
+          inp.value = fc[def.k]||'';
+          (function(pid,idx2,k){ inp.oninput = function(){
+            const pp=linhas.find(x=>x.id===pid);
+            if(pp && pp.focalContacts[idx2]) pp.focalContacts[idx2][k]=this.value;
+          };})(proj.id, fi, def.k);
+          wrap.appendChild(lbl); wrap.appendChild(inp);
+          item.appendChild(wrap);
+        });
+        const rmBtn = document.createElement('button');
+        rmBtn.className = 'proj-focal-rm'; rmBtn.innerHTML = '×';
+        (function(pid,idx2){ rmBtn.onclick = function(){
+          const pp=linhas.find(x=>x.id===pid);
+          if(pp){ pp.focalContacts.splice(idx2,1); renderFocais(); }
+        };})(proj.id, fi);
+        item.appendChild(rmBtn);
+        focalList.appendChild(item);
+      });
+      // Botão adicionar
+      const addBtn = document.createElement('button');
+      addBtn.className = 'proj-focal-add';
+      addBtn.innerHTML = '+ Adicionar focal';
+      (function(pid){ addBtn.onclick = function(){
+        const pp=linhas.find(x=>x.id===pid);
+        if(pp){ if(!pp.focalContacts) pp.focalContacts=[];
+          pp.focalContacts.push({nome:'',sobrenome:'',cargo:'',area:'',email:'',ddi:'',celular:''});
+          renderFocais();
+        }
+      };})(proj.id);
+      focalList.appendChild(addBtn);
+    }
+    renderFocais();
+    focalRow.appendChild(focalList);
     body.appendChild(focalRow);
 
     // Linha 3: Produtos + Obs
@@ -1565,12 +1595,7 @@ function coletarDados() {
         vertical: p.vertical||'', area: p.vertical||'',
         area_cliente: p.areaCli||'',
         aplicacao: p.aplicacao||'',
-        focal_nome:      p.focalNome||'',
-        focal_sobrenome: p.focalSobrenome||'',
-        focal_cargo:     p.focalCargo||'',
-        focal_area:      p.focalArea||'',
-        focal_email:     p.focalEmail||'',
-        focal_celular:   p.focalCelular||'',
+        focal_contacts:  p.focalContacts||[],
         produtos: p.prods, qtd_estimada: '',
         projetos: p.aplicacao ? [p.aplicacao] : [],
         status: p.status||'', obs: p.obs||''

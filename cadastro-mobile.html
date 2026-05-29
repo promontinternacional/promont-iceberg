@@ -920,27 +920,68 @@ function renderProjetos(){
       stWrap.appendChild(stSel);
       body.appendChild(stWrap);
 
-      // Focal Point Cliente
+      // Focal Point Cliente — array mobile
       const focalWrap=document.createElement('div'); focalWrap.className='field';
       focalWrap.innerHTML='<label style="font-size:10px;font-weight:700;color:#888;letter-spacing:.08em">FOCAL POINT CLIENTE</label>';
-      const focalGrid=document.createElement('div');
-      focalGrid.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px';
-      const focalDefs=[
-        {key:'focalNome',ph:'Nome'},{key:'focalSobrenome',ph:'Sobrenome'},
-        {key:'focalCargo',ph:'Cargo'},{key:'focalArea',ph:'Área'},
-        {key:'focalEmail',ph:'E-mail',type:'email'},{key:'focalCelular',ph:'Celular',type:'tel'}
-      ];
-      focalDefs.forEach(function(def){
-        const inp=document.createElement('input');
-        inp.type=def.type||'text'; inp.placeholder=def.ph;
-        inp.style.cssText='height:42px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13px;font-family:inherit;width:100%;box-sizing:border-box';
-        inp.value=proj[def.key]||'';
-        (function(pid,k){inp.oninput=function(){
-          const p=linhas.find(x=>x.id===pid); if(p) p[k]=this.value;
-        };})(proj.id,def.key);
-        focalGrid.appendChild(inp);
-      });
-      focalWrap.appendChild(focalGrid);
+      const focalList=document.createElement('div'); focalList.style.marginTop='8px';
+      function renderFocaisMob(){
+        focalList.innerHTML='';
+        const pp=linhas.find(x=>x.id===proj.id);
+        if(!pp) return;
+        if(!pp.focalContacts) pp.focalContacts=[];
+        pp.focalContacts.forEach(function(fc,fi){
+          const card=document.createElement('div');
+          card.style.cssText='background:#FAFAFA;border:1px solid #EEEEEE;border-radius:8px;padding:10px;margin-bottom:8px';
+          const defs=[
+            {ph:'Nome',k:'nome'},{ph:'Sobrenome',k:'sobrenome'},
+            {ph:'Cargo',k:'cargo'},{ph:'Área',k:'area'},
+            {ph:'E-mail',k:'email',type:'email'},
+          ];
+          // Grid 2 colunas para nome/sobrenome e cargo/area
+          const g1=document.createElement('div');
+          g1.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px';
+          defs.forEach(function(def){
+            const inp=document.createElement('input');
+            inp.type=def.type||'text'; inp.placeholder=def.ph;
+            inp.style.cssText='height:42px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13px;font-family:inherit;width:100%;box-sizing:border-box';
+            inp.value=fc[def.k]||'';
+            (function(pid,idx2,k){inp.oninput=function(){
+              const p2=linhas.find(x=>x.id===pid);
+              if(p2&&p2.focalContacts[idx2]) p2.focalContacts[idx2][k]=this.value;
+            };})(proj.id,fi,def.k);
+            g1.appendChild(inp);
+          });
+          card.appendChild(g1);
+          // DDI + Celular numa linha
+          const ddiRow=document.createElement('div');
+          ddiRow.style.cssText='display:flex;gap:8px;margin-bottom:8px';
+          const ddiInp=document.createElement('input');
+          ddiInp.placeholder='+DDI'; ddiInp.style.cssText='width:80px;height:42px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:13px;font-family:inherit;flex-shrink:0';
+          ddiInp.value=fc.ddi||'';
+          (function(pid,idx2){ddiInp.oninput=function(){const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2].ddi=this.value;};})(proj.id,fi);
+          const celInp=document.createElement('input');
+          celInp.placeholder='Celular'; celInp.type='tel';
+          celInp.style.cssText='flex:1;height:42px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13px;font-family:inherit';
+          celInp.value=fc.celular||'';
+          (function(pid,idx2){celInp.oninput=function(){const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2].celular=this.value;};})(proj.id,fi);
+          ddiRow.appendChild(ddiInp); ddiRow.appendChild(celInp);
+          card.appendChild(ddiRow);
+          // Remover
+          const rmBtn=document.createElement('button');
+          rmBtn.textContent='Remover focal';
+          rmBtn.style.cssText='width:100%;height:36px;background:#fff;border:1px solid #EEEEEE;border-radius:6px;color:#E30613;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer';
+          (function(pid,idx2){rmBtn.onclick=function(){const p2=linhas.find(x=>x.id===pid);if(p2){p2.focalContacts.splice(idx2,1);renderFocaisMob();}};})(proj.id,fi);
+          card.appendChild(rmBtn);
+          focalList.appendChild(card);
+        });
+        const addBtn=document.createElement('button');
+        addBtn.textContent='+ Adicionar focal';
+        addBtn.style.cssText='width:100%;height:44px;background:#fff;border:1.5px dashed #CCCCCC;border-radius:8px;color:#E30613;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px';
+        (function(pid){addBtn.onclick=function(){const p2=linhas.find(x=>x.id===pid);if(p2){if(!p2.focalContacts)p2.focalContacts=[];p2.focalContacts.push({nome:'',sobrenome:'',cargo:'',area:'',email:'',ddi:'',celular:''});renderFocaisMob();}};})(proj.id);
+        focalList.appendChild(addBtn);
+      }
+      renderFocaisMob();
+      focalWrap.appendChild(focalList);
       body.appendChild(focalWrap);
 
       body.appendChild(document.createElement('div')).className='divider';
@@ -1139,9 +1180,7 @@ function coletarDados(){
         titulo:p.titulo||'', pais:p.pais, cliente:p.cliente,
         vertical:p.vertical||'', area:p.vertical||'',
         area_cliente:p.areaCli||'', aplicacao:p.aplicacao||'',
-        focal_nome:p.focalNome||'', focal_sobrenome:p.focalSobrenome||'',
-        focal_cargo:p.focalCargo||'', focal_area:p.focalArea||'',
-        focal_email:p.focalEmail||'', focal_celular:p.focalCelular||'',
+        focal_contacts: p.focalContacts||[],
         produtos:p.prods, qtd_estimada:'',
         projetos:p.aplicacao?[p.aplicacao]:[],
         status:p.status||'', obs:p.obs||''

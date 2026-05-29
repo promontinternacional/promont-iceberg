@@ -1312,18 +1312,14 @@ function construirArvore(rows) {
     const aplicacao   = String(row[21]||'').trim();
     const vertFinal   = vertical || area;
     const apliList    = aplicacao ? [aplicacao] : (projetos ? projetos.split(',').map(x=>x.trim()).filter(Boolean) : []);
-    const focalNome      = String(row[22]||'').trim();
-    const focalSobrenome = String(row[23]||'').trim();
-    const focalCargo     = String(row[24]||'').trim();
-    const focalArea      = String(row[25]||'').trim();
-    const focalEmail     = String(row[26]||'').trim();
-    const focalCelular   = String(row[27]||'').trim();
+    let focalContacts = [];
+    try { if(row[22]) focalContacts = JSON.parse(row[22]); } catch(e){}
     tree[cont][sub][paisAt][empresa][cliente].push({
       area, vertical:vertFinal, areaCliente:areaCliente2||'',
       aplicacoes:apliList, produtos, qtd, projetos, obs,
       titulo, criadoEm: row[0]||null,
-      repNome, repPais, repCidade, repEmail, repTel, status,
-      focalNome, focalSobrenome, focalCargo, focalArea, focalEmail, focalCelular
+      repNome, repPais, repCidade, repEmail, repTel, repLinkedin: String(row[9]||'').trim(), status,
+      focalContacts
     });
   });
 
@@ -1745,6 +1741,12 @@ function buildCardV2(p, paisAt, nomeCliente) {
     h += '<span class="proj-copy" data-copy="'+esc(tel)+'" onclick="copyText(this.dataset.copy,this)" title="Copiar">⎘</span>';
     h += '</div>';
   }
+  if (p.repLinkedin) {
+    const li = p.repLinkedin.startsWith('http') ? p.repLinkedin : 'https://'+p.repLinkedin;
+    h += '<div class="proj-contact-row">';
+    h += '<a class="proj-contact-btn" href="'+esc(li)+'" target="_blank" style="background:#0A66C2;color:#fff;border-color:#0A66C2">💼 LinkedIn</a>';
+    h += '</div>';
+  }
   h += '</div>'; // contacts
   h += '</div>'; // rep-panel
 
@@ -1821,21 +1823,23 @@ function buildCardV2(p, paisAt, nomeCliente) {
   h += '</div>'; // proj-prods-apli
 
   // Observações
-  // Focal Point Cliente
-  const temFocal = p.focalNome||p.focalEmail||p.focalCargo;
-  if (temFocal) {
+  // Focal Point Cliente — array
+  if (p.focalContacts && p.focalContacts.length) {
     h += '<div class="proj-focal-block">';
     h += '<div class="proj-focal-lbl">FOCAL POINT CLIENTE</div>';
-    h += '<div class="proj-focal-row">';
-    const fparts = [
-      p.focalNome&&p.focalSobrenome ? p.focalNome+' '+p.focalSobrenome : p.focalNome||'',
-      p.focalCargo||'',
-      p.focalArea||'',
-    ].filter(Boolean);
-    if (fparts.length) h += '<span class="proj-focal-name">'+esc(fparts.join(' · '))+'</span>';
-    if (p.focalEmail) h += '<a class="proj-contact-btn" href="mailto:'+esc(p.focalEmail)+'">✉ '+esc(p.focalEmail)+'</a>';
-    if (p.focalCelular) h += '<span class="proj-focal-cel">📞 '+esc(p.focalCelular)+'</span>';
-    h += '</div></div>';
+    p.focalContacts.forEach(fc => {
+      h += '<div class="proj-focal-row" style="margin-bottom:4px">';
+      const nm = [fc.nome, fc.sobrenome].filter(Boolean).join(' ');
+      const meta = [fc.cargo, fc.area].filter(Boolean).join(' · ');
+      if (nm||meta) h += '<span class="proj-focal-name">'+(nm?(esc(nm)+(meta?' · '+esc(meta):'')):esc(meta))+'</span>';
+      if (fc.email) h += '<a class="proj-contact-btn" href="mailto:'+esc(fc.email)+'">✉ '+esc(fc.email)+'</a>';
+      if (fc.celular) {
+        const tel = (fc.ddi||'')+' '+fc.celular;
+        h += '<span class="proj-focal-cel">📞 '+esc(tel.trim())+'</span>';
+      }
+      h += '</div>';
+    });
+    h += '</div>';
   }
 
   h += '<div class="proj-obs-block">';
