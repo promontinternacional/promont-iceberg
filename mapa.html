@@ -484,8 +484,24 @@ button{font-family:inherit}
 .proj-focal-name{font-size:10px;font-weight:600;color:#2C2C2C}
 .proj-focal-cel{font-size:10px;color:#555;text-decoration:none}
 .proj-focal-email{font-size:10px;color:#1A6B3A;text-decoration:none}
-.proj-rep-name,.proj-rep-loc,.proj-prod-name,
-.proj-obs-txt,.proj-focal-name{text-transform:uppercase}
+/* ── UPPERCASE GLOBAL NO CARD ─────────────────────── */
+.proj-rep-name, .proj-rep-loc, .proj-rep-name-text,
+.proj-meta-value, .proj-prod-name, .proj-obs-txt,
+.proj-focal-name, .proj-focal-row span,
+.proj-col-label span, .proj-info-panel *:not(a):not(input):not(select),
+.rep-info *, .rep-name-text, .rep-loc-text,
+.proj-card .proj-rep-top div,
+.proj-card .proj-rep-contacts a,
+.proj-card .proj-obs-block div {
+  text-transform: uppercase;
+}
+/* Exceções: emails, links, valores numéricos */
+.proj-card a[href^="mailto"],
+.proj-card a[href^="tel"],
+.proj-card a[href^="http"],
+.proj-prod-qty, .proj-prod-val, .proj-soma-val,
+.proj-rep-clock, .badge-exp,
+.proj-focal-tel { text-transform: none !important; }
 </style>
 </head>
 <body>
@@ -1290,15 +1306,15 @@ function construirArvore(rows) {
     if (!paisAt) return;
 
     const empresa   = String(row[5]||'—').trim();
-    const cliente   = String(row[11]||'').trim();
+    const cliente   = String(row[11]||'').trim().toUpperCase();
     if (!cliente) return;
 
     const area      = String(row[12]||'').trim();
     const produtos  = String(row[13]||'').trim();
     const projetos  = String(row[15]||'').trim();
-    const repNome   = (String(row[1]||'')+' '+String(row[2]||'')).trim();
+    const repNome   = (String(row[1]||'')+' '+String(row[2]||'')).trim().toUpperCase();
     const repPais   = NORM[String(row[3]||'').trim()] || String(row[3]||'').trim();
-    const repCidade = String(row[4]||'').trim();
+    const repCidade = String(row[4]||'').trim().toUpperCase();
 
     const sub  = paisParaSub[paisAt] || 'Outros';
     const cont = subParaCont[sub]    || '🌐 Outros';
@@ -1313,11 +1329,11 @@ function construirArvore(rows) {
     const repEmail = String(row[6]||'').trim();
     const repTel   = String(row[7]||'').trim().replace(/^'/,'');
     const qtd = String(row[14]||'').trim();
-    const obs = String(row[16]||'').trim();
-        const titulo      = String(row[18]||'').trim();
-    const vertical    = String(row[19]||'').trim();
-    const areaCliente2= String(row[20]||'').trim();
-    const aplicacao   = String(row[21]||'').trim();
+    const obs = String(row[16]||'').trim().toUpperCase();
+        const titulo      = String(row[18]||'').trim().toUpperCase();
+    const vertical    = String(row[19]||'').trim().toUpperCase();
+    const areaCliente2= String(row[20]||'').trim().toUpperCase();
+    const aplicacao   = String(row[21]||'').trim().toUpperCase();
     const vertFinal   = vertical || area;
     const apliList    = aplicacao ? [aplicacao] : (projetos ? projetos.split(',').map(x=>x.trim()).filter(Boolean) : []);
     let focalContacts = [];
@@ -1328,7 +1344,7 @@ function construirArvore(rows) {
       titulo, criadoEm: row[0]||null,
       repNome, repPais, repCidade, repEmail, repTel,
       repLinkedin: String(row[8]||'').trim(),
-      repEmpresa: String(row[5]||'').trim(),
+      repEmpresa: String(row[5]||'').trim().toUpperCase(),
       repToken:   String(row[23]||'').trim(),
       status,
       focalContacts
