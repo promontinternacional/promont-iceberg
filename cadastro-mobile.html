@@ -58,8 +58,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);fon
 }
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red)}
 .field textarea{height:auto;min-height:90px;padding:12px 14px;resize:none;line-height:1.5}
+/* Select wrapper com chevron — usado em todos os selects do formulário */
+.sel-wrap{position:relative}
+.sel-wrap select{padding-right:36px}
+.sel-wrap .chev{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:#888;font-size:16px}
+/* field-row: 2 colunas em telas >= 360px, 1 coluna em telas muito estreitas */
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ddi-row{display:grid;grid-template-columns:130px 1fr;gap:8px}
+@media(max-width:359px){.field-row{grid-template-columns:1fr}}
+/* DDI row: DDI fixo 110px + número restante */
+.ddi-row{display:grid;grid-template-columns:110px 1fr;gap:8px}
 .char-count{font-size:11px;color:#AAA;text-align:right;margin-top:4px}
 
 /* PROJETOS */
@@ -80,17 +87,47 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);fon
 
 /* PRODUTO LINHA */
 .prod-lines{margin-bottom:8px;display:flex;flex-direction:column;gap:8px}
-.prod-line-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:1fr 110px 36px;gap:8px;align-items:start}
+/* Card de produto: produto (flex:1) + quantidade (100px fixo) + lixeira (40px) */
+.prod-line-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;flex-direction:row;gap:8px;align-items:flex-end}
 .prod-line-col{display:flex;flex-direction:column;gap:4px}
-.prod-line-lbl{font-size:11px;font-weight:600;color:#888;letter-spacing:.03em}
-.prod-line-col select{height:44px;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:0 10px;background:var(--white);width:100%;appearance:none;-webkit-appearance:none;font-family:inherit;color:var(--dark)}
-.prod-line-col select:focus{border-color:var(--red);outline:none}
-.prod-line-rm{width:36px;height:44px;border-radius:6px;border:1px solid var(--border);background:var(--white);color:#CCC;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex-shrink:0}
+.prod-line-col.col-prod{flex:1;min-width:0}      /* flex:1 garante que produto ocupa o espaço restante */
+.prod-line-col.col-qtd{width:84px;flex-shrink:0} /* quantidade: largura fixa */
+.prod-line-lbl{font-size:11px;font-weight:600;color:#888;letter-spacing:.03em;white-space:nowrap}
+.prod-line-col select,.prod-line-col input{
+  height:44px;font-size:14px;border:1px solid var(--border);border-radius:6px;
+  padding:0 10px;background:var(--white);width:100%;
+  appearance:none;-webkit-appearance:none;font-family:inherit;color:var(--dark);
+}
+.prod-line-col select{padding-right:28px} /* espaço para o chevron via wrapper */
+.prod-line-col select:focus,.prod-line-col input:focus{border-color:var(--red);outline:none}
+/* Wrapper para o select do produto com seta */
+.prod-sel-wrap{position:relative}
+.prod-sel-wrap select{padding-right:28px}
+.prod-sel-wrap .chev{position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;color:#888;font-size:13px}
+.prod-line-rm{width:40px;height:44px;border-radius:6px;border:1px solid var(--border);background:var(--white);color:#CCC;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex-shrink:0;align-self:flex-end}
 .prod-line-rm:active{color:var(--red);border-color:var(--red);background:#FDECEE}
 .add-prod-btn{width:100%;height:48px;background:var(--white);border:1.5px dashed #CCCCCC;border-radius:8px;color:var(--red);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}
 .add-prod-btn:active{background:#FDECEE;border-color:var(--red)}
 
-/* DIVIDER */
+/* FOCAL POINT */
+.focal-card{background:#FAFAFA;border:1px solid #EEEEEE;border-radius:8px;padding:12px;margin-bottom:8px}
+.focal-field{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.focal-field:last-child{margin-bottom:0}
+.focal-field label{font-size:11px;font-weight:600;color:#888;letter-spacing:.03em}
+.focal-field input{
+  height:44px;border:1px solid var(--border);border-radius:8px;
+  padding:0 12px;font-size:14px;font-family:inherit;
+  background:var(--white);color:var(--dark);outline:none;
+  -webkit-appearance:none;width:100%;box-sizing:border-box;
+}
+.focal-field input:focus{border-color:var(--red)}
+/* 2 colunas para nome/sobrenome e cargo/área */
+.focal-row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:359px){.focal-row-2{grid-template-columns:1fr}}
+/* DDI + Celular */
+.focal-tel-row{display:grid;grid-template-columns:90px 1fr;gap:8px}
+.focal-rm-btn{width:100%;height:36px;background:#fff;border:1px solid #EEEEEE;border-radius:6px;color:var(--red);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px}
+.focal-rm-btn:active{background:#FDECEE;border-color:var(--red)}
 .divider{height:1px;background:var(--bg);margin:14px 0}
 .field-label-sm{font-size:12px;font-weight:600;color:var(--mid);margin-bottom:8px}
 
@@ -188,9 +225,9 @@ input[type=email], input[type=url], input[type=number] {
   </div>
   <div class="field">
     <label>País <span class="req">*</span></label>
-    <div style="position:relative">
-      <select id="pais" onchange="autoDDI(this.value)" style="padding-right:36px"></select>
-      <i class="ti ti-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:#888;font-size:16px"></i>
+    <div class="sel-wrap">
+      <select id="pais" onchange="autoDDI(this.value)"></select>
+      <i class="ti ti-chevron-down chev"></i>
     </div>
   </div>
   <div class="field">
@@ -200,9 +237,9 @@ input[type=email], input[type=url], input[type=number] {
   <div class="field">
     <label>WhatsApp / Celular <span class="req">*</span></label>
     <div class="ddi-row">
-      <div style="position:relative">
-        <select id="ddi" style="padding-right:28px"></select>
-        <i class="ti ti-chevron-down" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;color:#888;font-size:14px"></i>
+      <div class="sel-wrap">
+        <select id="ddi"></select>
+        <i class="ti ti-chevron-down chev" style="font-size:13px;right:8px"></i>
       </div>
       <input id="whats" type="tel" placeholder="99 99999-9999" autocomplete="tel">
     </div>
@@ -939,53 +976,58 @@ function renderProjetos(){
         if(!pp.focalContacts) pp.focalContacts=[];
         pp.focalContacts.forEach(function(fc,fi){
           const card=document.createElement('div');
-          card.style.cssText='background:#FAFAFA;border:1px solid #EEEEEE;border-radius:8px;padding:10px;margin-bottom:8px';
-          const defs=[
-            {ph:'Nome',k:'nome'},{ph:'Sobrenome',k:'sobrenome'},
-            {ph:'Cargo',k:'cargo'},{ph:'Área',k:'area'},
-            {ph:'E-mail',k:'email',type:'email'},
-          ];
-          // Grid 2 colunas para nome/sobrenome e cargo/area
-          const g1=document.createElement('div');
-          g1.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px';
-          defs.forEach(function(def){
-            const inp=document.createElement('input');
-            inp.type=def.type||'text'; inp.placeholder=def.ph;
-            inp.style.cssText='height:42px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13px;font-family:inherit;width:100%;box-sizing:border-box';
-            inp.value=fc[def.k]||'';
-            (function(pid,idx2,k,isText){inp.oninput=function(){
-              if(isText) this.value=this.value.toUpperCase();
-              const p2=linhas.find(x=>x.id===pid);
-              if(p2&&p2.focalContacts[idx2]) p2.focalContacts[idx2][k]=this.value;
-            };})(proj.id,fi,def.k,!def.type);
-            g1.appendChild(inp);
+          card.className='focal-card';
+
+          // Linha 1: Nome | Sobrenome
+          const row1=document.createElement('div'); row1.className='focal-row-2';
+          [{ph:'Nome',k:'nome'},{ph:'Sobrenome',k:'sobrenome'}].forEach(function(def){
+            const wrap=document.createElement('div'); wrap.className='focal-field';
+            const lbl=document.createElement('label'); lbl.textContent=def.ph; wrap.appendChild(lbl);
+            const inp=document.createElement('input'); inp.type='text'; inp.placeholder=def.ph; inp.value=fc[def.k]||'';
+            inp.style.textTransform='uppercase';
+            (function(pid,idx2,k){inp.oninput=function(){this.value=this.value.toUpperCase();const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2][k]=this.value;};})(proj.id,fi,def.k);
+            wrap.appendChild(inp); row1.appendChild(wrap);
           });
-          card.appendChild(g1);
-          // DDI + Celular numa linha
-          const ddiRow=document.createElement('div');
-          ddiRow.style.cssText='display:flex;gap:8px;margin-bottom:8px';
-          const ddiInp=document.createElement('input');
-          ddiInp.placeholder='+DDI'; ddiInp.style.cssText='width:80px;height:42px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:13px;font-family:inherit;flex-shrink:0';
-          ddiInp.value=fc.ddi||'';
+          card.appendChild(row1);
+
+          // Linha 2: Cargo | Área
+          const row2=document.createElement('div'); row2.className='focal-row-2';
+          [{ph:'Cargo',k:'cargo'},{ph:'Área',k:'area'}].forEach(function(def){
+            const wrap=document.createElement('div'); wrap.className='focal-field';
+            const lbl=document.createElement('label'); lbl.textContent=def.ph; wrap.appendChild(lbl);
+            const inp=document.createElement('input'); inp.type='text'; inp.placeholder=def.ph; inp.value=fc[def.k]||'';
+            inp.style.textTransform='uppercase';
+            (function(pid,idx2,k){inp.oninput=function(){this.value=this.value.toUpperCase();const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2][k]=this.value;};})(proj.id,fi,def.k);
+            wrap.appendChild(inp); row2.appendChild(wrap);
+          });
+          card.appendChild(row2);
+
+          // E-mail — largura total
+          const rowEmail=document.createElement('div'); rowEmail.className='focal-field';
+          const lblEmail=document.createElement('label'); lblEmail.textContent='E-mail'; rowEmail.appendChild(lblEmail);
+          const emailInp=document.createElement('input'); emailInp.type='email'; emailInp.placeholder='email@empresa.com'; emailInp.value=fc.email||'';
+          (function(pid,idx2){emailInp.oninput=function(){const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2].email=this.value;};})(proj.id,fi);
+          rowEmail.appendChild(emailInp); card.appendChild(rowEmail);
+
+          // DDI + Celular
+          const telRow=document.createElement('div'); telRow.className='focal-field';
+          const lblTel=document.createElement('label'); lblTel.textContent='Celular'; telRow.appendChild(lblTel);
+          const telGrid=document.createElement('div'); telGrid.className='focal-tel-row';
+          const ddiInp=document.createElement('input'); ddiInp.placeholder='+DDI'; ddiInp.type='tel'; ddiInp.value=fc.ddi||'';
           (function(pid,idx2){ddiInp.oninput=function(){const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2].ddi=this.value;};})(proj.id,fi);
-          const celInp=document.createElement('input');
-          celInp.placeholder='Celular'; celInp.type='tel';
-          celInp.style.cssText='flex:1;height:42px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13px;font-family:inherit';
-          celInp.value=fc.celular||'';
+          const celInp=document.createElement('input'); celInp.placeholder='99 99999-9999'; celInp.type='tel'; celInp.value=fc.celular||'';
           (function(pid,idx2){celInp.oninput=function(){const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2].celular=this.value;};})(proj.id,fi);
-          ddiRow.appendChild(ddiInp); ddiRow.appendChild(celInp);
-          card.appendChild(ddiRow);
+          telGrid.appendChild(ddiInp); telGrid.appendChild(celInp); telRow.appendChild(telGrid); card.appendChild(telRow);
+
           // Remover
-          const rmBtn=document.createElement('button');
-          rmBtn.textContent='Remover focal';
-          rmBtn.style.cssText='width:100%;height:36px;background:#fff;border:1px solid #EEEEEE;border-radius:6px;color:#E30613;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer';
+          const rmBtn=document.createElement('button'); rmBtn.className='focal-rm-btn'; rmBtn.textContent='Remover focal';
           (function(pid,idx2){rmBtn.onclick=function(){const p2=linhas.find(x=>x.id===pid);if(p2){p2.focalContacts.splice(idx2,1);renderFocaisMob();}};})(proj.id,fi);
           card.appendChild(rmBtn);
           focalList.appendChild(card);
         });
         const addBtn=document.createElement('button');
-        addBtn.textContent='+ Adicionar focal';
-        addBtn.style.cssText='width:100%;height:44px;background:#fff;border:1.5px dashed #CCCCCC;border-radius:8px;color:#E30613;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px';
+        addBtn.className='add-prod-btn';
+        addBtn.innerHTML='<i class="ti ti-plus"></i> Adicionar focal';
         (function(pid){addBtn.onclick=function(){const p2=linhas.find(x=>x.id===pid);if(p2){if(!p2.focalContacts)p2.focalContacts=[];p2.focalContacts.push({nome:'',sobrenome:'',cargo:'',area:'',email:'',ddi:'',celular:''});renderFocaisMob();}};})(proj.id);
         focalList.appendChild(addBtn);
       }
@@ -998,11 +1040,14 @@ function renderProjetos(){
       // País
       const paisF=document.createElement('div'); paisF.className='field';
       paisF.innerHTML='<label>País <span class="req">*</span></label>';
+      const paisWrap=document.createElement('div'); paisWrap.className='sel-wrap';
       const paisSel=document.createElement('select');
       paisSel.innerHTML=buildPaisOptions(proj.pais||'');
       setPaisValue(paisSel, proj.pais);
       (function(pid){paisSel.onchange=()=>uProj(pid,'pais',paisSel.value);})(proj.id);
-      paisF.appendChild(paisSel); body.appendChild(paisF);
+      const paisChev=document.createElement('i'); paisChev.className='ti ti-chevron-down chev';
+      paisWrap.appendChild(paisSel); paisWrap.appendChild(paisChev);
+      paisF.appendChild(paisWrap); body.appendChild(paisF);
 
       // Cliente
       body.appendChild(mField('Cliente','text',proj.cliente,'Nome do cliente',v=>uProj(proj.id,'cliente',v)));
@@ -1029,8 +1074,9 @@ function renderProjetos(){
         const card=document.createElement('div');
         card.className='prod-line-card';
         // Col Produto
-        const colP=document.createElement('div'); colP.className='prod-line-col';
+        const colP=document.createElement('div'); colP.className='prod-line-col col-prod';
         const lblP=document.createElement('div'); lblP.className='prod-line-lbl'; lblP.textContent='Produto';
+        const pWrap=document.createElement('div'); pWrap.className='prod-sel-wrap';
         const pSel=document.createElement('select');
         PRODUTOS.forEach(p=>{
           const o=document.createElement('option'); o.value=p; o.textContent=p;
@@ -1038,12 +1084,14 @@ function renderProjetos(){
         });
         (function(pid,idx){pSel.onchange=function(){
           const p=linhas.find(x=>x.id===pid);
-          if(p){ const f=p.prods[idx].split(':')[1]||'1–50'; p.prods[idx]=this.value+':'+f; }
+          if(p){ const f=p.prods[idx].split(':')[1]||'1'; p.prods[idx]=this.value+':'+f; }
         };})(proj.id,i);
-        colP.appendChild(lblP); colP.appendChild(pSel);
-        // Col Faixa
-        const colF=document.createElement('div'); colF.className='prod-line-col';
-        const lblF=document.createElement('div'); lblF.className='prod-line-lbl'; lblF.textContent='Quantidade';
+        const pChev=document.createElement('i'); pChev.className='ti ti-chevron-down chev';
+        pWrap.appendChild(pSel); pWrap.appendChild(pChev);
+        colP.appendChild(lblP); colP.appendChild(pWrap);
+        // Col Quantidade
+        const colF=document.createElement('div'); colF.className='prod-line-col col-qtd';
+        const lblF=document.createElement('div'); lblF.className='prod-line-lbl'; lblF.textContent='Qtd.';
         const fSel=document.createElement('input');
         fSel.type='number'; fSel.min='1'; fSel.placeholder='Qtd.';
         fSel.value=faixa||''; fSel.required=true;
@@ -1062,22 +1110,22 @@ function renderProjetos(){
       });
       // Add produto
       const addPLine=document.createElement('div');
-      addPLine.className='prod-line';
+      addPLine.className='prod-line-card';
       const newPSel=document.createElement('select');
       newPSel.innerHTML='<option value="">— produto —</option>'+PRODUTOS.map(p=>`<option>${p}</option>`).join('');
       const newFSel=document.createElement('input');
       newFSel.type='number'; newFSel.min='1'; newFSel.placeholder='Qtd.';
-      newFSel.className='faixa-sel';
-      // Linha nova seleção como card
-      addPLine.className='prod-line-card';
-      const colNewP=document.createElement('div'); colNewP.className='prod-line-col';
+      // Card de nova linha
+      const colNewP=document.createElement('div'); colNewP.className='prod-line-col col-prod';
       const lblNewP=document.createElement('div'); lblNewP.className='prod-line-lbl'; lblNewP.textContent='Produto';
-      colNewP.appendChild(lblNewP); colNewP.appendChild(newPSel);
-      const colNewF=document.createElement('div'); colNewF.className='prod-line-col';
-      const lblNewF=document.createElement('div'); lblNewF.className='prod-line-lbl'; lblNewF.textContent='Quantidade';
+      const newPWrap=document.createElement('div'); newPWrap.className='prod-sel-wrap';
+      const newPChev=document.createElement('i'); newPChev.className='ti ti-chevron-down chev';
+      newPWrap.appendChild(newPSel); newPWrap.appendChild(newPChev);
+      colNewP.appendChild(lblNewP); colNewP.appendChild(newPWrap);
+      const colNewF=document.createElement('div'); colNewF.className='prod-line-col col-qtd';
+      const lblNewF=document.createElement('div'); lblNewF.className='prod-line-lbl'; lblNewF.textContent='Qtd.';
       colNewF.appendChild(lblNewF); colNewF.appendChild(newFSel);
-      // Placeholder na lixeira (espaço vazio)
-      const rmPlaceholder=document.createElement('div'); rmPlaceholder.style.width='36px';
+      const rmPlaceholder=document.createElement('div'); rmPlaceholder.style.width='40px';
       addPLine.appendChild(colNewP); addPLine.appendChild(colNewF); addPLine.appendChild(rmPlaceholder);
       prodLines.appendChild(addPLine);
       const addPBtn=document.createElement('button');
@@ -1134,6 +1182,7 @@ function mField(label,type,val,ph,onChange){
 function mSelect(label,opts,ph,val,onChange){
   const div=document.createElement('div'); div.className='field';
   div.innerHTML=`<label>${label}</label>`;
+  const wrap=document.createElement('div'); wrap.className='sel-wrap';
   const sel=document.createElement('select');
   const ph_opt=document.createElement('option');
   ph_opt.value=''; ph_opt.textContent=ph;
@@ -1144,7 +1193,9 @@ function mSelect(label,opts,ph,val,onChange){
     if(o===val) opt.selected=true; sel.appendChild(opt);
   });
   sel.onchange=()=>onChange(sel.value);
-  div.appendChild(sel); return div;
+  const chev=document.createElement('i'); chev.className='ti ti-chevron-down chev';
+  wrap.appendChild(sel); wrap.appendChild(chev);
+  div.appendChild(wrap); return div;
 }
 
 // ── UTILS ────────────────────────────────────────────────────
