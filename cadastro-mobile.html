@@ -85,51 +85,87 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);fon
 
 /* status pills removed — using select */
 
-/* PRODUTO LINHA */
-.prod-lines{margin-bottom:8px;display:flex;flex-direction:column;gap:8px}
-/* Card de produto: produto (flex:1) + quantidade (100px fixo) + lixeira (40px) */
-.prod-line-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;flex-direction:row;gap:8px;align-items:flex-end}
-.prod-line-col{display:flex;flex-direction:column;gap:4px}
-.prod-line-col.col-prod{flex:1;min-width:0}      /* flex:1 garante que produto ocupa o espaço restante */
-.prod-line-col.col-qtd{width:84px;flex-shrink:0} /* quantidade: largura fixa */
-.prod-line-lbl{font-size:11px;font-weight:600;color:#888;letter-spacing:.03em;white-space:nowrap}
-.prod-line-col select,.prod-line-col input{
-  height:44px;font-size:14px;border:1px solid var(--border);border-radius:6px;
-  padding:0 10px;background:var(--white);width:100%;
-  appearance:none;-webkit-appearance:none;font-family:inherit;color:var(--dark);
+/* ── PRODUTOS ──────────────────────────────────────────────── */
+/* Botão "Adicionar produto" — topo da seção, destaque */
+.add-prod-btn{
+  width:100%;height:50px;background:var(--red);color:#fff;
+  border:none;border-radius:8px;font-size:14px;font-weight:700;
+  font-family:inherit;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px;margin-bottom:12px;
 }
-.prod-line-col select{padding-right:28px} /* espaço para o chevron via wrapper */
-.prod-line-col select:focus,.prod-line-col input:focus{border-color:var(--red);outline:none}
-/* Wrapper para o select do produto com seta */
-.prod-sel-wrap{position:relative}
-.prod-sel-wrap select{padding-right:28px}
-.prod-sel-wrap .chev{position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;color:#888;font-size:13px}
-.prod-line-rm{width:40px;height:44px;border-radius:6px;border:1px solid var(--border);background:var(--white);color:#CCC;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex-shrink:0;align-self:flex-end}
-.prod-line-rm:active{color:var(--red);border-color:var(--red);background:#FDECEE}
-.add-prod-btn{width:100%;height:48px;background:var(--white);border:1.5px dashed #CCCCCC;border-radius:8px;color:var(--red);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}
-.add-prod-btn:active{background:#FDECEE;border-color:var(--red)}
+.add-prod-btn:active{background:#B30410}
 
-/* FOCAL POINT */
-.focal-card{background:#FAFAFA;border:1px solid #EEEEEE;border-radius:8px;padding:12px;margin-bottom:8px}
-.focal-field{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
-.focal-field:last-child{margin-bottom:0}
-.focal-field label{font-size:11px;font-weight:600;color:#888;letter-spacing:.03em}
-.focal-field input{
+/* Lista de cards de produto */
+.prod-lines{display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
+
+/* Card individual — empilhado verticalmente */
+.prod-card{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;
+}
+.prod-card-hdr{
+  background:var(--dark);padding:8px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.prod-card-num{font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase}
+.prod-card-rm{
+  width:28px;height:28px;border-radius:6px;border:1px solid rgba(227,6,19,.4);
+  background:transparent;color:rgba(227,6,19,.8);display:flex;
+  align-items:center;justify-content:center;cursor:pointer;font-size:13px;
+}
+.prod-card-rm:active{background:rgba(227,6,19,.15)}
+.prod-card-body{padding:12px;display:flex;flex-direction:column;gap:10px}
+
+/* Campo genérico dentro do card de produto */
+.prod-field{display:flex;flex-direction:column;gap:4px}
+.prod-lbl{font-size:11px;font-weight:600;color:#888;letter-spacing:.04em;text-transform:uppercase}
+
+/* Select do produto — largura total */
+.prod-sel-wrap{position:relative}
+.prod-sel-wrap select{
+  width:100%;height:48px;border:1px solid var(--border);border-radius:8px;
+  padding:0 36px 0 12px;font-size:14px;font-family:inherit;
+  background:var(--white);color:var(--dark);outline:none;
+  appearance:none;-webkit-appearance:none;
+}
+.prod-sel-wrap select:focus{border-color:var(--red)}
+.prod-sel-wrap .chev{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:#888;font-size:15px}
+
+/* Linha moeda + valor un + total: 3 colunas */
+.prod-val-row{display:grid;grid-template-columns:80px 1fr 1fr;gap:8px;align-items:end}
+.prod-val-row .prod-sel-wrap select{height:44px;font-size:13px}
+.prod-val-row input{
   height:44px;border:1px solid var(--border);border-radius:8px;
-  padding:0 12px;font-size:14px;font-family:inherit;
+  padding:0 10px;font-size:14px;font-family:inherit;
+  background:var(--white);color:var(--dark);outline:none;width:100%;
+  appearance:none;-webkit-appearance:none;
+}
+.prod-val-row input:focus{border-color:var(--red)}
+.prod-total-display{
+  height:44px;border:1px solid var(--border);border-radius:8px;
+  padding:0 10px;font-size:14px;font-weight:600;font-family:inherit;
+  background:#F9F9F9;color:var(--mid);display:flex;align-items:center;
+  white-space:nowrap;overflow:hidden;
+}
+
+/* ── FOCAL POINT ───────────────────────────────────────────── */
+.focal-card{background:#FAFAFA;border:1px solid #EEEEEE;border-radius:8px;padding:12px;margin-bottom:8px}
+/* Todos os campos do focal: empilhados, 1 por linha */
+.focal-field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.focal-field:last-child{margin-bottom:0}
+.focal-field label{font-size:11px;font-weight:600;color:#888;letter-spacing:.03em;text-transform:uppercase}
+.focal-field input{
+  height:48px;border:1px solid var(--border);border-radius:8px;
+  padding:0 14px;font-size:15px;font-family:inherit;
   background:var(--white);color:var(--dark);outline:none;
   -webkit-appearance:none;width:100%;box-sizing:border-box;
 }
 .focal-field input:focus{border-color:var(--red)}
-/* 2 colunas para nome/sobrenome e cargo/área */
-.focal-row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media(max-width:359px){.focal-row-2{grid-template-columns:1fr}}
-/* DDI + Celular */
-.focal-tel-row{display:grid;grid-template-columns:90px 1fr;gap:8px}
-.focal-rm-btn{width:100%;height:36px;background:#fff;border:1px solid #EEEEEE;border-radius:6px;color:var(--red);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px}
+/* DDI + Celular lado a lado (único caso que justifica 2 colunas) */
+.focal-tel-row{display:grid;grid-template-columns:100px 1fr;gap:8px}
+.focal-rm-btn{width:100%;height:38px;background:#fff;border:1px solid #EEEEEE;border-radius:6px;color:var(--red);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:6px}
 .focal-rm-btn:active{background:#FDECEE;border-color:var(--red)}
 .divider{height:1px;background:var(--bg);margin:14px 0}
-.field-label-sm{font-size:12px;font-weight:600;color:var(--mid);margin-bottom:8px}
 
 /* DICA */
 .dica{background:#F0F7FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 12px;font-size:12px;color:#1E40AF;margin-top:12px;display:flex;gap:8px}
@@ -687,6 +723,49 @@ const DDI_MAP = {
   "TV":"+688",
 };
 
+// ── TABELA DE PREÇOS (Junho/2026) ────────────────────────────
+const TABELA_PRECOS_VERSAO = 'Junho/2026';
+const PRECO_FAIXAS = {
+  'Unilock Pad I - BLE':              [263,255,250,245,244.59],
+  'Unilock Pad I - Kit HSL Standard': [345,335,328,321,320.85],
+  'Unilock Pad I - Kit HSL Container':[454,440,431,422,422.38],
+  'Unilock Pad C - BLE':              [290,281,275,269,269.7],
+  'Unilock One - BLE':                [100,97,95,93,93],
+  'Unilock One - WiFi/BLE':           [154,149,146,143,143.22],
+  'Unilock One - NBIoT/BLE':          [154,149,146,143,143.22],
+  'Unilock One - WiFi/ETH/BLE':       [172,167,164,160,159.76],
+  'Unilock Cover - NBIoT/BLE':        [227,220,215,211,211.11],
+  'Unilock Chain - WiFi/ETH/BLE':     [509,493,483,473,473.37],
+  'HaspLock Standard':                [82,79,77,76,76.26],
+  'HaspLock Container':               [191,185,181,177,177.63],
+  'Fastening Bracket - CBS (Aéreo)':  [2,1.94,1.9,1.86,1.86],
+  'Fastening Bracket - TMP (Manhole)':[38,37,36,35,35.34],
+  'Battery 4.000mAh PRO':             [26,25,24,23,24.18],
+  'RedSquare PRO':                    [81,79,77,76,75.33],
+  'RedSquare SLM (Slim)':             [70,68,67,65,65.1],
+  'SGR - Licença Mensal':             [1,1,1,1,1],
+  'SGR - Licença Anual':              [10,10,10,10,10],
+  'Analytics - Mensal':               [0.5,0.5,0.5,0.5,0.5],
+  'Analytics - Anual':                [5,5,5,5,5],
+  'NB-IoT/CAT M1 - Mensal':          [2,2,2,2,2],
+  'NB-IoT/CAT M1 - Anual':           [24,24,24,24,24],
+};
+const CAMBIO = { BRL: 5.70, EUR: 0.92 };
+
+function calcPrecoUn(produto, qtd, moeda) {
+  const faixas = PRECO_FAIXAS[produto]; if (!faixas) return null;
+  const fi = qtd>=500?4 : qtd>=300?3 : qtd>=100?2 : qtd>=10?1 : 0;
+  let usd = faixas[fi];
+  if (moeda === 'BRL') return parseFloat((usd * CAMBIO.BRL).toFixed(2));
+  if (moeda === 'EUR') return parseFloat((usd * CAMBIO.EUR).toFixed(2));
+  return usd;
+}
+function fmtMoeda(num, moeda) {
+  if (num === null || isNaN(num)) return '—';
+  const s = parseFloat(num).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  return moeda==='BRL' ? 'R$ '+s : moeda==='EUR' ? '€ '+s : '$ '+s;
+}
+
 const VERTICAIS = ['Logística','Energia','Telecom','Mineração','Oil & Gas','Automação Industrial','Varejo','Segurança','Outro'];
 const APLICACOES = ['Storage','Logística Last-Mile','Frotas / Caminhões','E-commerce','Portaria','Canteiro de Obras','Datacenter','Varejo','Manutenção','Outro'];
 const AREAS_CLIENTE = ['TI / Tecnologia','Segurança','Engenharia','Logística','Facilities','Operações','Compras / Procurement','Projetos','Manutenção','P&D','Jurídico','Financeiro','Diretoria','Outro'];
@@ -831,9 +910,13 @@ async function carregarPerfil(token){
           cliente:a.cliente||'', vertical:a.vertical||a.area||'',
           areaCli:a.area_cliente||a.areaCli||'',
           aplicacao:a.aplicacao||(a.projetos&&a.projetos[0])||'',
+          moeda:a.moeda||'USD',
           prods: Array.isArray(a.produtos)
-            ? a.produtos
-            : (a.produtos ? String(a.produtos).split(',').map(x=>x.trim()).filter(Boolean) : []),
+            ? a.produtos.map(function(x){
+                if(typeof x === 'object') return (x.nome||'')+':'+(x.qtd||'1');
+                return String(x).split(':').slice(0,2).join(':') || String(x)+':1';
+              })
+            : (a.produtos ? String(a.produtos).split(',').map(function(x){return x.trim()+':1';}).filter(Boolean) : []),
           obs:a.obs||'', status:a.status||'',
           collapsed:false
         };
@@ -846,7 +929,7 @@ async function carregarPerfil(token){
 
 // ── PROJETOS ─────────────────────────────────────────────────
 function addProjeto(){
-  linhas.push({id:'p'+(rowId++),titulo:'',pais:'',cliente:'',vertical:'',areaCli:'',aplicacao:'',prods:[],obs:'',status:'',collapsed:false});
+  linhas.push({id:'p'+(rowId++),titulo:'',pais:'',cliente:'',vertical:'',areaCli:'',aplicacao:'',moeda:'USD',prods:[],obs:'',status:'',collapsed:false});
   renderProjetos();
   setTimeout(()=>{
     const cards=document.querySelectorAll('.proj-card');
@@ -974,50 +1057,40 @@ function renderProjetos(){
         const pp=linhas.find(x=>x.id===proj.id);
         if(!pp) return;
         if(!pp.focalContacts) pp.focalContacts=[];
+
         pp.focalContacts.forEach(function(fc,fi){
           const card=document.createElement('div');
           card.className='focal-card';
 
-          // Linha 1: Nome | Sobrenome
-          const row1=document.createElement('div'); row1.className='focal-row-2';
-          [{ph:'Nome',k:'nome'},{ph:'Sobrenome',k:'sobrenome'}].forEach(function(def){
+          // Campos em coluna única: Nome, Sobrenome, Cargo, Área, E-mail
+          [{lbl:'Nome',k:'nome',type:'text'},{lbl:'Sobrenome',k:'sobrenome',type:'text'},
+           {lbl:'Cargo',k:'cargo',type:'text'},{lbl:'Área',k:'area',type:'text'},
+           {lbl:'E-mail',k:'email',type:'email'}
+          ].forEach(function(def){
             const wrap=document.createElement('div'); wrap.className='focal-field';
-            const lbl=document.createElement('label'); lbl.textContent=def.ph; wrap.appendChild(lbl);
-            const inp=document.createElement('input'); inp.type='text'; inp.placeholder=def.ph; inp.value=fc[def.k]||'';
-            inp.style.textTransform='uppercase';
-            (function(pid,idx2,k){inp.oninput=function(){this.value=this.value.toUpperCase();const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2][k]=this.value;};})(proj.id,fi,def.k);
-            wrap.appendChild(inp); row1.appendChild(wrap);
+            const lbl=document.createElement('label'); lbl.textContent=def.lbl; wrap.appendChild(lbl);
+            const inp=document.createElement('input');
+            inp.type=def.type; inp.placeholder=def.lbl; inp.value=fc[def.k]||'';
+            if(def.type==='text') inp.style.textTransform='uppercase';
+            (function(pid,idx2,k,isText){
+              inp.oninput=function(){
+                if(isText) this.value=this.value.toUpperCase();
+                const p2=linhas.find(x=>x.id===pid);
+                if(p2&&p2.focalContacts[idx2]) p2.focalContacts[idx2][k]=this.value;
+              };
+            })(proj.id,fi,def.k,def.type==='text');
+            wrap.appendChild(inp); card.appendChild(wrap);
           });
-          card.appendChild(row1);
 
-          // Linha 2: Cargo | Área
-          const row2=document.createElement('div'); row2.className='focal-row-2';
-          [{ph:'Cargo',k:'cargo'},{ph:'Área',k:'area'}].forEach(function(def){
-            const wrap=document.createElement('div'); wrap.className='focal-field';
-            const lbl=document.createElement('label'); lbl.textContent=def.ph; wrap.appendChild(lbl);
-            const inp=document.createElement('input'); inp.type='text'; inp.placeholder=def.ph; inp.value=fc[def.k]||'';
-            inp.style.textTransform='uppercase';
-            (function(pid,idx2,k){inp.oninput=function(){this.value=this.value.toUpperCase();const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2][k]=this.value;};})(proj.id,fi,def.k);
-            wrap.appendChild(inp); row2.appendChild(wrap);
-          });
-          card.appendChild(row2);
-
-          // E-mail — largura total
-          const rowEmail=document.createElement('div'); rowEmail.className='focal-field';
-          const lblEmail=document.createElement('label'); lblEmail.textContent='E-mail'; rowEmail.appendChild(lblEmail);
-          const emailInp=document.createElement('input'); emailInp.type='email'; emailInp.placeholder='email@empresa.com'; emailInp.value=fc.email||'';
-          (function(pid,idx2){emailInp.oninput=function(){const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2].email=this.value;};})(proj.id,fi);
-          rowEmail.appendChild(emailInp); card.appendChild(rowEmail);
-
-          // DDI + Celular
-          const telRow=document.createElement('div'); telRow.className='focal-field';
-          const lblTel=document.createElement('label'); lblTel.textContent='Celular'; telRow.appendChild(lblTel);
+          // Celular: DDI + número (único caso de 2 colunas)
+          const telWrap=document.createElement('div'); telWrap.className='focal-field';
+          const telLbl=document.createElement('label'); telLbl.textContent='Celular'; telWrap.appendChild(telLbl);
           const telGrid=document.createElement('div'); telGrid.className='focal-tel-row';
-          const ddiInp=document.createElement('input'); ddiInp.placeholder='+DDI'; ddiInp.type='tel'; ddiInp.value=fc.ddi||'';
+          const ddiInp=document.createElement('input'); ddiInp.type='tel'; ddiInp.placeholder='+DDI'; ddiInp.value=fc.ddi||'';
           (function(pid,idx2){ddiInp.oninput=function(){const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2].ddi=this.value;};})(proj.id,fi);
-          const celInp=document.createElement('input'); celInp.placeholder='99 99999-9999'; celInp.type='tel'; celInp.value=fc.celular||'';
+          const celInp=document.createElement('input'); celInp.type='tel'; celInp.placeholder='99 99999-9999'; celInp.value=fc.celular||'';
           (function(pid,idx2){celInp.oninput=function(){const p2=linhas.find(x=>x.id===pid);if(p2&&p2.focalContacts[idx2])p2.focalContacts[idx2].celular=this.value;};})(proj.id,fi);
-          telGrid.appendChild(ddiInp); telGrid.appendChild(celInp); telRow.appendChild(telGrid); card.appendChild(telRow);
+          telGrid.appendChild(ddiInp); telGrid.appendChild(celInp); telWrap.appendChild(telGrid); card.appendChild(telWrap);
 
           // Remover
           const rmBtn=document.createElement('button'); rmBtn.className='focal-rm-btn'; rmBtn.textContent='Remover focal';
@@ -1025,10 +1098,15 @@ function renderProjetos(){
           card.appendChild(rmBtn);
           focalList.appendChild(card);
         });
+
         const addBtn=document.createElement('button');
         addBtn.className='add-prod-btn';
+        addBtn.style.marginBottom='0';
         addBtn.innerHTML='<i class="ti ti-plus"></i> Adicionar focal';
-        (function(pid){addBtn.onclick=function(){const p2=linhas.find(x=>x.id===pid);if(p2){if(!p2.focalContacts)p2.focalContacts=[];p2.focalContacts.push({nome:'',sobrenome:'',cargo:'',area:'',email:'',ddi:'',celular:''});renderFocaisMob();}};})(proj.id);
+        (function(pid){addBtn.onclick=function(){
+          const p2=linhas.find(x=>x.id===pid);
+          if(p2){if(!p2.focalContacts)p2.focalContacts=[];p2.focalContacts.push({nome:'',sobrenome:'',cargo:'',area:'',email:'',ddi:'',celular:''});renderFocaisMob();}
+        };})(proj.id);
         focalList.appendChild(addBtn);
       }
       renderFocaisMob();
@@ -1061,83 +1139,162 @@ function renderProjetos(){
       // Aplicação
       body.appendChild(mSelect('Aplicação',APLICACOES,'— aplicação —',proj.aplicacao,v=>uProj(proj.id,'aplicacao',v)));
 
+      // Moeda do Projeto
+      body.appendChild(mSelect('Moeda do Projeto',['USD','BRL','EUR'],'— moeda —',proj.moeda||'USD',function(v){
+        uProj(proj.id,'moeda',v);
+        renderProdLines(); calcSoma();
+      }));
+
       body.appendChild(document.createElement('div')).className='divider';
 
-      // Produtos
+      // ── PRODUTOS ─────────────────────────────────────────────
       const prodWrap=document.createElement('div');
-      prodWrap.innerHTML='<div class="field-label-sm">Produtos e projeção</div>';
+
+      const prodSecLbl=document.createElement('div');
+      prodSecLbl.className='prod-lbl';
+      prodSecLbl.style.cssText='font-size:12px;margin-bottom:10px';
+      prodSecLbl.textContent='Produtos e Projeção';
+      prodWrap.appendChild(prodSecLbl);
+
       const prodLines=document.createElement('div');
       prodLines.className='prod-lines';
-      proj.prods.forEach((prod,i)=>{
-        const pts=prod.split(':');
-        const nome=pts[0]; const faixa=pts[1]||'';
-        const card=document.createElement('div');
-        card.className='prod-line-card';
-        // Col Produto
-        const colP=document.createElement('div'); colP.className='prod-line-col col-prod';
-        const lblP=document.createElement('div'); lblP.className='prod-line-lbl'; lblP.textContent='Produto';
-        const pWrap=document.createElement('div'); pWrap.className='prod-sel-wrap';
-        const pSel=document.createElement('select');
-        PRODUTOS.forEach(p=>{
-          const o=document.createElement('option'); o.value=p; o.textContent=p;
-          if(p===nome) o.selected=true; pSel.appendChild(o);
+
+      // Somatório — exibido abaixo dos cards
+      const somaBox=document.createElement('div');
+      somaBox.style.cssText='background:var(--dark);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:8px';
+      const somaLbl=document.createElement('span');
+      somaLbl.style.cssText='font-size:12px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.06em;text-transform:uppercase';
+      somaLbl.textContent='Total do Projeto';
+      const somaVal=document.createElement('span');
+      somaVal.id='soma-'+proj.id;
+      somaVal.style.cssText='font-size:16px;font-weight:700;color:#fff';
+      somaVal.textContent='—';
+      somaBox.appendChild(somaLbl); somaBox.appendChild(somaVal);
+
+      function calcSoma(){
+        const pp=linhas.find(x=>x.id===proj.id); if(!pp) return;
+        const moedaProjeto=pp.moeda||'USD';
+        let totalUSD=0; let temValor=false;
+        pp.prods.forEach(function(pr){
+          const pts=pr.split(':');
+          const nome=pts[0]; const qtd=parseInt(pts[1])||0;
+          const unUSD=calcPrecoUn(nome,qtd,'USD');
+          if(unUSD!==null&&qtd){ totalUSD+=unUSD*qtd; temValor=true; }
         });
-        (function(pid,idx){pSel.onchange=function(){
-          const p=linhas.find(x=>x.id===pid);
-          if(p){ const f=p.prods[idx].split(':')[1]||'1'; p.prods[idx]=this.value+':'+f; }
-        };})(proj.id,i);
-        const pChev=document.createElement('i'); pChev.className='ti ti-chevron-down chev';
-        pWrap.appendChild(pSel); pWrap.appendChild(pChev);
-        colP.appendChild(lblP); colP.appendChild(pWrap);
-        // Col Quantidade
-        const colF=document.createElement('div'); colF.className='prod-line-col col-qtd';
-        const lblF=document.createElement('div'); lblF.className='prod-line-lbl'; lblF.textContent='Qtd.';
-        const fSel=document.createElement('input');
-        fSel.type='number'; fSel.min='1'; fSel.placeholder='Qtd.';
-        fSel.value=faixa||''; fSel.required=true;
-        (function(pid,idx){fSel.oninput=function(){
-          const p=linhas.find(x=>x.id===pid);
-          if(p){ const n=p.prods[idx].split(':')[0]; p.prods[idx]=n+':'+this.value; }
-        };})(proj.id,i);
-        colF.appendChild(lblF); colF.appendChild(fSel);
-        // Lixeira
-        const rm=document.createElement('button');
-        rm.className='prod-line-rm';
-        rm.innerHTML='<i class="ti ti-trash"></i>';
-        (function(pid,idx){rm.onclick=()=>rmProd(pid,idx);})(proj.id,i);
-        card.appendChild(colP); card.appendChild(colF); card.appendChild(rm);
-        prodLines.appendChild(card);
-      });
-      // Add produto
-      const addPLine=document.createElement('div');
-      addPLine.className='prod-line-card';
-      const newPSel=document.createElement('select');
-      newPSel.innerHTML='<option value="">— produto —</option>'+PRODUTOS.map(p=>`<option>${p}</option>`).join('');
-      const newFSel=document.createElement('input');
-      newFSel.type='number'; newFSel.min='1'; newFSel.placeholder='Qtd.';
-      // Card de nova linha
-      const colNewP=document.createElement('div'); colNewP.className='prod-line-col col-prod';
-      const lblNewP=document.createElement('div'); lblNewP.className='prod-line-lbl'; lblNewP.textContent='Produto';
-      const newPWrap=document.createElement('div'); newPWrap.className='prod-sel-wrap';
-      const newPChev=document.createElement('i'); newPChev.className='ti ti-chevron-down chev';
-      newPWrap.appendChild(newPSel); newPWrap.appendChild(newPChev);
-      colNewP.appendChild(lblNewP); colNewP.appendChild(newPWrap);
-      const colNewF=document.createElement('div'); colNewF.className='prod-line-col col-qtd';
-      const lblNewF=document.createElement('div'); lblNewF.className='prod-line-lbl'; lblNewF.textContent='Qtd.';
-      colNewF.appendChild(lblNewF); colNewF.appendChild(newFSel);
-      const rmPlaceholder=document.createElement('div'); rmPlaceholder.style.width='40px';
-      addPLine.appendChild(colNewP); addPLine.appendChild(colNewF); addPLine.appendChild(rmPlaceholder);
-      prodLines.appendChild(addPLine);
-      const addPBtn=document.createElement('button');
-      addPBtn.className='add-prod-btn';
-      addPBtn.innerHTML='<i class="ti ti-plus"></i> Adicionar produto';
-      (function(pid){addPBtn.onclick=()=>{
-        if(!newPSel.value) return;
-        addTagProd(pid,newPSel.value+':'+newFSel.value);
-        newPSel.value='';
-      };})(proj.id);
-      prodLines.appendChild(addPBtn);
+        let totalExib=totalUSD;
+        if(moedaProjeto==='BRL') totalExib=parseFloat((totalUSD*CAMBIO.BRL).toFixed(2));
+        if(moedaProjeto==='EUR') totalExib=parseFloat((totalUSD*CAMBIO.EUR).toFixed(2));
+        somaVal.textContent=temValor?fmtMoeda(totalExib,moedaProjeto):'—';
+      }
+
+      function renderProdLines(){
+        prodLines.innerHTML='';
+        const pp=linhas.find(x=>x.id===proj.id); if(!pp) return;
+
+        pp.prods.forEach(function(prod,i){
+          const pts=prod.split(':');
+          const nomeProd=pts[0]||'';
+          const qtd=parseInt(pts[1])||0;
+          const isNovo = !pts[0] || pts[0]==='';  // card recém adicionado
+
+          const pCard=document.createElement('div'); pCard.className='prod-card';
+          const pHdr=document.createElement('div'); pHdr.className='prod-card-hdr';
+          const pNum=document.createElement('span'); pNum.className='prod-card-num'; pNum.textContent='Produto #'+(i+1);
+          const pRm=document.createElement('button'); pRm.className='prod-card-rm'; pRm.innerHTML='<i class="ti ti-trash"></i>';
+          (function(pid,idx){pRm.onclick=function(){rmProd(pid,idx);renderProdLines();calcSoma();};})(proj.id,i);
+          pHdr.appendChild(pNum); pHdr.appendChild(pRm); pCard.appendChild(pHdr);
+
+          const pBody=document.createElement('div'); pBody.className='prod-card-body';
+
+          // Produto (seletor, largura total)
+          const pNomeField=document.createElement('div'); pNomeField.className='prod-field';
+          const pNomeLbl=document.createElement('div'); pNomeLbl.className='prod-lbl'; pNomeLbl.textContent='Produto';
+          const pNomeWrap=document.createElement('div'); pNomeWrap.className='prod-sel-wrap';
+          const pNomeSel=document.createElement('select');
+          // Placeholder sempre presente
+          const phOpt=document.createElement('option');
+          phOpt.value=''; phOpt.textContent='— escolha um produto —';
+          phOpt.disabled=true; phOpt.selected=isNovo;
+          pNomeSel.appendChild(phOpt);
+          PRODUTOS.forEach(function(p){
+            const o=document.createElement('option'); o.value=p; o.textContent=p;
+            if(!isNovo && p===nomeProd) o.selected=true;
+            pNomeSel.appendChild(o);
+          });
+          if(isNovo) pNomeSel.selectedIndex=0; // garante placeholder visível
+          const pNomeChev=document.createElement('i'); pNomeChev.className='ti ti-chevron-down chev';
+          pNomeWrap.appendChild(pNomeSel); pNomeWrap.appendChild(pNomeChev);
+          pNomeField.appendChild(pNomeLbl); pNomeField.appendChild(pNomeWrap); pBody.appendChild(pNomeField);
+
+          // Linha: Valor Un (auto) | Total linha (auto) — moeda do projeto
+          const valRow=document.createElement('div'); valRow.className='prod-val-row';
+          // grid 2 colunas (sem coluna de moeda)
+          valRow.style.gridTemplateColumns='1fr 1fr';
+
+          const unField=document.createElement('div'); unField.className='prod-field';
+          const unLbl=document.createElement('div'); unLbl.className='prod-lbl'; unLbl.textContent='Valor Un.';
+          const unDisplay=document.createElement('div'); unDisplay.className='prod-total-display';
+          unField.appendChild(unLbl); unField.appendChild(unDisplay); valRow.appendChild(unField);
+
+          const totField=document.createElement('div'); totField.className='prod-field';
+          const totLbl=document.createElement('div'); totLbl.className='prod-lbl'; totLbl.textContent='Total Linha';
+          const totDisplay=document.createElement('div'); totDisplay.className='prod-total-display';
+          totField.appendChild(totLbl); totField.appendChild(totDisplay); valRow.appendChild(totField);
+
+          pBody.appendChild(valRow);
+
+          // Quantidade
+          const qtdField=document.createElement('div'); qtdField.className='prod-field';
+          const qtdLbl=document.createElement('div'); qtdLbl.className='prod-lbl'; qtdLbl.textContent='Quantidade';
+          const qtdInp=document.createElement('input');
+          qtdInp.type='number'; qtdInp.min='1'; qtdInp.placeholder='Qtd.';
+          qtdInp.value = qtd > 0 ? qtd : '';  // vazio se qtd não definida
+          qtdInp.autocomplete='off';
+          qtdInp.style.cssText='width:100%;height:48px;border:1px solid var(--border);border-radius:8px;padding:0 14px;font-size:15px;font-family:inherit;background:var(--white);color:var(--dark);outline:none;appearance:none;-webkit-appearance:none';
+          qtdField.appendChild(qtdLbl); qtdField.appendChild(qtdInp); pBody.appendChild(qtdField);
+
+          function recalcLinha(){
+            const p=linhas.find(x=>x.id===proj.id); if(!p) return;
+            const pts2=p.prods[i].split(':');
+            const q=parseInt(pts2[1])||0;
+            const m=p.moeda||'USD';
+            const n=pts2[0];
+            if(!n){ unDisplay.textContent='—'; totDisplay.textContent='—'; calcSoma(); return; }
+            const un=calcPrecoUn(n,q,m);
+            unDisplay.textContent=un!==null?fmtMoeda(un,m):'—';
+            totDisplay.textContent=(un!==null&&q)?fmtMoeda(un*q,m):'—';
+            calcSoma();
+          }
+
+          (function(pid,idx){
+            pNomeSel.onchange=function(){
+              const p=linhas.find(x=>x.id===pid); if(!p||!this.value) return;
+              const pts2=p.prods[idx].split(':'); pts2[0]=this.value; p.prods[idx]=pts2.join(':'); recalcLinha();
+            };
+            qtdInp.oninput=function(){const p=linhas.find(x=>x.id===pid);if(p){const pts2=p.prods[idx].split(':');pts2[1]=this.value;p.prods[idx]=pts2.join(':');recalcLinha();}};
+          })(proj.id,i);
+
+          pCard.appendChild(pBody);
+          prodLines.appendChild(pCard);
+          recalcLinha();
+        });
+
+        // Botão adicionar — abaixo dos cards
+        const addPBtn=document.createElement('button');
+        addPBtn.className='add-prod-btn';
+        addPBtn.style.margin='8px 0 0';
+        addPBtn.innerHTML='<i class="ti ti-plus"></i> Adicionar produto';
+        (function(pid){addPBtn.onclick=function(){
+          const p=linhas.find(x=>x.id===pid); if(!p) return;
+          p.prods.push(':'); renderProdLines(); calcSoma();
+        };})(proj.id);
+        prodLines.appendChild(addPBtn);
+      }
+
+      renderProdLines();
+      calcSoma();
       prodWrap.appendChild(prodLines);
+      prodWrap.appendChild(somaBox);
       body.appendChild(prodWrap);
 
       body.appendChild(document.createElement('div')).className='divider';
@@ -1238,10 +1395,14 @@ function coletarDados(){
     atuacao:linhas.filter(p=>p.cliente&&p.cliente.trim()).map(p=>{
       return {
         titulo:(p.titulo||'').toUpperCase(), pais:p.pais, cliente:p.cliente,
-         area:p.vertical||'',
+        area:p.vertical||'', moeda:p.moeda||'USD',
         area_cliente:p.areaCli||'', aplicacao:p.aplicacao||'',
         focal_contacts: p.focalContacts||[],
-        produtos:p.prods, qtd_estimada:'',
+        produtos:p.prods.map(function(x){
+          const pts=x.split(':');
+          return {nome:pts[0],qtd:pts[1]||'',moeda:p.moeda||'USD'};
+        }),
+        qtd_estimada:'',
         projetos:p.aplicacao?[p.aplicacao]:[],
         status:p.status||'', obs:(p.obs||'').toUpperCase()
       };
