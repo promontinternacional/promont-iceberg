@@ -28,7 +28,6 @@ input.err,select.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10
 .phone-row{display:flex;gap:8px;width:100%}
 .phone-row select{width:130px;min-width:130px;flex-shrink:0}
 .phone-row input{flex:1;min-width:0}
-.phone-row .ss-wrap{width:130px;min-width:130px;flex-shrink:0}
 .at-wrap{overflow-x:auto;margin:0 -1.5rem;padding:0 1.5rem}
 .at-table{min-width:740px}
 .at-head{display:grid;grid-template-columns:130px 130px 95px 170px 125px 70px 90px 56px;gap:8px;padding:0 8px 8px;border-bottom:1px solid #E4E4E4}
@@ -46,6 +45,7 @@ input.err,select.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10
 .obs-count{font-size:10px;color:#9A9A9A;text-align:right;font-family:'DM Mono',monospace;margin-top:2px}
 /* ── SearchableSelect ── */
 .ss-wrap{position:relative;width:100%}
+.phone-row>.ss-wrap{width:130px !important;min-width:130px;max-width:130px;flex-shrink:0}
 .ss-input{background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box;cursor:text}
 .ss-input:focus{border-color:#2C2C2C}
 .ss-input.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10)}
