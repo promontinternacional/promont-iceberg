@@ -43,6 +43,19 @@ input.err,select.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10
 .tag button{background:none;border:none;cursor:pointer;font-size:13px;padding:0;line-height:1;margin-left:1px;opacity:.7}
 .tag-sel{font-size:11px;padding:5px 7px}
 .obs-count{font-size:10px;color:#9A9A9A;text-align:right;font-family:'DM Mono',monospace;margin-top:2px}
+/* ── SearchableSelect ── */
+.ss-wrap{position:relative;width:100%}
+.ss-input{background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box;cursor:text}
+.ss-input:focus{border-color:#2C2C2C}
+.ss-input.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10)}
+.ss-input.ss-sm{font-size:11px;padding:6px 8px}
+.ss-drop{position:absolute;top:calc(100% + 3px);left:0;right:0;background:#fff;border:1px solid #2C2C2C;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:999;max-height:220px;overflow-y:auto;display:none}
+.ss-drop.open{display:block}
+.ss-item{padding:8px 11px;font-size:13px;cursor:pointer;color:#2C2C2C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ss-item:hover,.ss-item.active{background:#F5F5F5}
+.ss-item.ss-sm{padding:5px 8px;font-size:11px}
+.ss-empty{padding:8px 11px;font-size:12px;color:#9A9A9A;font-style:italic}
+.ss-group{padding:4px 11px 2px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9A9A9A;background:#FAFAFA;border-bottom:1px solid #F0F0F0}
 .row-actions{display:flex;flex-direction:column;gap:5px;align-items:center;padding-top:2px}
 .row-btn{width:28px;height:28px;border-radius:4px;border:1px solid #E4E4E4;background:#fff;color:#9A9A9A;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .15s}
 .row-btn:hover{border-color:#2C2C2C;color:#2C2C2C;background:#F0F0F0}
@@ -174,7 +187,7 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield}
 
-.prod-moeda{width:70px;font-size:11px}
+
 .prod-valor{width:100px;font-size:11px;font-weight:600;color:#1A6B3A;
             background:#F0FDF4;border:1px solid #BBF7D0;border-radius:4px;
             padding:4px 6px;text-align:right;pointer-events:none}
@@ -259,39 +272,7 @@ input[type=number].linha-inp {
     <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">Sobrenome <span style="color:#E30613">*</span></label><input id="sobrenome" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="Last name"></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-    <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">País <span style="color:#E30613">*</span></label><select id="pais" onchange="autoDDI(this.value)">
-<option value="">Selecione seu país...</option>
-<optgroup label="América do Norte"><option value="CA">🇨🇦 Canadá</option><option value="US">🇺🇸 Estados Unidos</option><option value="MX">🇲🇽 México</option></optgroup>
-<optgroup label="América Central Continental"><option value="BZ">🇧🇿 Belize</option><option value="CR">🇨🇷 Costa Rica</option><option value="SV">🇸🇻 El Salvador</option><option value="GT">🇬🇹 Guatemala</option><option value="HN">🇭🇳 Honduras</option><option value="NI">🇳🇮 Nicarágua</option><option value="PA">🇵🇦 Panamá</option></optgroup>
-<optgroup label="Caribe — Grandes Antilhas"><option value="CU">🇨🇺 Cuba</option><option value="HT">🇭🇹 Haiti</option><option value="JM">🇯🇲 Jamaica</option><option value="DO">🇩🇴 República Dominicana</option><option value="BS">🇧🇸 Bahamas</option></optgroup>
-<optgroup label="Caribe — Pequenas Antilhas"><option value="AG">🇦🇬 Antígua e Barbuda</option><option value="BB">🇧🇧 Barbados</option><option value="DM">🇩🇲 Dominica</option><option value="GD">🇬🇩 Granada</option><option value="LC">🇱🇨 Santa Lúcia</option><option value="KN">🇰🇳 São Cristóvão e Névis</option><option value="VC">🇻🇨 São Vicente e Granadinas</option><option value="TT">🇹🇹 Trinidad e Tobago</option></optgroup>
-<optgroup label="Caribe — Adm. EUA"><option value="PR">🇵🇷 Porto Rico</option><option value="VI">🇻🇮 Ilhas Virgens Americanas</option></optgroup>
-<optgroup label="Caribe — Adm. Reino Unido"><option value="AI">🇦🇮 Anguila</option><option value="BM">🇧🇲 Bermudas</option><option value="KY">🇰🇾 Ilhas Cayman</option><option value="VG">🇻🇬 Ilhas Virgens Britânicas</option><option value="MS">🇲🇸 Montserrat</option><option value="TC">🇹🇨 Turcas e Caicos</option></optgroup>
-<optgroup label="Caribe — Adm. França"><option value="GP">🇬🇵 Guadalupe</option><option value="MQ">🇲🇶 Martinica</option><option value="BL">🇧🇱 São Bartolomeu</option><option value="MF">🇲🇫 São Martinho (Norte)</option></optgroup>
-<optgroup label="Caribe — Adm. Holanda"><option value="AW">🇦🇼 Aruba</option><option value="CW">🇨🇼 Curaçao</option><option value="SX">🇸🇽 São Martinho (Sul)</option></optgroup>
-<optgroup label="América do Sul"><option value="AR">🇦🇷 Argentina</option><option value="BO">🇧🇴 Bolívia</option><option value="BR">🇧🇷 Brasil</option><option value="CL">🇨🇱 Chile</option><option value="CO">🇨🇴 Colômbia</option><option value="EC">🇪🇨 Equador</option><option value="GY">🇬🇾 Guiana</option><option value="PY">🇵🇾 Paraguai</option><option value="PE">🇵🇪 Peru</option><option value="SR">🇸🇷 Suriname</option><option value="UY">🇺🇾 Uruguai</option><option value="VE">🇻🇪 Venezuela</option></optgroup>
-<optgroup label="Ibéria"><option value="PT">🇵🇹 Portugal</option><option value="ES">🇪🇸 Espanha</option></optgroup>
-<optgroup label="Europa Ocidental"><option value="FR">🇫🇷 França</option><option value="DE">🇩🇪 Alemanha</option><option value="GB">🇬🇧 Reino Unido</option><option value="IT">🇮🇹 Itália</option><option value="NL">🇳🇱 Países Baixos</option><option value="BE">🇧🇪 Bélgica</option><option value="CH">🇨🇭 Suíça</option><option value="AT">🇦🇹 Áustria</option><option value="LU">🇱🇺 Luxemburgo</option></optgroup>
-<optgroup label="Europa do Norte"><option value="SE">🇸🇪 Suécia</option><option value="NO">🇳🇴 Noruega</option><option value="DK">🇩🇰 Dinamarca</option><option value="FI">🇫🇮 Finlândia</option><option value="IE">🇮🇪 Irlanda</option><option value="IS">🇮🇸 Islândia</option></optgroup>
-<optgroup label="Europa do Sul"><option value="GR">🇬🇷 Grécia</option><option value="HR">🇭🇷 Croácia</option><option value="RS">🇷🇸 Sérvia</option><option value="SI">🇸🇮 Eslovênia</option><option value="BA">🇧🇦 Bósnia e Herzegovina</option><option value="ME">🇲🇪 Montenegro</option><option value="MK">🇲🇰 Macedônia do Norte</option><option value="AL">🇦🇱 Albânia</option></optgroup>
-<optgroup label="Europa do Leste"><option value="PL">🇵🇱 Polônia</option><option value="CZ">🇨🇿 República Tcheca</option><option value="HU">🇭🇺 Hungria</option><option value="RO">🇷🇴 Romênia</option><option value="SK">🇸🇰 Eslováquia</option><option value="BG">🇧🇬 Bulgária</option><option value="UA">🇺🇦 Ucrânia</option><option value="MD">🇲🇩 Moldávia</option><option value="BY">🇧🇾 Bielorrússia</option></optgroup>
-<optgroup label="Países Bálticos"><option value="EE">🇪🇪 Estônia</option><option value="LV">🇱🇻 Letônia</option><option value="LT">🇱🇹 Lituânia</option></optgroup>
-<optgroup label="África — Língua Portuguesa"><option value="AO">🇦🇴 Angola</option><option value="MZ">🇲🇿 Moçambique</option><option value="CV">🇨🇻 Cabo Verde</option><option value="ST">🇸🇹 São Tomé e Príncipe</option><option value="GW">🇬🇼 Guiné-Bissau</option><option value="GQ">🇬🇶 Guiné Equatorial</option></optgroup>
-<optgroup label="África do Norte"><option value="MA">🇲🇦 Marrocos</option><option value="DZ">🇩🇿 Argélia</option><option value="TN">🇹🇳 Tunísia</option><option value="LY">🇱🇾 Líbia</option><option value="EG">🇪🇬 Egito</option><option value="SD">🇸🇩 Sudão</option></optgroup>
-<optgroup label="África Ocidental"><option value="NG">🇳🇬 Nigéria</option><option value="GH">🇬🇭 Gana</option><option value="SN">🇸🇳 Senegal</option><option value="CI">🇨🇮 Costa do Marfim</option><option value="CM">🇨🇲 Camarões</option><option value="ML">🇲🇱 Mali</option><option value="BF">🇧🇫 Burkina Faso</option><option value="GN">🇬🇳 Guiné</option><option value="NE">🇳🇪 Níger</option><option value="TG">🇹🇬 Togo</option><option value="BJ">🇧🇯 Benim</option><option value="SL">🇸🇱 Serra Leoa</option><option value="LR">🇱🇷 Libéria</option><option value="MR">🇲🇷 Mauritânia</option><option value="GM">🇬🇲 Gâmbia</option></optgroup>
-<optgroup label="África Central"><option value="CD">🇨🇩 República Democrática do Congo</option><option value="CG">🇨🇬 República do Congo</option><option value="GA">🇬🇦 Gabão</option><option value="CF">🇨🇫 República Centro-Africana</option><option value="TD">🇹🇩 Chade</option></optgroup>
-<optgroup label="África Oriental"><option value="KE">🇰🇪 Quênia</option><option value="TZ">🇹🇿 Tanzânia</option><option value="ET">🇪🇹 Etiópia</option><option value="UG">🇺🇬 Uganda</option><option value="RW">🇷🇼 Ruanda</option><option value="BI">🇧🇮 Burundi</option><option value="SO">🇸🇴 Somália</option><option value="DJ">🇩🇯 Djibuti</option><option value="ER">🇪🇷 Eritreia</option></optgroup>
-<optgroup label="África Austral"><option value="ZA">🇿🇦 África do Sul</option><option value="ZW">🇿🇼 Zimbábue</option><option value="ZM">🇿🇲 Zâmbia</option><option value="BW">🇧🇼 Botsuana</option><option value="NA">🇳🇦 Namíbia</option><option value="MW">🇲🇼 Malaui</option><option value="SZ">🇸🇿 Essuatíni</option><option value="LS">🇱🇸 Lesoto</option><option value="MG">🇲🇬 Madagascar</option></optgroup>
-<optgroup label="Golfo Pérsico"><option value="AE">🇦🇪 Emirados Árabes Unidos</option><option value="SA">🇸🇦 Arábia Saudita</option><option value="QA">🇶🇦 Catar</option><option value="KW">🇰🇼 Kuwait</option><option value="BH">🇧🇭 Bahrein</option><option value="OM">🇴🇲 Omã</option></optgroup>
-<optgroup label="Levante & Outros"><option value="IL">🇮🇱 Israel</option><option value="TR">🇹🇷 Turquia</option><option value="JO">🇯🇴 Jordânia</option><option value="LB">🇱🇧 Líbano</option><option value="IQ">🇮🇶 Iraque</option><option value="IR">🇮🇷 Irã</option><option value="SY">🇸🇾 Síria</option><option value="YE">🇾🇪 Iêmen</option><option value="PS">🇵🇸 Palestina</option></optgroup>
-<optgroup label="Cáucaso"><option value="GE">🇬🇪 Geórgia</option><option value="AM">🇦🇲 Armênia</option><option value="AZ">🇦🇿 Azerbaijão</option></optgroup>
-<optgroup label="Ásia Central"><option value="KZ">🇰🇿 Cazaquistão</option><option value="UZ">🇺🇿 Uzbequistão</option><option value="TM">🇹🇲 Turcomenistão</option><option value="KG">🇰🇬 Quirguistão</option><option value="TJ">🇹🇯 Tadjiquistão</option><option value="AF">🇦🇫 Afeganistão</option></optgroup>
-<optgroup label="Ásia do Sul"><option value="IN">🇮🇳 Índia</option><option value="PK">🇵🇰 Paquistão</option><option value="BD">🇧🇩 Bangladesh</option><option value="LK">🇱🇰 Sri Lanka</option><option value="NP">🇳🇵 Nepal</option><option value="MM">🇲🇲 Myanmar</option></optgroup>
-<optgroup label="Ásia Oriental"><option value="CN">🇨🇳 China</option><option value="JP">🇯🇵 Japão</option><option value="KR">🇰🇷 Coreia do Sul</option><option value="TW">🇹🇼 Taiwan</option><option value="HK">🇭🇰 Hong Kong</option><option value="MN">🇲🇳 Mongólia</option></optgroup>
-<optgroup label="Ásia do Sudeste"><option value="SG">🇸🇬 Singapura</option><option value="MY">🇲🇾 Malásia</option><option value="TH">🇹🇭 Tailândia</option><option value="ID">🇮🇩 Indonésia</option><option value="VN">🇻🇳 Vietnã</option><option value="PH">🇵🇭 Filipinas</option><option value="KH">🇰🇭 Camboja</option><option value="LA">🇱🇦 Laos</option><option value="BN">🇧🇳 Brunei</option><option value="TL">🇹🇱 Timor-Leste</option></optgroup>
-<optgroup label="Oceania"><option value="AU">🇦🇺 Austrália</option><option value="NZ">🇳🇿 Nova Zelândia</option><option value="PG">🇵🇬 Papua Nova Guiné</option><option value="FJ">🇫🇯 Fiji</option><option value="SB">🇸🇧 Ilhas Salomão</option><option value="VU">🇻🇺 Vanuatu</option><option value="WS">🇼🇸 Samoa</option><option value="TO">🇹🇴 Tonga</option><option value="KI">🇰🇮 Kiribati</option><option value="FM">🇫🇲 Micronésia</option><option value="PW">🇵🇼 Palau</option><option value="MH">🇲🇭 Ilhas Marshall</option><option value="NR">🇳🇷 Nauru</option><option value="TV">🇹🇻 Tuvalu</option></optgroup>
-<optgroup label="Outro"><option value="OT">🌐 Outro</option></optgroup>
-</select></div>
+    <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">País <span style="color:#E30613">*</span></label><select id="pais" style="display:none"></select></div>
     <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">Cidade <span style="color:#E30613">*</span></label><input id="cidade" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="City"></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
@@ -301,7 +282,7 @@ input[type=number].linha-inp {
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
     <div style="display:flex;flex-direction:column;gap:5px">
       <label style="font-size:12px;font-weight:500;color:#555">WhatsApp / Celular <span style="color:#E30613">*</span></label>
-      <div style="display:flex;gap:8px"><select id="ddi"><option value="+1">🇨🇦 +1</option><option value="+52">🇲🇽 +52</option><option value="+501">🇧🇿 +501</option><option value="+506">🇨🇷 +506</option><option value="+503">🇸🇻 +503</option><option value="+502">🇬🇹 +502</option><option value="+504">🇭🇳 +504</option><option value="+505">🇳🇮 +505</option><option value="+507">🇵🇦 +507</option><option value="+53">🇨🇺 +53</option><option value="+509">🇭🇹 +509</option><option value="+1-876">🇯🇲 +1-876</option><option value="+1-809">🇩🇴 +1-809</option><option value="+1-242">🇧🇸 +1-242</option><option value="+1-268">🇦🇬 +1-268</option><option value="+1-246">🇧🇧 +1-246</option><option value="+1-767">🇩🇲 +1-767</option><option value="+1-473">🇬🇩 +1-473</option><option value="+1-758">🇱🇨 +1-758</option><option value="+1-869">🇰🇳 +1-869</option><option value="+1-784">🇻🇨 +1-784</option><option value="+1-868">🇹🇹 +1-868</option><option value="+1-787">🇵🇷 +1-787</option><option value="+1-340">🇻🇮 +1-340</option><option value="+1-264">🇦🇮 +1-264</option><option value="+1-441">🇧🇲 +1-441</option><option value="+1-345">🇰🇾 +1-345</option><option value="+1-284">🇻🇬 +1-284</option><option value="+1-664">🇲🇸 +1-664</option><option value="+1-649">🇹🇨 +1-649</option><option value="+590">🇬🇵 +590</option><option value="+596">🇲🇶 +596</option><option value="+297">🇦🇼 +297</option><option value="+599">🇨🇼 +599</option><option value="+1-721">🇸🇽 +1-721</option><option value="+54">🇦🇷 +54</option><option value="+591">🇧🇴 +591</option><option value="+55">🇧🇷 +55</option><option value="+56">🇨🇱 +56</option><option value="+57">🇨🇴 +57</option><option value="+593">🇪🇨 +593</option><option value="+592">🇬🇾 +592</option><option value="+595">🇵🇾 +595</option><option value="+51">🇵🇪 +51</option><option value="+597">🇸🇷 +597</option><option value="+598">🇺🇾 +598</option><option value="+58">🇻🇪 +58</option><option value="+351">🇵🇹 +351</option><option value="+34">🇪🇸 +34</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+44">🇬🇧 +44</option><option value="+39">🇮🇹 +39</option><option value="+31">🇳🇱 +31</option><option value="+32">🇧🇪 +32</option><option value="+41">🇨🇭 +41</option><option value="+43">🇦🇹 +43</option><option value="+352">🇱🇺 +352</option><option value="+46">🇸🇪 +46</option><option value="+47">🇳🇴 +47</option><option value="+45">🇩🇰 +45</option><option value="+358">🇫🇮 +358</option><option value="+353">🇮🇪 +353</option><option value="+354">🇮🇸 +354</option><option value="+30">🇬🇷 +30</option><option value="+385">🇭🇷 +385</option><option value="+381">🇷🇸 +381</option><option value="+386">🇸🇮 +386</option><option value="+387">🇧🇦 +387</option><option value="+382">🇲🇪 +382</option><option value="+389">🇲🇰 +389</option><option value="+355">🇦🇱 +355</option><option value="+48">🇵🇱 +48</option><option value="+420">🇨🇿 +420</option><option value="+36">🇭🇺 +36</option><option value="+40">🇷🇴 +40</option><option value="+421">🇸🇰 +421</option><option value="+359">🇧🇬 +359</option><option value="+380">🇺🇦 +380</option><option value="+373">🇲🇩 +373</option><option value="+375">🇧🇾 +375</option><option value="+372">🇪🇪 +372</option><option value="+371">🇱🇻 +371</option><option value="+370">🇱🇹 +370</option><option value="+244">🇦🇴 +244</option><option value="+258">🇲🇿 +258</option><option value="+238">🇨🇻 +238</option><option value="+239">🇸🇹 +239</option><option value="+245">🇬🇼 +245</option><option value="+240">🇬🇶 +240</option><option value="+212">🇲🇦 +212</option><option value="+213">🇩🇿 +213</option><option value="+216">🇹🇳 +216</option><option value="+218">🇱🇾 +218</option><option value="+20">🇪🇬 +20</option><option value="+249">🇸🇩 +249</option><option value="+234">🇳🇬 +234</option><option value="+233">🇬🇭 +233</option><option value="+221">🇸🇳 +221</option><option value="+225">🇨🇮 +225</option><option value="+237">🇨🇲 +237</option><option value="+223">🇲🇱 +223</option><option value="+226">🇧🇫 +226</option><option value="+224">🇬🇳 +224</option><option value="+227">🇳🇪 +227</option><option value="+228">🇹🇬 +228</option><option value="+229">🇧🇯 +229</option><option value="+232">🇸🇱 +232</option><option value="+231">🇱🇷 +231</option><option value="+222">🇲🇷 +222</option><option value="+220">🇬🇲 +220</option><option value="+243">🇨🇩 +243</option><option value="+242">🇨🇬 +242</option><option value="+241">🇬🇦 +241</option><option value="+236">🇨🇫 +236</option><option value="+235">🇹🇩 +235</option><option value="+254">🇰🇪 +254</option><option value="+255">🇹🇿 +255</option><option value="+251">🇪🇹 +251</option><option value="+256">🇺🇬 +256</option><option value="+250">🇷🇼 +250</option><option value="+257">🇧🇮 +257</option><option value="+252">🇸🇴 +252</option><option value="+253">🇩🇯 +253</option><option value="+291">🇪🇷 +291</option><option value="+27">🇿🇦 +27</option><option value="+263">🇿🇼 +263</option><option value="+260">🇿🇲 +260</option><option value="+267">🇧🇼 +267</option><option value="+264">🇳🇦 +264</option><option value="+265">🇲🇼 +265</option><option value="+268">🇸🇿 +268</option><option value="+266">🇱🇸 +266</option><option value="+261">🇲🇬 +261</option><option value="+971">🇦🇪 +971</option><option value="+966">🇸🇦 +966</option><option value="+974">🇶🇦 +974</option><option value="+965">🇰🇼 +965</option><option value="+973">🇧🇭 +973</option><option value="+968">🇴🇲 +968</option><option value="+972">🇮🇱 +972</option><option value="+90">🇹🇷 +90</option><option value="+962">🇯🇴 +962</option><option value="+961">🇱🇧 +961</option><option value="+964">🇮🇶 +964</option><option value="+98">🇮🇷 +98</option><option value="+963">🇸🇾 +963</option><option value="+967">🇾🇪 +967</option><option value="+970">🇵🇸 +970</option><option value="+995">🇬🇪 +995</option><option value="+374">🇦🇲 +374</option><option value="+994">🇦🇿 +994</option><option value="+7">🇰🇿 +7</option><option value="+998">🇺🇿 +998</option><option value="+993">🇹🇲 +993</option><option value="+996">🇰🇬 +996</option><option value="+992">🇹🇯 +992</option><option value="+93">🇦🇫 +93</option><option value="+91">🇮🇳 +91</option><option value="+92">🇵🇰 +92</option><option value="+880">🇧🇩 +880</option><option value="+94">🇱🇰 +94</option><option value="+977">🇳🇵 +977</option><option value="+95">🇲🇲 +95</option><option value="+86">🇨🇳 +86</option><option value="+81">🇯🇵 +81</option><option value="+82">🇰🇷 +82</option><option value="+886">🇹🇼 +886</option><option value="+852">🇭🇰 +852</option><option value="+976">🇲🇳 +976</option><option value="+65">🇸🇬 +65</option><option value="+60">🇲🇾 +60</option><option value="+66">🇹🇭 +66</option><option value="+62">🇮🇩 +62</option><option value="+84">🇻🇳 +84</option><option value="+63">🇵🇭 +63</option><option value="+855">🇰🇭 +855</option><option value="+856">🇱🇦 +856</option><option value="+673">🇧🇳 +673</option><option value="+670">🇹🇱 +670</option><option value="+61">🇦🇺 +61</option><option value="+64">🇳🇿 +64</option><option value="+675">🇵🇬 +675</option><option value="+679">🇫🇯 +679</option><option value="+677">🇸🇧 +677</option><option value="+678">🇻🇺 +678</option><option value="+685">🇼🇸 +685</option><option value="+676">🇹🇴 +676</option><option value="+686">🇰🇮 +686</option><option value="+691">🇫🇲 +691</option><option value="+680">🇵🇼 +680</option><option value="+692">🇲🇭 +692</option><option value="+674">🇳🇷 +674</option><option value="+688">🇹🇻 +688</option></select><input type="tel" id="whats" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box;flex:1;min-width:0" placeholder="99 99999-9999"></div>
+      <div style="display:flex;gap:8px"><select id="ddi" style="display:none"></select><input type="tel" id="whats" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box;flex:1;min-width:0" placeholder="99 99999-9999"></div>
     </div>
     <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">LinkedIn</label><input type="url" id="linkedin" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="linkedin.com/in/seuperfil"></div>
   </div>
@@ -557,45 +538,76 @@ const DDI_MAP = {
   "TV":"+688",
 };
 const VERTICAIS = ['Logística','Energia','Telecom','Mineração','Oil & Gas','Automação Industrial','Varejo','Segurança','Outro'];
-// ── TABELA DE PREÇOS MVP (fonte: contrato março 2026) ────────
+// ── TABELA DE PREÇOS MVP (fonte: planilha Junho/2026) ────────
+const TABELA_PRECOS_VERSAO = 'Junho/2026';
 const PRECO_BASE = {
-  'Unilock Pad I - BLE':               263,
-  'Unilock Pad I - Kit HSL Standard':  345,
+  'Unilock Pad I - BLE': 263,
+  'Unilock Pad I - Kit HSL Standard': 345,
   'Unilock Pad I - Kit HSL Container': 454,
-  'Unilock Pad C - BLE':               290,
-  'Unilock One - BLE':                 100,
-  'Unilock One - WiFi/BLE':            154,
-  'Unilock One - NBIoT/BLE':           154,
-  'Unilock One - WiFi/ETH/BLE':        172,
-  'Unilock Cover - NBIoT/BLE':         227,
-  'Unilock Chain - WiFi/ETH/BLE':      509,
-  'HaspLock Standard':                  82,
-  'HaspLock Container':                191,
-  'Fastening Bracket - CBS (Aéreo)':     2,
-  'Fastening Bracket - TMP (Manhole)':  38,
-  'Battery 4.000mAh PRO':               26,
-  'RedSquare PRO':                       81,
-  'RedSquare SLM (Slim)':               70,
-  'SGR - Licença Mensal':                1,
-  'SGR - Licença Anual':                10,
-  'Analytics - Mensal':                0.5,
-  'Analytics - Anual':                   5,
-  'NB-IoT/CAT M1 - Mensal':             2,
-  'NB-IoT/CAT M1 - Anual':             24,
+  'Unilock Pad C - BLE': 290,
+  'Unilock One - BLE': 100,
+  'Unilock One - WiFi/BLE': 154,
+  'Unilock One - NBIoT/BLE': 154,
+  'Unilock One - WiFi/ETH/BLE': 172,
+  'Unilock Cover - NBIoT/BLE': 227,
+  'Unilock Chain - WiFi/ETH/BLE': 509,
+  'HaspLock Standard': 82,
+  'HaspLock Container': 191,
+  'Fastening Bracket - CBS (Aéreo)': 2,
+  'Fastening Bracket - TMP (Manhole)': 38,
+  'Battery 4.000mAh PRO': 26,
+  'RedSquare PRO': 81,
+  'RedSquare SLM (Slim)': 70,
+  'SGR - Licença Mensal': 1,
+  'SGR - Licença Anual': 10,
+  'Analytics - Mensal': 0.5,
+  'Analytics - Anual': 5,
+  'NB-IoT/CAT M1 - Mensal': 2,
+  'NB-IoT/CAT M1 - Anual': 24,
 };
-// Faixas: [qtd_min, desconto_decimal]
 const FAIXAS_DESC = [[1,0],[10,0],[100,0.03],[300,0.05],[500,0.07]];
-// Câmbio padrão (ajustável)
 const CAMBIO = { BRL: 5.70, EUR: 0.92 };
+const PRECO_FAIXAS = {
+  'Unilock Pad I - BLE': [263,255,250,245,244.59],
+  'Unilock Pad I - Kit HSL Standard': [345,335,328,321,320.85],
+  'Unilock Pad I - Kit HSL Container': [454,440,431,422,422.38],
+  'Unilock Pad C - BLE': [290,281,275,269,269.7],
+  'Unilock One - BLE': [100,97,95,93,93],
+  'Unilock One - WiFi/BLE': [154,149,146,143,143.22],
+  'Unilock One - NBIoT/BLE': [154,149,146,143,143.22],
+  'Unilock One - WiFi/ETH/BLE': [172,167,164,160,159.76],
+  'Unilock Cover - NBIoT/BLE': [227,220,215,211,211.11],
+  'Unilock Chain - WiFi/ETH/BLE': [509,493,483,473,473.37],
+  'HaspLock Standard': [82,79,77,76,76.26],
+  'HaspLock Container': [191,185,181,177,177.63],
+  'Fastening Bracket - CBS (Aéreo)': [2,1.94,1.9,1.86,1.86],
+  'Fastening Bracket - TMP (Manhole)': [38,37,36,35,35.34],
+  'Battery 4.000mAh PRO': [26,25,24,23,24.18],
+  'RedSquare PRO': [81,79,77,76,75.33],
+  'RedSquare SLM (Slim)': [70,68,67,65,65.1],
+  'SGR - Licença Mensal': [1,1,1,1,1],
+  'SGR - Licença Anual': [10,10,10,10,10],
+  'Analytics - Mensal': [0.5,0.5,0.5,0.5,0.5],
+  'Analytics - Anual': [5,5,5,5,5],
+  'NB-IoT/CAT M1 - Mensal': [2,2,2,2,2],
+  'NB-IoT/CAT M1 - Anual': [24,24,24,24,24],
+};
 
 function calcPrecoNum(produto, qtd, moeda) {
-  const base = PRECO_BASE[produto];
-  if (!base || !qtd) return null;
-  let desc = 0;
-  for (const [min, d] of FAIXAS_DESC) {
-    if (qtd >= min) desc = d;
+  // Usar PRECO_FAIXAS (valores exatos por faixa da planilha)
+  let usd;
+  if (typeof PRECO_FAIXAS !== 'undefined' && PRECO_FAIXAS[produto]) {
+    const faixas = PRECO_FAIXAS[produto];
+    const fi = qtd>=500?4 : qtd>=300?3 : qtd>=100?2 : qtd>=10?1 : 0;
+    usd = faixas[fi];
+  } else {
+    const base = PRECO_BASE[produto];
+    if (!base || !qtd) return null;
+    let desc = 0;
+    for (const [min, d] of FAIXAS_DESC) { if (qtd >= min) desc = d; }
+    usd = parseFloat((base * (1 - desc)).toFixed(2));
   }
-  const usd = parseFloat((base * (1 - desc)).toFixed(2));
+  if (!usd || !qtd) return null;
   if (moeda === 'BRL') return parseFloat((usd * CAMBIO.BRL).toFixed(2));
   if (moeda === 'EUR') return parseFloat((usd * CAMBIO.EUR).toFixed(2));
   return usd;
@@ -925,6 +937,7 @@ async function carregarPerfil(token) {
           vertical: a.vertical||a.area||'',
           areaCli:  a.area_cliente||a.areaCli||'',
           aplicacao:a.aplicacao||(a.projetos&&a.projetos[0])||'',
+          moeda:    a.moeda||'USD',
           prods:    Array.isArray(a.produtos) ? a.produtos : (a.produtos ? a.produtos.split(',').map(x=>x.trim()).filter(Boolean) : []),
           status:   a.status||'PROSPECCAO',
           obs:      a.obs||'',
@@ -974,26 +987,21 @@ function setPaisValue(selEl, nomePais) {
 function preencherPerfil(p) {
   sv('nome',p.nome); sv('sobrenome',p.sobrenome); sv('cidade',p.cidade);
   sv('empresa',p.empresa); sv('email',p.email); sv('linkedin',p.linkedin||'');
-  // País
-  const ps = document.getElementById('pais');
-  setPaisValue(ps, p.pais);
+  // País — usa SearchableSelect
+  if (ssPais) {
+    // Tenta pelo ISO primeiro, depois pelo nome
+    var iso = (PAISES_DATA.find(function(x){ return x.nome === p.pais || x.iso === p.pais; })||{}).iso || p.pais;
+    ssPais.setValue(iso || p.pais);
+  }
   // Telefone
   const tel = p.telefone||'';
   const m = tel.match(/^(\+[\d-]+)\s(.+)$/);
   if (m) {
-    // Garantir DDI populado antes de setar valor
-    const ddiEl = document.getElementById('ddi');
-    if (ddiEl && ddiEl.options.length === 0) {
-      const ISO_NOME = {};
-      PAISES_DATA.forEach(p => { ISO_NOME[p.iso] = p.nome; });
-      ddiEl.innerHTML = Object.entries(DDI_MAP).map(([iso,ddi]) =>
-        '<option value="' + ddi + '">' + (ISO_NOME[iso]||iso) + ' ' + ddi + '</option>'
-      ).join('');
-    }
-    document.getElementById('ddi').value = m[1];
+    if (ssDDI) ssDDI.setValue(m[1]);
     sv('whats', m[2]);
+  } else {
+    sv('whats', tel.replace(/^'/,''));
   }
-  else sv('whats', tel.replace(/^'/,''));
 }
 
 // ── RECOVERY ─────────────────────────────────────────────────
@@ -1026,6 +1034,7 @@ function addProjeto(src) {
     id: 'p'+(rowId++),
     titulo: '', pais: '', cliente: '',
     vertical: '', areaCli: '', aplicacao: '',
+    moeda: 'USD',
     prods: [], obs: '', status: '',
     collapsed: false
   };
@@ -1192,16 +1201,19 @@ function renderProjetos() {
     const row2 = document.createElement('div');
     row2.className = 'proj-row2';
 
-    // País
+    // País — SearchableSelect
     const paisWrap = document.createElement('div');
     paisWrap.className = 'proj-field';
     paisWrap.innerHTML = '<div class="proj-field-label">País</div>';
-    const paisSel = document.createElement('select');
-    paisSel.className = 'linha-inp';
-    paisSel.innerHTML = buildPaisOptions(proj.pais);
-    setPaisValue(paisSel, proj.pais);
-    paisSel.onchange = (function(pid){ return function(){ uProj(pid,'pais',this.value); }; })(proj.id);
-    paisWrap.appendChild(paisSel); row2.appendChild(paisWrap);
+    var paisISO = (PAISES_DATA.find(function(x){ return x.nome===proj.pais||x.iso===proj.pais; })||{}).iso || proj.pais || '';
+    var ssPaisProj = createSearchableSelect({
+      items: buildPaisItems(),
+      placeholder: '— país —',
+      initialValue: paisISO,
+      small: true,
+      onChange: (function(pid){ return function(val){ uProj(pid,'pais',val); }; })(proj.id)
+    });
+    paisWrap.appendChild(ssPaisProj.wrap); row2.appendChild(paisWrap);
 
     // Cliente
     const cliWrap = document.createElement('div');
@@ -1263,6 +1275,24 @@ function renderProjetos() {
     });
     apliSel.onchange = (function(pid){ return function(){ uProj(pid,'aplicacao',this.value); }; })(proj.id);
     apliWrap.appendChild(apliSel); row2.appendChild(apliWrap);
+
+    // Moeda do Projeto
+    const moedaWrap = document.createElement('div');
+    moedaWrap.className = 'proj-field';
+    moedaWrap.innerHTML = '<div class="proj-field-label">Moeda</div>';
+    const moedaSel = document.createElement('select');
+    moedaSel.className = 'linha-inp';
+    moedaSel.style.width = '90px';
+    ['USD','BRL','EUR'].forEach(function(m) {
+      const o = document.createElement('option'); o.value=m; o.textContent=m;
+      if (m === (proj.moeda||'USD')) o.selected = true;
+      moedaSel.appendChild(o);
+    });
+    moedaSel.onchange = (function(pid){ return function(){
+      uProj(pid,'moeda',this.value);
+      renderProjetos();
+    }; })(proj.id);
+    moedaWrap.appendChild(moedaSel); row2.appendChild(moedaWrap);
 
     body.appendChild(row2);
 
@@ -1359,17 +1389,17 @@ function renderProjetos() {
 
     // recalcSoma: soma os totDiv já calculados no prodWrap
     function recalcSoma() {
+      var pp = linhas.find(function(x){ return x.id===proj.id; });
+      var moedaRef = (pp && pp.moeda) ? pp.moeda : 'USD';
       var tots = prodWrap.querySelectorAll('.prod-total');
       var total = 0; var tem = false;
-      var moedaRef = 'USD';
       tots.forEach(function(t){
         var txt = (t.textContent||'').trim();
         if(!txt || txt==='—') return;
-        // Detectar moeda pelo prefixo
         var num;
-        if(txt.startsWith('R$')){ moedaRef='BRL'; num=parseFloat(txt.replace('R$','').replace(/\./g,'').replace(',','.').trim()); }
-        else if(txt.startsWith('€')){ moedaRef='EUR'; num=parseFloat(txt.replace('€','').replace(/\./g,'').replace(',','.').trim()); }
-        else { moedaRef='USD'; num=parseFloat(txt.replace('$','').replace(/\./g,'').replace(',','.').trim()); }
+        if(txt.startsWith('R$')){ num=parseFloat(txt.replace('R$','').replace(/\./g,'').replace(',','.').trim()); }
+        else if(txt.startsWith('€')){ num=parseFloat(txt.replace('€','').replace(/\./g,'').replace(',','.').trim()); }
+        else { num=parseFloat(txt.replace('$','').replace(/\./g,'').replace(',','.').trim()); }
         if(!isNaN(num)){ total+=num; tem=true; }
       });
       somaVal.textContent = tem ? formatVal(total, moedaRef) : '—';
@@ -1407,15 +1437,6 @@ function renderProjetos() {
       const rmBtn = document.createElement('button');
       rmBtn.className = 'proj-prod-rm'; rmBtn.textContent = '×';
       (function(pid,idx){ rmBtn.onclick = () => rmProd(pid,idx); })(proj.id, i);
-      // Select moeda
-      const mSel = document.createElement('select');
-      mSel.className = 'linha-inp prod-moeda';
-      ['USD','BRL','EUR'].forEach(m => {
-        const o = document.createElement('option'); o.value=m; o.textContent=m;
-        mSel.appendChild(o);
-      });
-      const partsM = (proj.prods[i]||'').split(':');
-      mSel.value = partsM[2] || 'USD';
 
       // Valor unitário
       const valDiv = document.createElement('div');
@@ -1430,24 +1451,16 @@ function renderProjetos() {
       function atualizarValor() {
         const qtd   = parseInt(fSel.value)||0;
         const prod  = pSel.value;
-        const moeda = mSel.value;
+        const pp    = linhas.find(x=>x.id===proj.id);
+        const moeda = (pp && pp.moeda) ? pp.moeda : 'USD';
         const un    = calcPrecoNum(prod, qtd, moeda);
         valDiv.textContent = un !== null ? formatVal(un, moeda) + '/un' : '—';
         totDiv.textContent = un !== null && qtd ? formatVal(un * qtd, moeda) : '—';
-        // Recalcular soma via referência direta ao somaVal
         recalcSoma();
       }
       atualizarValor();
 
       (function(pid,idx2){
-        mSel.onchange = function() {
-          const p = linhas.find(x=>x.id===pid);
-          if(p){
-            const pts = p.prods[idx2].split(':');
-            p.prods[idx2] = (pts[0]||'') + ':' + (pts[1]||'') + ':' + this.value;
-          }
-          atualizarValor();
-        };
         fSel.oninput = (function(origFn){ return function(e){
           if(origFn) origFn.call(this,e);
           atualizarValor();
@@ -1459,7 +1472,7 @@ function renderProjetos() {
       })(proj.id, i);
 
       line.appendChild(pSel); line.appendChild(fSel);
-      line.appendChild(mSel); line.appendChild(valDiv); line.appendChild(totDiv);
+      line.appendChild(valDiv); line.appendChild(totDiv);
       line.appendChild(rmBtn);
       prodWrap.appendChild(line);
     });
@@ -1522,13 +1535,18 @@ function uRow(id,f,v){ uProj(id,f,v); }
 
 
 async function enviar() {
-  const req=['nome','sobrenome','pais','cidade','empresa','email','whats'];
+  const req=['nome','sobrenome','cidade','empresa','email','whats'];
   let ok=true;
   req.forEach(id=>{
     const el=document.getElementById(id);
     if(!el||!el.value.trim()){ if(el) el.style.borderColor='#E30613'; ok=false; }
     else if(el) el.style.borderColor='#E4E4E4';
   });
+  // Validar SearchableSelects
+  if(!ssPais || !ssPais.getValue()){ if(ssPais) ssPais.setError(true); ok=false; }
+  else if(ssPais) ssPais.setError(false);
+  if(!ssDDI || !ssDDI.getValue()){ if(ssDDI) ssDDI.setError(true); ok=false; }
+  else if(ssDDI) ssDDI.setError(false);
   if(!ok){ showError('Preencha todos os campos obrigatórios (*).'); return; }
   hideError(); setSending(true);
   try {
@@ -1563,7 +1581,7 @@ function gv(id){ return (document.getElementById(id)||{}).value?.trim()||''; }
 function sv(id,val){ const el=document.getElementById(id); if(el) el.value=val||''; }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function ini(s){ return (s||'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('')||'?'; }
-function autoDDI(code){ if(DDI_MAP[code]) document.getElementById('ddi').value=DDI_MAP[code]; }
+function autoDDI(code){ if(DDI_MAP[code] && ssDDI) ssDDI.setValue(DDI_MAP[code]); }
 function setSending(s){
   const b=document.getElementById('btn-enviar'),r=document.getElementById('btn-rascunho');
   b.disabled=s; r.disabled=s;
@@ -1590,13 +1608,13 @@ function coletarDados() {
       repId: repId||null, token: repToken||null,
       nome: (gv('nome')||'').toUpperCase(), sobrenome: (gv('sobrenome')||'').toUpperCase(),
       pais: (function(){
-        const iso = gv('pais');
+        const iso = ssPais ? ssPais.getValue() : gv('pais');
         const p = PAISES_DATA.find(x => x.iso === iso);
-        return p ? p.nome : iso; // retorna nome se encontrar, senão ISO
+        return p ? p.nome : iso;
       })(),
       cidade: (gv('cidade')||'').toUpperCase(),
       empresa: gv('empresa'), email: gv('email'),
-      telefone: gv('ddi')+' '+gv('whats'), linkedin: gv('linkedin')
+      telefone: (ssDDI ? ssDDI.getValue() : gv('ddi'))+' '+gv('whats'), linkedin: gv('linkedin')
     },
     atuacao: linhas
       .filter(p => p.cliente && p.cliente.trim())
@@ -1610,6 +1628,7 @@ function coletarDados() {
         vertical: p.vertical||'', area: p.vertical||'',
         area_cliente: p.areaCli||'',
         aplicacao: p.aplicacao||'',
+        moeda: p.moeda||'USD',
         focal_contacts:  p.focalContacts||[],
         produtos: p.prods, qtd_estimada: '',
         projetos: p.aplicacao ? [p.aplicacao] : [],
@@ -1624,15 +1643,192 @@ function salvarRascunho() {
   a.download='rascunho_promont.json'; a.click();
 }
 // ── POPULAR SELECT DDI ───────────────────────────────────────
+// ── SEARCHABLE SELECT ────────────────────────────────────────────
+function createSearchableSelect(cfg) {
+  var items       = cfg.items || [];
+  var placeholder = cfg.placeholder || '— selecione —';
+  var small       = cfg.small || false;
+  var currentVal  = '';
+  var activeIdx   = -1;
+
+  var wrap  = document.createElement('div');
+  wrap.className = 'ss-wrap';
+
+  var inp = document.createElement('input');
+  inp.type = 'text';
+  inp.className = 'ss-input' + (small ? ' ss-sm' : '');
+  inp.placeholder = placeholder;
+  inp.autocomplete = 'off';
+  inp.spellcheck = false;
+
+  var drop = document.createElement('div');
+  drop.className = 'ss-drop';
+
+  wrap.appendChild(inp);
+  wrap.appendChild(drop);
+
+  function norm(s) {
+    return (s||'').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/[^a-z0-9+ ]/g,' ').trim();
+  }
+
+  function renderDrop(filter) {
+    drop.innerHTML = '';
+    var q = norm(filter||'');
+    var filtered = items.filter(function(it) {
+      return !q || norm(it.label).includes(q) || norm(it.value).includes(q);
+    });
+    if (!filtered.length) {
+      var em = document.createElement('div');
+      em.className = 'ss-empty'; em.textContent = 'Nenhum resultado';
+      drop.appendChild(em); return;
+    }
+    var lastGroup = null;
+    filtered.forEach(function(it) {
+      if (it.group && it.group !== lastGroup) {
+        var g = document.createElement('div');
+        g.className = 'ss-group'; g.textContent = it.group;
+        drop.appendChild(g);
+        lastGroup = it.group;
+      }
+      var el = document.createElement('div');
+      el.className = 'ss-item' + (small ? ' ss-sm' : '');
+      el.textContent = it.label;
+      el.dataset.val = it.value;
+      el.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        selectItem(it.value, it.label);
+      });
+      drop.appendChild(el);
+    });
+    activeIdx = -1;
+  }
+
+  function selectItem(val, label) {
+    currentVal = val;
+    inp.value = label;
+    inp.classList.remove('err');
+    drop.classList.remove('open');
+    if (cfg.onChange) cfg.onChange(val);
+  }
+
+  function getLabelForValue(val) {
+    var found = items.find(function(it){ return it.value === val; });
+    return found ? found.label : '';
+  }
+
+  inp.addEventListener('focus', function() {
+    renderDrop(currentVal ? '' : inp.value);
+    drop.classList.add('open');
+  });
+  inp.addEventListener('input', function() {
+    currentVal = '';
+    renderDrop(inp.value);
+    drop.classList.add('open');
+  });
+  inp.addEventListener('keydown', function(e) {
+    var visible = drop.querySelectorAll('.ss-item');
+    if (!visible.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIdx = Math.min(activeIdx+1, visible.length-1);
+      visible.forEach(function(el,i){ el.classList.toggle('active', i===activeIdx); });
+      if (visible[activeIdx]) visible[activeIdx].scrollIntoView({block:'nearest'});
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIdx = Math.max(activeIdx-1, 0);
+      visible.forEach(function(el,i){ el.classList.toggle('active', i===activeIdx); });
+      if (visible[activeIdx]) visible[activeIdx].scrollIntoView({block:'nearest'});
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (activeIdx >= 0 && visible[activeIdx]) {
+        selectItem(visible[activeIdx].dataset.val, visible[activeIdx].textContent);
+      }
+    } else if (e.key === 'Escape') {
+      drop.classList.remove('open');
+      inp.value = getLabelForValue(currentVal);
+    }
+  });
+  inp.addEventListener('blur', function() {
+    setTimeout(function() {
+      drop.classList.remove('open');
+      if (!currentVal) inp.value = '';
+      else inp.value = getLabelForValue(currentVal);
+    }, 150);
+  });
+
+  function getValue() { return currentVal; }
+  function setValue(val) {
+    if (!val) return;
+    var found = items.find(function(it){ return it.value === val; });
+    if (found) { currentVal = val; inp.value = found.label; return; }
+    var byLabel = items.find(function(it){
+      return norm(it.label) === norm(val) || norm(it.value) === norm(val);
+    });
+    if (byLabel) { currentVal = byLabel.value; inp.value = byLabel.label; }
+  }
+  function setError(on) { inp.classList.toggle('err', !!on); }
+
+  if (cfg.initialValue) setValue(cfg.initialValue);
+  return { wrap: wrap, getValue: getValue, setValue: setValue, setError: setError };
+}
+
+function buildPaisItems() {
+  var items = [];
+  PAISES_DATA.forEach(function(p) {
+    items.push({ value: p.iso, label: p.flag + ' ' + p.nome, group: p.sub });
+  });
+  items.push({ value: 'OT', label: '\uD83C\uDF10 Outro', group: 'Outro' });
+  return items;
+}
+
+function buildDDIItems() {
+  var items = []; var seen = {};
+  PAISES_DATA.forEach(function(p) {
+    var ddi = DDI_MAP[p.iso];
+    if (!ddi || seen[ddi]) return;
+    items.push({ value: ddi, label: p.flag + ' ' + p.nome + ' ' + ddi });
+    seen[ddi] = true;
+  });
+  return items;
+}
+
+// ── INSTÂNCIAS GLOBAIS (perfil do rep) ─────────────────────────
+var ssPais = null;
+var ssDDI  = null;
+
 (function initDDI() {
-  const sel = document.getElementById('ddi');
-  if (!sel) return;
-  const ISO_NOME = {};
-  PAISES_DATA.forEach(p => { ISO_NOME[p.iso] = p.nome; });
-  sel.innerHTML = Object.entries(DDI_MAP).map(([iso,ddi]) =>
-    '<option value="' + ddi + '">' + (ISO_NOME[iso]||iso) + ' ' + ddi + '</option>'
-  ).join('');
-  sel.value = '+55'; // padrão Brasil
+  // Montar SearchableSelect para País do rep
+  var paisContainer = document.getElementById('pais');
+  if (paisContainer) {
+    var paisParent = paisContainer.parentNode;
+    ssPais = createSearchableSelect({
+      items: buildPaisItems(),
+      placeholder: 'Selecione seu país...',
+      initialValue: '',
+      onChange: function(iso) { autoDDI(iso); }
+    });
+    // Copiar estilo do campo de texto do perfil
+    ssPais.wrap.querySelector('.ss-input').style.cssText =
+      'background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:\'DM Sans\',sans-serif;width:100%;outline:none;box-sizing:border-box';
+    paisParent.replaceChild(ssPais.wrap, paisContainer);
+  }
+
+  // Montar SearchableSelect para DDI do rep
+  var ddiContainer = document.getElementById('ddi');
+  if (ddiContainer) {
+    var ddiParent = ddiContainer.parentNode;
+    ssDDI = createSearchableSelect({
+      items: buildDDIItems(),
+      placeholder: '+55',
+      initialValue: '+55'
+    });
+    var ddiInp = ssDDI.wrap.querySelector('.ss-input');
+    ddiInp.style.cssText =
+      'background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:\'DM Sans\',sans-serif;width:80px;outline:none;box-sizing:border-box;flex-shrink:0';
+    ddiParent.replaceChild(ssDDI.wrap, ddiContainer);
+  }
 })();
 
 </script>
