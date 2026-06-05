@@ -25,9 +25,10 @@ label{font-size:12px;font-weight:500;color:#555}
 input,select,textarea{background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;transition:border-color .15s}
 input:focus,select:focus,textarea:focus{border-color:#2C2C2C}
 input.err,select.err{border-color:#E30613;box-shadow:0 0 0 3px rgba(227,6,19,.10)}
-.phone-row{display:flex;gap:8px}
+.phone-row{display:flex;gap:8px;width:100%}
 .phone-row select{width:130px;min-width:130px;flex-shrink:0}
-.phone-row input{flex:1}
+.phone-row input{flex:1;min-width:0}
+.phone-row .ss-wrap{width:130px;min-width:130px;flex-shrink:0}
 .at-wrap{overflow-x:auto;margin:0 -1.5rem;padding:0 1.5rem}
 .at-table{min-width:740px}
 .at-head{display:grid;grid-template-columns:130px 130px 95px 170px 125px 70px 90px 56px;gap:8px;padding:0 8px 8px;border-bottom:1px solid #E4E4E4}
@@ -222,6 +223,10 @@ input[type=url].linha-inp,
 input[type=number].linha-inp {
   text-transform: none;
 }
+/* Caixa alta nos campos de texto do perfil do representante */
+#nome, #sobrenome, #cidade, #empresa {
+  text-transform: uppercase;
+}
 </style>
 </head>
 <body>
@@ -282,7 +287,7 @@ input[type=number].linha-inp {
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
     <div style="display:flex;flex-direction:column;gap:5px">
       <label style="font-size:12px;font-weight:500;color:#555">WhatsApp / Celular <span style="color:#E30613">*</span></label>
-      <div style="display:flex;gap:8px"><select id="ddi" style="display:none"></select><input type="tel" id="whats" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box;flex:1;min-width:0" placeholder="99 99999-9999"></div>
+      <div class="phone-row"><select id="ddi" style="display:none"></select><input type="tel" id="whats" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;outline:none;box-sizing:border-box;flex:1;min-width:0" placeholder="99 99999-9999"></div>
     </div>
     <div style="display:flex;flex-direction:column;gap:5px"><label style="font-size:12px;font-weight:500;color:#555">LinkedIn</label><input type="url" id="linkedin" style="background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:'DM Sans',sans-serif;width:100%;outline:none;box-sizing:border-box" placeholder="linkedin.com/in/seuperfil"></div>
   </div>
@@ -1824,9 +1829,6 @@ var ssDDI  = null;
       placeholder: '+55',
       initialValue: '+55'
     });
-    var ddiInp = ssDDI.wrap.querySelector('.ss-input');
-    ddiInp.style.cssText =
-      'background:#fff;border:1px solid #E4E4E4;border-radius:4px;padding:9px 11px;font-size:13px;color:#2C2C2C;font-family:\'DM Sans\',sans-serif;width:80px;outline:none;box-sizing:border-box;flex-shrink:0';
     ddiParent.replaceChild(ssDDI.wrap, ddiContainer);
   }
 })();
